@@ -1,0 +1,21 @@
+.list-enter {
+    max-height: 0;
+    opacity: 0;
+}
+
+.list-enter-active {
+    opacity: 1;
+    max-height: 500px;
+    transition: opacity 0.3s ease-in-out, max-height 0.2s ease-in-out;
+}
+
+.list-exit {
+    opacity: 1;
+    max-height: 500px;
+}
+
+.list-exit-active {
+    opacity: 0;
+    max-height: 0;
+    transition: opacity 0.3s ease-in-out, max-height 0.2s ease-in-out;
+}

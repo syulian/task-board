@@ -1,0 +1,40 @@
+{
+    "name": "task-board",
+    "version": "0.1.0",
+    "private": true,
+    "scripts": {
+        "dev": "next dev --turbopack",
+        "build": "next build",
+        "start": "next start",
+        "lint": "next lint",
+        "prettier": "npx prettier . --write"
+    },
+    "dependencies": {
+        "@babel/runtime": "^7.28.2",
+        "next": "15.4.6",
+        "react": "19.1.0",
+        "react-dom": "19.1.0",
+        "react-icons": "^5.5.0",
+        "react-transition-group": "^4.4.5"
+    },
+    "devDependencies": {
+        "@eslint/eslintrc": "^3",
+        "@feature-sliced/eslint-config": "^0.1.1",
+        "@tailwindcss/postcss": "^4",
+        "@types/node": "^20",
+        "@types/react": "^19",
+        "@types/react-dom": "^19",
+        "@types/react-transition-group": "^4.4.12",
+        "eslint": "^8.57.1",
+        "eslint-config-next": "15.4.6",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-jsx-a11y": "^6.10.2",
+        "eslint-plugin-prettier": "^5.5.4",
+        "eslint-plugin-react": "^7.37.5",
+        "eslint-plugin-react-hooks": "^5.2.0",
+        "eslint-plugin-react-refresh": "^0.4.20",
+        "prettier": "^3.6.2",
+        "tailwindcss": "^4",
+        "typescript": "^5"
+    }
+}

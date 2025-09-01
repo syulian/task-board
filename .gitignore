@@ -1,0 +1,57 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# IDE
+.idea/
+
+# dependencies
+/node_modules
+.pnp.js
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# builds
+dist/
+tsconfig.tsbuildinfo
+/build
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-debug.log*
+
+# testing
+/coverage
+
+# env
+.env
+.env*
+!.env.example
+
+# misc
+.DS_Store
+*.local
+*.pem
+
+# next.js
+/.next/
+/out/
+
+# docker
+docker-compose.override.yml
+docker-compose*.log
+*.pid
+*.seed.ts
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
