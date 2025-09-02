@@ -8,7 +8,7 @@ interface ISearchInputProps {
 
 export default function SearchInput({ placeholder, onChange }: ISearchInputProps) {
     return (
-        <div className="flex items-center border-surface-light border border-solid w-full max-w-md p-2 gap-2 rounded-sm">
+        <div className="flex items-center border-surface-light border w-full max-w-sm p-2 gap-2 rounded-sm">
             <HiMagnifyingGlass size={24} />
             <input
                 className="w-full outline-none text-sm caret-surface-light h-6"

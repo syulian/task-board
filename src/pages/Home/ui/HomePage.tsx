@@ -25,18 +25,22 @@ export default function HomePage() {
     }, []);
 
     return (
-        <main className="bg-background-dark w-full p-4">
-            <header className="py-4 flex gap-4">
-                <SettingsButton onClick={() => {}}>{board}</SettingsButton>
-                <SearchInput
-                    onChange={() => {}}
-                    placeholder={`Start typing ${command} to search ...`}
-                />
+        <main className="bg-background-dark w-[calc(100%-340px)] p-4">
+            <header className="py-4 flex items-center justify-between gap-4">
+                <div className="flex gap-4 w-full">
+                    <SettingsButton onClick={() => {}}>{board}</SettingsButton>
+                    <SearchInput
+                        onChange={() => {}}
+                        placeholder={`Start typing ${command} to search ...`}
+                    />
+                </div>
                 <DefaultButton onClick={() => {}}>
-                    <HiCalendarDays size={24}/>
+                    <HiCalendarDays size={24} />
                 </DefaultButton>
             </header>
-            <section className="w-full flex ">{board && <Board title={board} />}</section>
+            <section className="w-full flex overflow-x-scroll pb-4">
+                {board && <Board title={board} />}
+            </section>
         </main>
     );
 }
