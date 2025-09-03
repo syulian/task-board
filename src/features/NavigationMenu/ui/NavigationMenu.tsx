@@ -10,23 +10,7 @@ export default function NavigationMenu() {
     const [links, setLinks] = useState([
         {
             href: '/',
-            text: 'slate',
-        },
-        {
-            href: '/',
-            text: 'zinc',
-        },
-        {
-            href: '/',
-            text: 'gray',
-        },
-        {
-            href: '/',
-            text: 'neutral',
-        },
-        {
-            href: '/',
-            text: 'stone',
+            text: '☠️ Website',
         },
     ]);
 

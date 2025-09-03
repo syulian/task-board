@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import React, { ReactNode } from 'react';
 import { LeftSidebar } from '@widgets/LeftSidebar';
+import { RightSidebar } from '@widgets/RightSidebar';
 import '../styles';
 
 interface IRootLayoutProps {
@@ -30,6 +31,7 @@ export function RootLayout({ children }: IRootLayoutProps) {
                 <div className="flex ">
                     <LeftSidebar />
                     {children}
+                    <RightSidebar />
                 </div>
             </body>
         </html>

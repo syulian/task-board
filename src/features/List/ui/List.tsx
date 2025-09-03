@@ -3,16 +3,23 @@ import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
 import { TaskCard } from '@entities/Task';
 import { DefaultButton, AddButton } from '@shared/ui';
 
-interface IBoardProps {
-    title: string;
-}
-
-export default function Board({ title }: IBoardProps) {
+export default function List() {
     const tasks = [
         {
             title: 'Website creation',
             body: '*Need to create a new task! Need to create a new task!* \n\n *Need to create a new task! Need to create a new task!*',
-            attachments: [''],
+            attachments: [
+                {
+                    type: 'checkbox',
+                    value: 'Easy to use',
+                    checked: true,
+                },
+                {
+                    type: 'checkbox',
+                    value: 'No Internet needed',
+                    checked: false,
+                },
+            ],
             labels: [
                 {
                     name: 'Web',
@@ -35,7 +42,6 @@ export default function Board({ title }: IBoardProps) {
         {
             title: 'Website creation',
             body: '*Need to create a new task! Need to create a new task!*',
-            attachments: [''],
             labels: [
                 {
                     name: 'Nice',
@@ -63,7 +69,7 @@ export default function Board({ title }: IBoardProps) {
                     >
                         <div className="flex items-center justify-between pb-2 px-2 border-b-2 border-red-900 rounded-b-xs">
                             <span className="flex items-end font-bold">
-                                <p className="text-2xl text-surface-light">⣿</p>
+                                <p className="text-2xl text-surface-lighter">⣿</p>
                                 <p>To Do</p>
                             </span>
                             <span className="flex">

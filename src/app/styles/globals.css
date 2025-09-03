@@ -12,6 +12,7 @@
     --color-background-dark: #121619;
     --color-surface-dark: #16191d;
     --color-surface-light: #1d2126;
+    --color-surface-lighter: #2f353d;
 }
 
 @theme inline {
