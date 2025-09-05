@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
 import { TaskCard } from '@entities/Task';

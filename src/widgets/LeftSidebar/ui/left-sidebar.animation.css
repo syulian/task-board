@@ -1,0 +1,25 @@
+.left-sidebar-enter {
+    max-width: 89px;
+}
+
+.left-sidebar-enter-active {
+    max-width: 340px;
+    transition: max-width .3s ease-in-out;
+}
+
+.left-sidebar-enter-done {
+    max-width: 340px;
+}
+
+.left-sidebar-exit {
+    max-width: 340px;
+}
+
+.left-sidebar-exit-active {
+    max-width: 89px;
+    transition: max-width .3s ease-in-out;
+}
+
+.left-sidebar-exit-done {
+    max-width: 89px;
+}

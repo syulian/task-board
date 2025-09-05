@@ -1,7 +1,8 @@
 import { Metadata } from 'next';
 import React, { ReactNode } from 'react';
+import { StoreProvider } from '@app/providers/StoreProvider';
 import { LeftSidebar } from '@widgets/LeftSidebar';
-import { RightSidebar } from '@widgets/RightSidebar';
+import { RightSidebar } from '@features/RightSidebar';
 import '../styles';
 
 interface IRootLayoutProps {
@@ -28,11 +29,13 @@ export function RootLayout({ children }: IRootLayoutProps) {
     return (
         <html lang="en">
             <body>
-                <div className="flex ">
-                    <LeftSidebar />
-                    {children}
-                    <RightSidebar />
-                </div>
+                <StoreProvider>
+                    <div className="flex">
+                        <LeftSidebar />
+                        {children}
+                        <RightSidebar />
+                    </div>
+                </StoreProvider>
             </body>
         </html>
     );

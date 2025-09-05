@@ -1,0 +1,17 @@
+.drop-down-enter {
+    opacity: 0;
+}
+
+.drop-down-enter-active {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.drop-down-exit {
+    opacity: 1;
+}
+
+.drop-down-exit-active {
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}

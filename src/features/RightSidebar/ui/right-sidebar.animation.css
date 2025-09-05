@@ -1,0 +1,31 @@
+.right-sidebar-enter {
+    width: 0;
+    padding: 0;
+}
+
+.right-sidebar-enter-active {
+    width: 340px;
+    padding: 0 16px;
+    transition: width .3s ease-in-out, padding .3s ease-in-out;
+}
+
+.right-sidebar-enter-done {
+    width: 340px;
+    padding: 0 16px;
+}
+
+.right-sidebar-exit {
+    width: 340px;
+    padding: 0 16px;
+}
+
+.right-sidebar-exit-active {
+    width: 0;
+    padding: 0;
+    transition: width .3s ease-in-out, padding .3s ease-in-out;
+}
+
+.right-sidebar-exit-done {
+    width: 0;
+    padding: 0;
+}

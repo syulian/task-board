@@ -1,16 +1,21 @@
 'use client';
+import { clsx } from 'clsx';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import './list.animation.css';
 
-export default function NavigationMenu() {
+interface INavigationMenuProps {
+    isExpanded: boolean;
+}
+
+export default function NavigationMenu({ isExpanded }: INavigationMenuProps) {
     const [isOpen, setIsOpen] = useState(true);
     const [links, setLinks] = useState([
         {
             href: '/',
-            text: '☠️ Website',
+            text: '💀 Website',
         },
     ]);
 
@@ -18,21 +23,23 @@ export default function NavigationMenu() {
 
     return (
         <section>
-            <div className="flex items-center rounded-lg hover:bg-surface-light text-gray-300 font-bold transition duration-300 ease-in-out">
+            <div className="flex items-center rounded-lg hover:bg-surface-light text-gray-300 font-bold transition duration-300 ease-in-out relative">
                 <button
-                    className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer"
+                    className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
                     onClick={() => setIsOpen(prev => !prev)}
                 >
                     {isOpen ? (
-                        <HiMiniChevronDown aria-hidden="true" size={24} />
+                        <HiMiniChevronDown aria-hidden="true" className="min-w-6 min-h-6" />
                     ) : (
-                        <HiMiniChevronRight aria-hidden="true" size={24} />
+                        <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
                     )}
-                    <span>My Colors</span>
+                    {isExpanded && <p>My Boards</p>}
                 </button>
-                <button className="ml-auto py-1.5 px-4 cursor-pointer text-white">
-                    <HiOutlinePlusSmall aria-hidden="true" size={24} />
-                </button>
+                {isExpanded && (
+                    <button className="ml-auto py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg absolute left-[251px]">
+                        <HiOutlinePlusSmall aria-hidden="true" size={24} />
+                    </button>
+                )}
             </div>
             <CSSTransition
                 in={isOpen}
@@ -46,9 +53,18 @@ export default function NavigationMenu() {
                         <Link
                             key={index}
                             href={link.href}
-                            className="flex items-center gap-1.5 py-1.5 hover:bg-bunker-900 transition duration-200 ease-in-out cursor-pointer rounded-lg pl-12 pr-4 hover:bg-surface-light"
+                            className={clsx(
+                                'gap-1.5 py-1.5 hover:bg-bunker-900 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-surface-light truncate',
+                                isExpanded ? 'pl-12' : 'pl-4',
+                            )}
                         >
-                            {link.text}
+                            {isExpanded ? (
+                                link.text
+                            ) : (
+                                <p className="w-6 text-center bg-surface-light rounded-full">
+                                    {Array.from(link.text)[0] ?? '?'}
+                                </p>
+                            )}
                         </Link>
                     ))}
                 </div>
