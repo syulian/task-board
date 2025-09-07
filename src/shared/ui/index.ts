@@ -6,3 +6,4 @@ export { default as Checkbox } from './Input/Checkbox/Checkbox';
 export { default as AddInput } from './Input/AddInput/AddInput';
 export { default as Label } from './Label/Label';
 export { default as DropDown } from './DropDown/DropDown';
+export { default as Tooltip } from './Tooltip/Tooltip';
