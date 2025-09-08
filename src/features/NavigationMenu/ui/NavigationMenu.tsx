@@ -1,32 +1,50 @@
 'use client';
-import React, { useMemo, useRef, useState } from 'react';
+import { clsx } from 'clsx';
+import React, { DragEvent, useRef, useState } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
-import { BoardItem, BoardItemSchema, BoardsGroupSchema } from '@entities/Board';
+import { BoardItem, BoardsGroupSchema, useBoardContext } from '@entities/Board';
 import { Tooltip } from '@shared/ui';
 import './list.animation.css';
 
 interface INavigationMenuProps {
-    board: BoardsGroupSchema;
+    group: BoardsGroupSchema;
     isExpanded: boolean;
 }
 
-export default function NavigationMenu({ board, isExpanded }: INavigationMenuProps) {
+export default function NavigationMenu({ group, isExpanded }: INavigationMenuProps) {
     const [isOpen, setIsOpen] = useState(true);
     const listRef = useRef(null);
 
-    const sortBoards = (a: BoardItemSchema, b: BoardItemSchema): number => {
-        return a.order - b.order;
+    const { currentItem, setGroups, currentGroup } = useBoardContext();
+
+    const onDragOver = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
     };
 
-    const sortedBoards = useMemo<BoardItemSchema[]>(
-        () => [...board.boards].sort(sortBoards),
-        [board],
-    );
+    const onDrop = (event: DragEvent<HTMLDivElement>) => {
+        event.preventDefault();
+        if (!currentGroup || !currentItem || group.boards.length) return;
+
+        setGroups(prev =>
+            prev.map(g => {
+                const updatedBoards = g.boards.filter(b => b.id !== currentItem.id);
+
+                if (g.id === group.id) {
+                    updatedBoards.push({ ...currentItem, order: 0 });
+                }
+
+                return {
+                    ...g,
+                    boards: updatedBoards,
+                };
+            }),
+        );
+    };
 
     return (
         <section>
-            <Tooltip text={board.name} isExpanded={isExpanded}>
+            <Tooltip text={group.name} isExpanded={isExpanded}>
                 <div className="flex items-center w-full rounded-lg hover:bg-surface-light text-gray-300 font-bold transition duration-300 ease-in-out">
                     <button
                         className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
@@ -37,7 +55,7 @@ export default function NavigationMenu({ board, isExpanded }: INavigationMenuPro
                         ) : (
                             <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
                         )}
-                        {isExpanded && <p>{board.name}</p>}
+                        {isExpanded && <p>{group.name}</p>}
                     </button>
                     {isExpanded && (
                         <button className="ml-auto py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg absolute left-[251px]">
@@ -53,11 +71,19 @@ export default function NavigationMenu({ board, isExpanded }: INavigationMenuPro
                 classNames="list"
                 unmountOnExit
             >
-                <div className="flex flex-col overflow-y-scroll max-h-125" ref={listRef}>
-                    {sortedBoards.map((b, index) => (
+                <div
+                    className={clsx(
+                        'flex flex-col overflow-y-scroll max-h-125',
+                        !group.boards.length && 'h-9',
+                    )}
+                    ref={listRef}
+                    onDragOver={onDragOver}
+                    onDrop={onDrop}
+                >
+                    {group.boards.map((b, index) => (
                         <Tooltip key={index} text={b.text} isExpanded={isExpanded}>
                             <BoardItem
-                                id={board.id}
+                                group={group}
                                 isExpanded={isExpanded}
                                 board={b}
                                 key={index}

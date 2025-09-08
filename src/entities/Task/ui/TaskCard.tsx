@@ -13,7 +13,10 @@ export default function TaskCard({ task }: ITaskCardProps) {
     const { body, title, labels, attachments } = task;
 
     return (
-        <div className="flex flex-col gap-2 border-surface-dark border rounded-sm bg-surface-light p-2 mt-2">
+        <div
+            className="flex flex-col gap-2 border-surface-dark border rounded-sm bg-surface-light p-2 mt-2 cursor-pointer"
+            draggable
+        >
             <p className="font-semibold">{title}</p>
             <div className="text-sm text-gray-400">
                 <Markdown>{body}</Markdown>

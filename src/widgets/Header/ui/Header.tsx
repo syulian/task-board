@@ -1,3 +1,4 @@
+'use client';
 import React from 'react';
 import { HiOutlineBookOpen, HiOutlineCalendarDays, HiOutlineTag } from 'react-icons/hi2';
 import { setIsExpanded } from '@features/RightSidebar';

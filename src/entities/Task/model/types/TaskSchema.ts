@@ -1,4 +1,6 @@
 export interface TaskSchema {
+    id: string;
+    order: number;
     title: string;
     body: string;
     attachments?: {

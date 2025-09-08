@@ -3,8 +3,10 @@ import { BoardItemSchema, BoardsGroupSchema } from '@entities/Board';
 
 export interface IBoardContext {
     currentItem: BoardItemSchema | null;
-    setBoardsList: Dispatch<SetStateAction<BoardsGroupSchema[] | null>>;
     setCurrentItem: Dispatch<SetStateAction<BoardItemSchema | null>>;
+    currentGroup: BoardsGroupSchema | null;
+    setCurrentGroup: Dispatch<SetStateAction<BoardsGroupSchema | null>>;
+    setGroups: Dispatch<SetStateAction<BoardsGroupSchema[]>>;
 }
 
 export const BoardContext = createContext<IBoardContext | null>(null);

@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { Board } from '@widgets/Board';
 import { Header } from '@widgets/Header';

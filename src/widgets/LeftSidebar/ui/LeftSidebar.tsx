@@ -20,7 +20,9 @@ export default function LeftSidebar() {
     const [isExpanded, setIsExpanded] = useState(true);
 
     const [currentItem, setCurrentItem] = useState<BoardItemSchema | null>(null);
-    const [boardsList, setBoardsList] = useState<BoardsGroupSchema[] | null>([
+    const [currentGroup, setCurrentGroup] = useState<BoardsGroupSchema | null>(null);
+
+    const [groups, setGroups] = useState<BoardsGroupSchema[]>([
         {
             id: '1',
             name: 'My Boards',
@@ -107,11 +109,13 @@ export default function LeftSidebar() {
                         value={{
                             currentItem: currentItem,
                             setCurrentItem: setCurrentItem,
-                            setBoardsList: setBoardsList,
+                            currentGroup: currentGroup,
+                            setCurrentGroup: setCurrentGroup,
+                            setGroups: setGroups,
                         }}
                     >
-                        {boardsList?.map(b => (
-                            <NavigationMenu key={b.id} board={b} isExpanded={isExpanded} />
+                        {groups.map(g => (
+                            <NavigationMenu key={g.id} group={g} isExpanded={isExpanded} />
                         ))}
                     </BoardContext>
                 </div>
