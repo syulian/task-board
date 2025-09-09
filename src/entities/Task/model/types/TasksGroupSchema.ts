@@ -1,8 +1,8 @@
 import { TaskSchema } from '@entities/Task';
 
-export default interface ListSchema {
+export interface TasksGroupSchema {
     id: string;
     order: number;
     name: string;
-    tasks: TaskSchema[];
+    items: TaskSchema[];
 }

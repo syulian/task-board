@@ -1,15 +1,25 @@
 'use client';
 import React, { useState } from 'react';
 import { List } from '@features/List';
+import {
+    TaskSchema,
+    TasksGroupSchema,
+    TaskDragAndDropContext,
+    TaskDragAndDropOrderContext,
+} from '@entities/Task';
 import { AddInput } from '@shared/ui';
 
 export default function Board() {
+    const [currentItem, setCurrentItem] = useState<TaskSchema | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<TasksGroupSchema | null>(null);
+    const [currentOrder, setCurrentOrder] = useState<TasksGroupSchema | null>(null);
+
     const [list, setList] = useState([
         {
             id: '1',
             order: 1,
             name: 'To Do',
-            tasks: [
+            items: [
                 {
                     id: '1',
                     order: 1,
@@ -52,9 +62,9 @@ export default function Board() {
             id: '2',
             order: 2,
             name: 'Doing',
-            tasks: [
+            items: [
                 {
-                    id: '1',
+                    id: '3',
                     order: 1,
                     title: 'Website testing',
                     body: '*Need to create a new task! Need to create a new task!*',
@@ -71,9 +81,27 @@ export default function Board() {
 
     return (
         <section className="w-full flex gap-8 overflow-x-scroll pb-4">
-            {list.map(l => (
-                <List list={l} key={l.id} />
-            ))}
+            <TaskDragAndDropContext
+                value={{
+                    currentItem: currentItem,
+                    setCurrentItem: setCurrentItem,
+                    currentGroup: currentGroup,
+                    setCurrentGroup: setCurrentGroup,
+                    setGroups: setList,
+                }}
+            >
+                <TaskDragAndDropOrderContext
+                    value={{
+                        currentOrder: currentOrder,
+                        setCurrentOrder: setCurrentOrder,
+                        setOrders: setList,
+                    }}
+                >
+                    {list.map(l => (
+                        <List list={l} key={l.id} />
+                    ))}
+                </TaskDragAndDropOrderContext>
+            </TaskDragAndDropContext>
             <div className="min-w-80">
                 <AddInput onChange={() => {}} placeholder="Add List" onSubmit={() => {}} />
             </div>

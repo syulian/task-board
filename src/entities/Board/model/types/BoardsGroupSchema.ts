@@ -1,7 +1,8 @@
-import { BoardItemSchema } from '@entities/Board';
+import { BoardLinkSchema } from '@entities/Board';
 
 export default interface BoardsGroupSchema {
     id: string;
+    order: number;
     name: string;
-    boards: BoardItemSchema[];
+    items: BoardLinkSchema[];
 }

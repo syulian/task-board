@@ -1,9 +1,10 @@
 'use client';
 import { clsx } from 'clsx';
-import React, { DragEvent, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
-import { BoardItem, BoardsGroupSchema, useBoardContext } from '@entities/Board';
+import { BoardItem, BoardsGroupSchema, useBoardDragAndDropContext } from '@entities/Board';
+import { useParentDragAndDrop } from '@shared/lib';
 import { Tooltip } from '@shared/ui';
 import './list.animation.css';
 
@@ -16,31 +17,12 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
     const [isOpen, setIsOpen] = useState(true);
     const listRef = useRef(null);
 
-    const { currentItem, setGroups, currentGroup } = useBoardContext();
-
-    const onDragOver = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-    };
-
-    const onDrop = (event: DragEvent<HTMLDivElement>) => {
-        event.preventDefault();
-        if (!currentGroup || !currentItem || group.boards.length) return;
-
-        setGroups(prev =>
-            prev.map(g => {
-                const updatedBoards = g.boards.filter(b => b.id !== currentItem.id);
-
-                if (g.id === group.id) {
-                    updatedBoards.push({ ...currentItem, order: 0 });
-                }
-
-                return {
-                    ...g,
-                    boards: updatedBoards,
-                };
-            }),
-        );
-    };
+    const { currentItem, setGroups, currentGroup } = useBoardDragAndDropContext();
+    const { onDragOver, onDrop } = useParentDragAndDrop(group, {
+        currentItem,
+        setGroups,
+        currentGroup,
+    });
 
     return (
         <section>
@@ -74,13 +56,13 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 <div
                     className={clsx(
                         'flex flex-col overflow-y-scroll max-h-125',
-                        !group.boards.length && 'h-9',
+                        !group.items.length && 'h-9',
                     )}
                     ref={listRef}
                     onDragOver={onDragOver}
                     onDrop={onDrop}
                 >
-                    {group.boards.map((b, index) => (
+                    {group.items.map((b, index) => (
                         <Tooltip key={index} text={b.text} isExpanded={isExpanded}>
                             <BoardItem
                                 group={group}

@@ -2,19 +2,29 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import React from 'react';
-import { BoardItemSchema, BoardsGroupSchema } from '@entities/Board';
-import useDragAndDrop from '@entities/Board/lib/hooks/useDragAndDrop';
+import { BoardLinkSchema, BoardsGroupSchema, useBoardDragAndDropContext } from '@entities/Board';
+import { useDragAndDrop } from '@shared/lib';
 
 interface IMenuItemProps {
     group: BoardsGroupSchema;
-    board: BoardItemSchema;
+    board: BoardLinkSchema;
     isExpanded: boolean;
 }
 
 export default function BoardItem({ group, board, isExpanded }: IMenuItemProps) {
+    const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
+        useBoardDragAndDropContext();
+
     const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop } = useDragAndDrop(
         group,
         board,
+        {
+            currentItem,
+            setGroups,
+            setCurrentItem,
+            setCurrentGroup,
+            currentGroup,
+        },
     );
 
     return (
@@ -23,7 +33,7 @@ export default function BoardItem({ group, board, isExpanded }: IMenuItemProps) 
             className={clsx(
                 'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-surface-light truncate',
                 isExpanded ? 'pl-12' : 'pl-4',
-                isDragOver && 'bg-surface-light',
+                isDragOver && currentItem && 'bg-surface-light',
             )}
             draggable
             onDragOver={onDragOver}

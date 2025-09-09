@@ -1,4 +1,4 @@
-export default interface BoardItemSchema {
+export default interface BoardLinkSchema {
     id: string;
     order: number;
     href: string;

@@ -12,21 +12,22 @@ import {
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
-import { BoardContext, BoardItemSchema, BoardsGroupSchema } from '@entities/Board';
+import { BoardDragAndDropContext, BoardLinkSchema, BoardsGroupSchema } from '@entities/Board';
 import { NavButton, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
     const [isExpanded, setIsExpanded] = useState(true);
 
-    const [currentItem, setCurrentItem] = useState<BoardItemSchema | null>(null);
+    const [currentItem, setCurrentItem] = useState<BoardLinkSchema | null>(null);
     const [currentGroup, setCurrentGroup] = useState<BoardsGroupSchema | null>(null);
 
     const [groups, setGroups] = useState<BoardsGroupSchema[]>([
         {
             id: '1',
+            order: 1,
             name: 'My Boards',
-            boards: [
+            items: [
                 {
                     id: '1',
                     order: 1,
@@ -43,8 +44,9 @@ export default function LeftSidebar() {
         },
         {
             id: '2',
+            order: 2,
             name: 'Another Boards',
-            boards: [
+            items: [
                 {
                     id: '3',
                     order: 1,
@@ -105,7 +107,7 @@ export default function LeftSidebar() {
                             {isExpanded && <p>Synced</p>}
                         </NavButton>
                     </Tooltip>
-                    <BoardContext
+                    <BoardDragAndDropContext
                         value={{
                             currentItem: currentItem,
                             setCurrentItem: setCurrentItem,
@@ -117,7 +119,7 @@ export default function LeftSidebar() {
                         {groups.map(g => (
                             <NavigationMenu key={g.id} group={g} isExpanded={isExpanded} />
                         ))}
-                    </BoardContext>
+                    </BoardDragAndDropContext>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky bottom-0 bg-surface-dark">
                     <Tooltip text="Add Group" isExpanded={isExpanded}>
