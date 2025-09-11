@@ -1,6 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
 import {
     TaskCard,
@@ -9,13 +9,25 @@ import {
     useTaskDragAndDropOrderContext,
 } from '@entities/Task';
 import { useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
-import { DefaultButton, AddButton } from '@shared/ui';
+import {
+    DefaultButton,
+    AddButton,
+    DropDownContainer,
+    DropDownList,
+    DropDownColor,
+    Drag,
+} from '@shared/ui';
 
 interface IListProps {
     list: TasksGroupSchema;
 }
 
 export default function List({ list }: IListProps) {
+    const [isOpen, setIsOpen] = useState({
+        settings: false,
+        colors: false,
+    });
+
     const { currentItem, currentGroup, setGroups } = useTaskDragAndDropContext();
     const { setCurrentOrder, currentOrder, setOrders } = useTaskDragAndDropOrderContext();
 
@@ -38,57 +50,110 @@ export default function List({ list }: IListProps) {
         setOrders,
     });
 
-    return (
-        <nav>
-            <ul className="flex gap-8">
-                <li
-                    key={list.id}
-                    className={clsx(
-                        'flex flex-col border-surface-light border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative',
-                        isDragOverOrder && currentOrder && 'border-dashed border-surface-lighter',
-                    )}
-                    onDragOver={onDragOverOrder}
-                    onDragLeave={onDragLeaveOrder}
-                    onDrop={onDropOrder}
-                >
-                    <div className="flex items-center justify-between pb-2 px-2 border-b-2 border-red-900 rounded-b-xs">
-                        <span
-                            className="flex items-end font-bold cursor-pointer drag-handle"
-                            draggable
-                            onDragStart={e => {
-                                onDragStartOrder(e);
+    const editList = [
+        {
+            title: '2 Cards',
+            children: [
+                {
+                    label: 'Add List',
+                    onClick: () => {},
+                },
+            ],
+        },
+        {
+            children: [
+                {
+                    label: 'Rename',
+                    onClick: () => {},
+                },
+                {
+                    label: 'Change Color',
+                    onClick: () => {
+                        setIsOpen(prev => ({
+                            ...prev,
+                            settings: false,
+                            colors: true,
+                        }));
+                    },
+                },
+            ],
+        },
+        {
+            children: [
+                {
+                    label: 'Delete',
+                    onClick: () => {},
+                },
+            ],
+        },
+    ];
 
-                                const li = e.currentTarget.closest('li');
-                                if (li) e.dataTransfer.setDragImage(li, 0, 0);
-                            }}
-                            onDragEnd={onDragEndOrder}
-                        >
-                            <p className="text-2xl text-surface-lighter">⣿</p>
-                            <p>{list.name}</p>
-                        </span>
-                        <span className="flex">
-                            <DefaultButton onClick={() => {}}>
-                                <HiMiniPlus size={24} />
-                            </DefaultButton>
-                            <DefaultButton onClick={() => {}}>
-                                <HiEllipsisHorizontal size={24} />
-                            </DefaultButton>
-                        </span>
-                    </div>
-                    <div
-                        className="overflow-y-scroll h-full"
-                        onDragOver={onDragOver}
-                        onDrop={e => {
-                            onDrop(e);
-                        }}
+    return (
+        <li
+            className={clsx(
+                'flex flex-col border-surface-light border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative',
+                isDragOverOrder && currentOrder && 'border-dashed border-surface-lighter',
+            )}
+            onDragOver={onDragOverOrder}
+            onDragLeave={onDragLeaveOrder}
+            onDrop={onDropOrder}
+        >
+            <div className="flex items-center justify-between pb-2 px-2 border-b-2 border-red-900 rounded-b-xs">
+                <Drag onDragStart={onDragStartOrder} onDragEnd={onDragEndOrder} target="li">
+                    <p>{list.name}</p>
+                </Drag>
+                <span className="flex relative">
+                    <DefaultButton onClick={() => {}}>
+                        <HiMiniPlus size={24} />
+                    </DefaultButton>
+                    <DefaultButton
+                        onClick={() =>
+                            setIsOpen(prev => ({
+                                ...prev,
+                                settings: true,
+                            }))
+                        }
                     >
-                        {list.items.map(t => (
-                            <TaskCard key={t.id} task={t} list={list} />
-                        ))}
-                    </div>
-                    <AddButton onClick={() => {}} />
-                </li>
-            </ul>
-        </nav>
+                        <HiEllipsisHorizontal size={24} />
+                    </DefaultButton>
+                    <DropDownContainer
+                        isOpen={isOpen.settings}
+                        setIsOpen={() =>
+                            setIsOpen(prev => ({
+                                ...prev,
+                                settings: false,
+                            }))
+                        }
+                        className="right-0 top-full"
+                    >
+                        <DropDownList list={editList} />
+                    </DropDownContainer>
+                    <DropDownContainer
+                        isOpen={isOpen.colors}
+                        setIsOpen={() =>
+                            setIsOpen(prev => ({
+                                ...prev,
+                                colors: false,
+                            }))
+                        }
+                        className="right-0 top-full"
+                    >
+                        <DropDownColor  />
+                    </DropDownContainer>
+                </span>
+            </div>
+            <div
+                className="overflow-y-scroll h-full"
+                onDragOver={onDragOver}
+                onDrop={e => {
+                    onDrop(e);
+                }}
+            >
+                {list.items.map(t => (
+                    <TaskCard key={t.id} task={t} list={list} />
+                ))}
+            </div>
+            <AddButton onClick={() => {}} />
+        </li>
     );
 }

@@ -9,18 +9,26 @@ import {
     HiOutlineCloud,
     HiOutlineUserCircle,
     HiMiniChevronDoubleRight,
+    HiMiniCheck,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
 import { BoardDragAndDropContext, BoardLinkSchema, BoardsGroupSchema } from '@entities/Board';
-import { NavButton, Tooltip } from '@shared/ui';
+import { DropDownContainer, DropDownList, NavButton, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
-    const [isExpanded, setIsExpanded] = useState(true);
-
     const [currentItem, setCurrentItem] = useState<BoardLinkSchema | null>(null);
     const [currentGroup, setCurrentGroup] = useState<BoardsGroupSchema | null>(null);
+
+    const [isExpanded, setIsExpanded] = useState(true);
+    const [isOpen, setIsOpen] = useState({
+        settings: false,
+        themes: false,
+        languages: false,
+    });
+
+    const sidebarRef = useRef<HTMLElement>(null);
 
     const [groups, setGroups] = useState<BoardsGroupSchema[]>([
         {
@@ -75,7 +83,96 @@ export default function LeftSidebar() {
         },
     ]);
 
-    const sidebarRef = useRef<HTMLElement>(null);
+    const dropDownList = [
+        {
+            children: [
+                {
+                    label: 'About',
+                    onClick: () => {},
+                },
+                {
+                    label: 'Feedback',
+                    onClick: () => {},
+                },
+            ],
+        },
+        {
+            children: [
+                {
+                    label: 'View',
+                    onClick: () => {
+                        setIsOpen(prev => ({
+                            ...prev,
+                            settings: false,
+                            themes: true,
+                        }));
+                    },
+                },
+                {
+                    label: 'Language',
+                    onClick: () => {
+                        setIsOpen(prev => ({
+                            ...prev,
+                            settings: false,
+                            languages: true,
+                        }));
+                    },
+                },
+            ],
+        },
+        {
+            children: [
+                {
+                    label: 'Release Notes',
+                    onClick: () => {},
+                },
+            ],
+        },
+    ];
+
+    const themesList = [
+        {
+            title: 'Theme',
+            children: [
+                {
+                    label: 'Light',
+                    onClick: () => {},
+                },
+                {
+                    label: (
+                        <>
+                            Dark <HiMiniCheck size={18} fontWeight="bold" color="white" />
+                        </>
+                    ),
+                    onClick: () => {},
+                },
+                {
+                    label: 'System',
+                    onClick: () => {},
+                },
+            ],
+        },
+    ];
+
+    const languagesList = [
+        {
+            title: 'Language',
+            children: [
+                {
+                    label: (
+                        <>
+                            English <HiMiniCheck size={18} fontWeight="bold" color="white" />
+                        </>
+                    ),
+                    onClick: () => {},
+                },
+                {
+                    label: 'Ukraine',
+                    onClick: () => {},
+                },
+            ],
+        },
+    ];
 
     return (
         <CSSTransition in={isExpanded} nodeRef={sidebarRef} timeout={300} classNames="left-sidebar">
@@ -121,22 +218,65 @@ export default function LeftSidebar() {
                         ))}
                     </BoardDragAndDropContext>
                 </div>
-                <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky bottom-0 bg-surface-dark">
+                <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky z-30 bottom-0 bg-surface-dark">
                     <Tooltip text="Add Group" isExpanded={isExpanded}>
                         <NavButton onClick={() => {}} ariaLabel="Add Group">
                             <HiOutlinePlusCircle aria-hidden="true" className="min-w-6 min-h-6" />
                             {isExpanded && <p>Add Group</p>}
                         </NavButton>
                     </Tooltip>
-                    <div className="flex items-center rounded-lg hover:bg-surface-light font-bold transition duration-300 ease-in-out">
+                    <div className="flex items-center rounded-lg hover:bg-surface-light transition duration-300 ease-in-out">
                         {isExpanded && (
-                            <button
-                                className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer"
-                                onClick={() => {}}
-                            >
-                                <HiOutlineCog8Tooth aria-hidden="true" size={24} />
-                                <p>Settings</p>
-                            </button>
+                            <div className="relative w-full">
+                                <button
+                                    className="flex items-center gap-1.5 py-1.5 px-4 w-full text-left font-bold cursor-pointer"
+                                    onClick={() =>
+                                        setIsOpen(prev => ({
+                                            ...prev,
+                                            settings: !prev.settings,
+                                        }))
+                                    }
+                                >
+                                    <HiOutlineCog8Tooth aria-hidden="true" size={24} />
+                                    <p>Settings</p>
+                                </button>
+                                <DropDownContainer
+                                    isOpen={isOpen.settings}
+                                    setIsOpen={() => {
+                                        setIsOpen(prev => ({
+                                            ...prev,
+                                            settings: false,
+                                        }));
+                                    }}
+                                    className="left-0 bottom-full"
+                                >
+                                    <DropDownList list={dropDownList} />
+                                </DropDownContainer>
+                                <DropDownContainer
+                                    isOpen={isOpen.themes}
+                                    setIsOpen={() => {
+                                        setIsOpen(prev => ({
+                                            ...prev,
+                                            themes: false,
+                                        }));
+                                    }}
+                                    className="left-0 bottom-full"
+                                >
+                                    <DropDownList list={themesList} />
+                                </DropDownContainer>
+                                <DropDownContainer
+                                    isOpen={isOpen.languages}
+                                    setIsOpen={() => {
+                                        setIsOpen(prev => ({
+                                            ...prev,
+                                            languages: false,
+                                        }));
+                                    }}
+                                    className="left-0 bottom-full"
+                                >
+                                    <DropDownList list={languagesList} />
+                                </DropDownContainer>
+                            </div>
                         )}
                         <button
                             className={clsx(

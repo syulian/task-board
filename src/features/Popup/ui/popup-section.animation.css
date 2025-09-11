@@ -1,0 +1,31 @@
+.popup-section-enter {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.popup-section-enter-active {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+}
+
+.popup-section-enter-done {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.popup-section-exit {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.popup-section-exit-active {
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity .3s ease-in-out, transform .3s ease-in-out;
+}
+
+.popup-section-exit-done {
+    opacity: 0;
+    transform: translateY(100%);
+}

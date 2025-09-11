@@ -9,7 +9,7 @@ import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
 import { setIsExpanded } from '@features/RightSidebar';
 import { getDate, getShortDate, getHour, useAppSelector, useAppDispatch } from '@shared/lib';
-import { DefaultButton, DropDown } from '@shared/ui';
+import { DefaultButton, DropDownContainer, DropDownList } from '@shared/ui';
 import './right-sidebar.animation.css';
 
 export default function RightSidebar() {
@@ -55,11 +55,15 @@ export default function RightSidebar() {
 
     const dropDownList = [
         {
-            label: 'Hide Panel',
-            onClick: () => {
-                setIsOpen(false);
-                dispatch(setIsExpanded(false));
-            },
+            children: [
+                {
+                    label: 'Hide Panel',
+                    onClick: () => {
+                        setIsOpen(false);
+                        dispatch(setIsExpanded(false));
+                    },
+                },
+            ],
         },
     ];
 
@@ -76,7 +80,7 @@ export default function RightSidebar() {
                 ref={sidebarRef}
             >
                 <div className="min-w-77 flex flex-col gap-6 overflow-y-scroll ">
-                    <div className="flex items-center py-4 border-b border-surface-lighter h-18.5 text-surface-lighter">
+                    <div className="flex items-center py-4 border-b border-surface-lighter h-18.5">
                         <p className="font-semibold flex-1 text-center">Upcoming Tasks</p>
                         <div className="relative">
                             <DefaultButton
@@ -85,7 +89,13 @@ export default function RightSidebar() {
                             >
                                 <HiMiniEllipsisHorizontal size={24} />
                             </DefaultButton>
-                            <DropDown list={dropDownList} isOpen={isOpen} setIsOpen={setIsOpen} />
+                            <DropDownContainer
+                                isOpen={isOpen}
+                                setIsOpen={() => setIsOpen(false)}
+                                className="right-0"
+                            >
+                                <DropDownList list={dropDownList} />
+                            </DropDownContainer>
                         </div>
                     </div>
                     {planned.map(p => (

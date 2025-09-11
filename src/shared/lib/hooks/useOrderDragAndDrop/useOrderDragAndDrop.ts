@@ -1,7 +1,7 @@
 import { Dispatch, DragEvent, SetStateAction, useState } from 'react';
-import { GroupSchema, ItemSchema } from '@shared/types';
+import { ItemSchema } from '@shared/types';
 
-const useOrderDragAndDrop = <TI extends ItemSchema, TO extends GroupSchema<TI>>(
+const useOrderDragAndDrop = <TO extends ItemSchema>(
     group: TO,
     ctx: {
         currentOrder: TO | null;

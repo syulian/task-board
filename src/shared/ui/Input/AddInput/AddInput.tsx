@@ -1,17 +1,23 @@
-import React from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { HiOutlinePlusCircle } from 'react-icons/hi2';
 
 interface IAddInputProps {
+    value?: string;
     placeholder?: string;
-    onChange: () => void;
     onSubmit: () => void;
 }
 
-export default function AddInput({ placeholder, onChange, onSubmit }: IAddInputProps) {
+export default function AddInput({ value, placeholder, onSubmit }: IAddInputProps) {
+    const [newValue, setNewValue] = useState(value);
+
     const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             onSubmit();
         }
+    };
+
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setNewValue(event.target.value);
     };
 
     return (
@@ -24,6 +30,7 @@ export default function AddInput({ placeholder, onChange, onSubmit }: IAddInputP
                 onKeyDown={handleOnKeyDown}
                 aria-label="Search"
                 placeholder={placeholder}
+                value={newValue}
             />
         </div>
     );

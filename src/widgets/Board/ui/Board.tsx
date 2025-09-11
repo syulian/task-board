@@ -97,9 +97,13 @@ export default function Board() {
                         setOrders: setList,
                     }}
                 >
-                    {list.map(l => (
-                        <List list={l} key={l.id} />
-                    ))}
+                    <nav>
+                        <ul className="flex gap-8">
+                            {list.map(l => (
+                                <List list={l} key={l.id} />
+                            ))}
+                        </ul>
+                    </nav>
                 </TaskDragAndDropOrderContext>
             </TaskDragAndDropContext>
             <div className="min-w-80">
