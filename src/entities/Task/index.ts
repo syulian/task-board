@@ -1,4 +1,5 @@
 export { default as TaskCard } from './ui/TaskCard';
+export { default as TaskPopup } from './ui/TaskPopup';
 export type { TaskSchema } from './model/types/TaskSchema';
 export type { TasksGroupSchema } from './model/types/TasksGroupSchema';
 export {

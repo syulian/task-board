@@ -47,7 +47,7 @@ export default function LabelPopup() {
     ]);
 
     return (
-        <div className="flex justify-center flex-col gap-4">
+        <div className="flex justify-center flex-col gap-4 px-8 pb-9">
             <p className="font-bold text-center">Configure Labels</p>
             <div className="flex items-center gap-2 pl-12 pr-4">
                 <div className="relative">

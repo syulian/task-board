@@ -5,7 +5,7 @@ import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react
 import { CSSTransition } from 'react-transition-group';
 import { BoardItem, BoardsGroupSchema, useBoardDragAndDropContext } from '@entities/Board';
 import { useParentDragAndDrop } from '@shared/lib';
-import { Tooltip } from '@shared/ui';
+import { DropDownContainer, Tooltip, DropDownAddBoard } from '@shared/ui';
 import './list.animation.css';
 
 interface INavigationMenuProps {
@@ -14,7 +14,10 @@ interface INavigationMenuProps {
 }
 
 export default function NavigationMenu({ group, isExpanded }: INavigationMenuProps) {
-    const [isOpen, setIsOpen] = useState(true);
+    const [isOpen, setIsOpen] = useState({
+        group: true,
+        add: false,
+    });
     const listRef = useRef(null);
 
     const { currentItem, setGroups, currentGroup } = useBoardDragAndDropContext();
@@ -25,14 +28,19 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
     });
 
     return (
-        <section>
+        <section className="relative">
             <Tooltip text={group.name} isExpanded={isExpanded}>
                 <div className="flex items-center w-full rounded-lg hover:bg-surface-light text-gray-300 font-bold transition duration-300 ease-in-out">
                     <button
                         className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
-                        onClick={() => setIsOpen(prev => !prev)}
+                        onClick={() =>
+                            setIsOpen(prev => ({
+                                ...prev,
+                                group: !prev.group,
+                            }))
+                        }
                     >
-                        {isOpen ? (
+                        {isOpen.group ? (
                             <HiMiniChevronDown aria-hidden="true" className="min-w-6 min-h-6" />
                         ) : (
                             <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
@@ -40,14 +48,22 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                         {isExpanded && <p>{group.name}</p>}
                     </button>
                     {isExpanded && (
-                        <button className="ml-auto py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg absolute left-[251px]">
+                        <button
+                            className="ml-auto py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg absolute left-[251px]"
+                            onClick={() =>
+                                setIsOpen(prev => ({
+                                    ...prev,
+                                    add: true,
+                                }))
+                            }
+                        >
                             <HiOutlinePlusSmall aria-hidden="true" size={24} />
                         </button>
                     )}
                 </div>
             </Tooltip>
             <CSSTransition
-                in={isOpen}
+                in={isOpen.group}
                 nodeRef={listRef}
                 timeout={300}
                 classNames="list"
@@ -74,6 +90,18 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                     ))}
                 </div>
             </CSSTransition>
+            <DropDownContainer
+                isOpen={isOpen.add}
+                setIsOpen={() =>
+                    setIsOpen(prev => ({
+                        ...prev,
+                        add: false,
+                    }))
+                }
+                className="right-0 top-0"
+            >
+                <DropDownAddBoard groupId={group.id} />
+            </DropDownContainer>
         </section>
     );
 }

@@ -1,15 +1,10 @@
 'use client';
 import { clsx } from 'clsx';
-import React, { ReactNode } from 'react';
+import React from 'react';
+import ListItemSchema from '@shared/types/ListItemSchema';
 
 interface IDropDownListProps {
-    list: {
-        title?: string;
-        children: {
-            label: ReactNode;
-            onClick: () => void;
-        }[];
-    }[];
+    list: ListItemSchema[];
 }
 
 export default function DropDownList({ list }: IDropDownListProps) {

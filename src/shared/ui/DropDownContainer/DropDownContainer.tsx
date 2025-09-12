@@ -17,7 +17,7 @@ export default function DropDownContainer({
     setIsOpen,
     className,
 }: IDropDownContainerProps) {
-    const dropDownRef = useRef<HTMLElement>(null);
+    const dropDownRef = useRef<HTMLDivElement>(null);
 
     return (
         <CSSTransition
@@ -29,7 +29,7 @@ export default function DropDownContainer({
         >
             <>
                 <div className="fixed z-40 inset-0" role="presentation" onClick={setIsOpen} />
-                <nav
+                <div
                     className={clsx(
                         'absolute z-50 bg-background-dark border border-surface-light rounded-md p-2 min-w-58 max-h-86 overflow-y-scroll',
                         className,
@@ -37,7 +37,7 @@ export default function DropDownContainer({
                     ref={dropDownRef}
                 >
                     {children}
-                </nav>
+                </div>
             </>
         </CSSTransition>
     );

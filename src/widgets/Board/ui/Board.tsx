@@ -107,7 +107,7 @@ export default function Board() {
                 </TaskDragAndDropOrderContext>
             </TaskDragAndDropContext>
             <div className="min-w-80">
-                <AddInput onChange={() => {}} placeholder="Add List" onSubmit={() => {}} />
+                <AddInput placeholder="Add List" onSubmit={() => {}} />
             </div>
         </section>
     );

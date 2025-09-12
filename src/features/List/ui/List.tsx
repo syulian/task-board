@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
 import {
     TaskCard,
+    TaskPopup,
     TasksGroupSchema,
     useTaskDragAndDropContext,
     useTaskDragAndDropOrderContext,
@@ -17,6 +18,7 @@ import {
     DropDownColor,
     Drag,
 } from '@shared/ui';
+import { Popup } from '@shared/ui';
 
 interface IListProps {
     list: TasksGroupSchema;
@@ -26,6 +28,7 @@ export default function List({ list }: IListProps) {
     const [isOpen, setIsOpen] = useState({
         settings: false,
         colors: false,
+        popup: false,
     });
 
     const { currentItem, currentGroup, setGroups } = useTaskDragAndDropContext();
@@ -138,7 +141,7 @@ export default function List({ list }: IListProps) {
                         }
                         className="right-0 top-full"
                     >
-                        <DropDownColor  />
+                        <DropDownColor />
                     </DropDownContainer>
                 </span>
             </div>
@@ -153,7 +156,25 @@ export default function List({ list }: IListProps) {
                     <TaskCard key={t.id} task={t} list={list} />
                 ))}
             </div>
-            <AddButton onClick={() => {}} />
+            <AddButton
+                onClick={() =>
+                    setIsOpen(prev => ({
+                        ...prev,
+                        popup: true,
+                    }))
+                }
+            />
+            <Popup
+                isOpen={isOpen.popup}
+                setIsOpen={() =>
+                    setIsOpen(prev => ({
+                        ...prev,
+                        popup: false,
+                    }))
+                }
+            >
+                <TaskPopup />
+            </Popup>
         </li>
     );
 }

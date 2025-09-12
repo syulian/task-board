@@ -1,17 +1,18 @@
 'use client';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineCalendarDays, HiOutlineTag } from 'react-icons/hi2';
-import { Popup } from '@features/Popup';
 import { setIsExpanded } from '@features/RightSidebar';
 import { SearchInput } from '@features/SearchInput';
+import { BoardPopup } from '@entities/Board';
+import { LabelPopup } from '@entities/Label';
 import { useAppDispatch, useAppSelector } from '@shared/lib';
-import { DefaultButton, DropDownContainer, DropDownList, SettingsButton } from '@shared/ui';
-import LabelPopup from '../../../features/LabelPopup/ui/LabelPopup';
+import { DefaultButton, DropDownContainer, DropDownList, SettingsButton, Popup } from '@shared/ui';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState({
         dropDown: false,
         popup: false,
+        edit: false,
     });
 
     const isExpanded = useAppSelector(state => state.rightSidebar.isExpanded);
@@ -23,7 +24,13 @@ export default function Header() {
             children: [
                 {
                     label: 'Edit',
-                    onClick: () => {},
+                    onClick: () => {
+                        setIsOpen(prev => ({
+                            ...prev,
+                            dropDown: false,
+                            edit: true,
+                        }));
+                    },
                 },
                 {
                     label: 'Delete',
@@ -99,6 +106,17 @@ export default function Header() {
                     </li>
                 </ul>
             </nav>
+            <Popup
+                isOpen={isOpen.edit}
+                setIsOpen={() =>
+                    setIsOpen(prev => ({
+                        ...prev,
+                        edit: false,
+                    }))
+                }
+            >
+                <BoardPopup />
+            </Popup>
         </header>
     );
 }

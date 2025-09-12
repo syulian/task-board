@@ -3,11 +3,16 @@ export { default as SettingsButton } from './Button/SettingsButton/SettingsButto
 export { default as DefaultButton } from './Button/DefaultButton/DefaultButton';
 export { default as AddButton } from './Button/AddButton/AddButton';
 export { default as ColorButton } from './Button/ColorButton/ColorButton';
+export { default as ConfirmButton } from './Button/ConfirmButton/ConfirmButton';
 export { default as Checkbox } from './Input/Checkbox/Checkbox';
 export { default as AddInput } from './Input/AddInput/AddInput';
+export { default as DefaultInput } from './Input/DefaultInput/DefaultInput';
 export { default as Label } from './Label/Label';
 export { default as DropDownContainer } from './DropDownContainer/DropDownContainer';
 export { default as DropDownColor } from './DropDown/DropDownColor';
 export { default as DropDownList } from './DropDown/DropDownList';
+export { default as DropDownAddGroup } from './DropDown/DropDownAddGroup';
+export { default as DropDownAddBoard } from './DropDown/DropDownAddBoard';
 export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as Drag } from './Drag/Drag';
+export { default as Popup } from './Popup/Popup';

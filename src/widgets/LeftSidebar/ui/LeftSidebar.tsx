@@ -14,7 +14,15 @@ import {
 import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
 import { BoardDragAndDropContext, BoardLinkSchema, BoardsGroupSchema } from '@entities/Board';
-import { DropDownContainer, DropDownList, NavButton, Tooltip } from '@shared/ui';
+import { SignInPopup } from '@entities/User';
+import {
+    DropDownAddGroup,
+    DropDownContainer,
+    DropDownList,
+    NavButton,
+    Popup,
+    Tooltip,
+} from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
@@ -26,6 +34,8 @@ export default function LeftSidebar() {
         settings: false,
         themes: false,
         languages: false,
+        auth: false,
+        add: false,
     });
 
     const sidebarRef = useRef<HTMLElement>(null);
@@ -180,7 +190,7 @@ export default function LeftSidebar() {
                 className="flex flex-col max-w-85 w-full bg-surface-dark h-screen border-surface-light border-r"
                 ref={sidebarRef}
             >
-                <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden">
+                <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden h-full">
                     <Tooltip text="Task Board" isExpanded={isExpanded}>
                         <NavButton onClick={() => {}}>
                             <Image
@@ -193,11 +203,29 @@ export default function LeftSidebar() {
                         </NavButton>
                     </Tooltip>
                     <Tooltip text="Profile" isExpanded={isExpanded}>
-                        <NavButton onClick={() => {}}>
+                        <NavButton
+                            onClick={() =>
+                                setIsOpen(prev => ({
+                                    ...prev,
+                                    auth: true,
+                                }))
+                            }
+                        >
                             <HiOutlineUserCircle aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>tony_redgrave</p>}
+                            {isExpanded && <p>Sign in</p>}
                         </NavButton>
                     </Tooltip>
+                    <Popup
+                        isOpen={isOpen.auth}
+                        setIsOpen={() =>
+                            setIsOpen(prev => ({
+                                ...prev,
+                                auth: false,
+                            }))
+                        }
+                    >
+                        <SignInPopup />
+                    </Popup>
                     <Tooltip text="Synced" isExpanded={isExpanded}>
                         <NavButton onClick={() => {}}>
                             <HiOutlineCloud aria-hidden="true" className="min-w-6 min-h-6" />
@@ -220,10 +248,30 @@ export default function LeftSidebar() {
                 </div>
                 <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky z-30 bottom-0 bg-surface-dark">
                     <Tooltip text="Add Group" isExpanded={isExpanded}>
-                        <NavButton onClick={() => {}} ariaLabel="Add Group">
+                        <NavButton
+                            onClick={() =>
+                                setIsOpen(prev => ({
+                                    ...prev,
+                                    add: true,
+                                }))
+                            }
+                            ariaLabel="Add Group"
+                        >
                             <HiOutlinePlusCircle aria-hidden="true" className="min-w-6 min-h-6" />
                             {isExpanded && <p>Add Group</p>}
                         </NavButton>
+                        <DropDownContainer
+                            isOpen={isOpen.add}
+                            setIsOpen={() =>
+                                setIsOpen(prev => ({
+                                    ...prev,
+                                    add: false,
+                                }))
+                            }
+                            className="right-0 bottom-0"
+                        >
+                            <DropDownAddGroup />
+                        </DropDownContainer>
                     </Tooltip>
                     <div className="flex items-center rounded-lg hover:bg-surface-light transition duration-300 ease-in-out">
                         {isExpanded && (

@@ -28,7 +28,6 @@ export default function AddInput({ value, placeholder, onSubmit }: IAddInputProp
                 type="search"
                 onChange={onChange}
                 onKeyDown={handleOnKeyDown}
-                aria-label="Search"
                 placeholder={placeholder}
                 value={newValue}
             />
