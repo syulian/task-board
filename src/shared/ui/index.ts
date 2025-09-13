@@ -16,3 +16,4 @@ export { default as DropDownAddBoard } from './DropDown/DropDownAddBoard';
 export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as Drag } from './Drag/Drag';
 export { default as Popup } from './Popup/Popup';
+export { default as Select } from './Select/Select';

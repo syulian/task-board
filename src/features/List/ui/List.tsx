@@ -9,7 +9,7 @@ import {
     useTaskDragAndDropContext,
     useTaskDragAndDropOrderContext,
 } from '@entities/Task';
-import { useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
+import { createStateController, useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
 import {
     DefaultButton,
     AddButton,
@@ -17,8 +17,8 @@ import {
     DropDownList,
     DropDownColor,
     Drag,
+    Popup,
 } from '@shared/ui';
-import { Popup } from '@shared/ui';
 
 interface IListProps {
     list: TasksGroupSchema;
@@ -53,6 +53,8 @@ export default function List({ list }: IListProps) {
         setOrders,
     });
 
+    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
+
     const editList = [
         {
             title: '2 Cards',
@@ -72,11 +74,8 @@ export default function List({ list }: IListProps) {
                 {
                     label: 'Change Color',
                     onClick: () => {
-                        setIsOpen(prev => ({
-                            ...prev,
-                            settings: false,
-                            colors: true,
-                        }));
+                        setIsOpenField('settings', false);
+                        setIsOpenField('colors', true);
                     },
                 },
             ],
@@ -109,36 +108,19 @@ export default function List({ list }: IListProps) {
                     <DefaultButton onClick={() => {}}>
                         <HiMiniPlus size={24} />
                     </DefaultButton>
-                    <DefaultButton
-                        onClick={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                settings: true,
-                            }))
-                        }
-                    >
+                    <DefaultButton onClick={() => setIsOpenField('settings', false)}>
                         <HiEllipsisHorizontal size={24} />
                     </DefaultButton>
                     <DropDownContainer
                         isOpen={isOpen.settings}
-                        setIsOpen={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                settings: false,
-                            }))
-                        }
+                        setIsOpen={() => setIsOpenField('settings', false)}
                         className="right-0 top-full"
                     >
                         <DropDownList list={editList} />
                     </DropDownContainer>
                     <DropDownContainer
                         isOpen={isOpen.colors}
-                        setIsOpen={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                colors: false,
-                            }))
-                        }
+                        setIsOpen={() => setIsOpenField('colors', false)}
                         className="right-0 top-full"
                     >
                         <DropDownColor />
@@ -156,23 +138,8 @@ export default function List({ list }: IListProps) {
                     <TaskCard key={t.id} task={t} list={list} />
                 ))}
             </div>
-            <AddButton
-                onClick={() =>
-                    setIsOpen(prev => ({
-                        ...prev,
-                        popup: true,
-                    }))
-                }
-            />
-            <Popup
-                isOpen={isOpen.popup}
-                setIsOpen={() =>
-                    setIsOpen(prev => ({
-                        ...prev,
-                        popup: false,
-                    }))
-                }
-            >
+            <AddButton onClick={() => setIsOpenField('popup', true)} />
+            <Popup isOpen={isOpen.popup} setIsOpen={() => setIsOpenField('popup', false)}>
                 <TaskPopup />
             </Popup>
         </li>

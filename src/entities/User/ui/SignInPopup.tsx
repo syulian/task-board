@@ -2,7 +2,11 @@ import React from 'react';
 import { HiMiniArrowRight } from 'react-icons/hi2';
 import { ConfirmButton, DefaultInput } from '@shared/ui';
 
-export default function SignInPopup() {
+interface ISignInPopupProps {
+    openSignUp: () => void;
+}
+
+export default function SignInPopup({ openSignUp }: ISignInPopupProps) {
     return (
         <div className="flex justify-center flex-col gap-10 px-8 pb-9">
             <b className="text-lg">Sign in</b>
@@ -26,7 +30,9 @@ export default function SignInPopup() {
             </div>
             <div className="flex gap-2">
                 <p>Don&#39;t have an account?</p>
-                <b>Sign up</b>
+                <button onClick={openSignUp} className="font-bold hover:underline cursor-pointer">
+                    Sign up
+                </button>
             </div>
         </div>
     );

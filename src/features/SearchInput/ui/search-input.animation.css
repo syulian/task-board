@@ -1,20 +1,20 @@
-.list-enter {
+.search-input-enter {
     opacity: 0;
     max-height: 0;
 }
 
-.list-enter-active {
+.search-input-enter-active {
     opacity: 1;
     max-height: 500px;
     transition: opacity 0.3s ease-in-out, max-height 0.2s ease-in-out;
 }
 
-.list-exit {
+.search-input-exit {
     opacity: 1;
     max-height: 500px;
 }
 
-.list-exit-active {
+.search-input-exit-active {
     opacity: 0;
     max-height: 0;
     transition: opacity 0.3s ease-in-out, max-height 0.2s ease-in-out;

@@ -14,7 +14,8 @@ import {
 import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
 import { BoardDragAndDropContext, BoardLinkSchema, BoardsGroupSchema } from '@entities/Board';
-import { SignInPopup } from '@entities/User';
+import { SignInPopup, SignUpPopup } from '@entities/User';
+import { createStateController } from '@shared/lib';
 import {
     DropDownAddGroup,
     DropDownContainer,
@@ -34,9 +35,12 @@ export default function LeftSidebar() {
         settings: false,
         themes: false,
         languages: false,
-        auth: false,
+        signIn: false,
+        signUp: false,
         add: false,
     });
+
+    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const sidebarRef = useRef<HTMLElement>(null);
 
@@ -111,21 +115,15 @@ export default function LeftSidebar() {
                 {
                     label: 'View',
                     onClick: () => {
-                        setIsOpen(prev => ({
-                            ...prev,
-                            settings: false,
-                            themes: true,
-                        }));
+                        setIsOpenField('settings', false);
+                        setIsOpenField('themes', true);
                     },
                 },
                 {
                     label: 'Language',
                     onClick: () => {
-                        setIsOpen(prev => ({
-                            ...prev,
-                            settings: false,
-                            languages: true,
-                        }));
+                        setIsOpenField('settings', false);
+                        setIsOpenField('languages', true);
                     },
                 },
             ],
@@ -184,6 +182,16 @@ export default function LeftSidebar() {
         },
     ];
 
+    const openSignUp = () => {
+        setIsOpenField('signIn', false);
+        setIsOpenField('signUp', true);
+    };
+
+    const openSignIn = () => {
+        setIsOpenField('signUp', false);
+        setIsOpenField('signIn', true);
+    };
+
     return (
         <CSSTransition in={isExpanded} nodeRef={sidebarRef} timeout={300} classNames="left-sidebar">
             <aside
@@ -203,28 +211,16 @@ export default function LeftSidebar() {
                         </NavButton>
                     </Tooltip>
                     <Tooltip text="Profile" isExpanded={isExpanded}>
-                        <NavButton
-                            onClick={() =>
-                                setIsOpen(prev => ({
-                                    ...prev,
-                                    auth: true,
-                                }))
-                            }
-                        >
+                        <NavButton onClick={() => setIsOpenField('signIn', true)}>
                             <HiOutlineUserCircle aria-hidden="true" className="min-w-6 min-h-6" />
                             {isExpanded && <p>Sign in</p>}
                         </NavButton>
                     </Tooltip>
-                    <Popup
-                        isOpen={isOpen.auth}
-                        setIsOpen={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                auth: false,
-                            }))
-                        }
-                    >
-                        <SignInPopup />
+                    <Popup isOpen={isOpen.signIn} setIsOpen={() => setIsOpenField('signIn', false)}>
+                        <SignInPopup openSignUp={openSignUp} />
+                    </Popup>
+                    <Popup isOpen={isOpen.signUp} setIsOpen={() => setIsOpenField('signUp', false)}>
+                        <SignUpPopup openSignIn={openSignIn} />
                     </Popup>
                     <Tooltip text="Synced" isExpanded={isExpanded}>
                         <NavButton onClick={() => {}}>
@@ -249,12 +245,7 @@ export default function LeftSidebar() {
                 <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky z-30 bottom-0 bg-surface-dark">
                     <Tooltip text="Add Group" isExpanded={isExpanded}>
                         <NavButton
-                            onClick={() =>
-                                setIsOpen(prev => ({
-                                    ...prev,
-                                    add: true,
-                                }))
-                            }
+                            onClick={() => setIsOpenField('add', true)}
                             ariaLabel="Add Group"
                         >
                             <HiOutlinePlusCircle aria-hidden="true" className="min-w-6 min-h-6" />
@@ -262,13 +253,8 @@ export default function LeftSidebar() {
                         </NavButton>
                         <DropDownContainer
                             isOpen={isOpen.add}
-                            setIsOpen={() =>
-                                setIsOpen(prev => ({
-                                    ...prev,
-                                    add: false,
-                                }))
-                            }
-                            className="right-0 bottom-0"
+                            setIsOpen={() => setIsOpenField('add', false)}
+                            className="left-0 bottom-0"
                         >
                             <DropDownAddGroup />
                         </DropDownContainer>
@@ -278,48 +264,31 @@ export default function LeftSidebar() {
                             <div className="relative w-full">
                                 <button
                                     className="flex items-center gap-1.5 py-1.5 px-4 w-full text-left font-bold cursor-pointer"
-                                    onClick={() =>
-                                        setIsOpen(prev => ({
-                                            ...prev,
-                                            settings: !prev.settings,
-                                        }))
-                                    }
+                                    onClick={() => setIsOpenField('settings', true)}
                                 >
-                                    <HiOutlineCog8Tooth aria-hidden="true" size={24} />
+                                    <HiOutlineCog8Tooth
+                                        aria-hidden="true"
+                                        className="min-w-6 min-h-6"
+                                    />
                                     <p>Settings</p>
                                 </button>
                                 <DropDownContainer
                                     isOpen={isOpen.settings}
-                                    setIsOpen={() => {
-                                        setIsOpen(prev => ({
-                                            ...prev,
-                                            settings: false,
-                                        }));
-                                    }}
+                                    setIsOpen={() => setIsOpenField('settings', false)}
                                     className="left-0 bottom-full"
                                 >
                                     <DropDownList list={dropDownList} />
                                 </DropDownContainer>
                                 <DropDownContainer
                                     isOpen={isOpen.themes}
-                                    setIsOpen={() => {
-                                        setIsOpen(prev => ({
-                                            ...prev,
-                                            themes: false,
-                                        }));
-                                    }}
+                                    setIsOpen={() => setIsOpenField('themes', false)}
                                     className="left-0 bottom-full"
                                 >
                                     <DropDownList list={themesList} />
                                 </DropDownContainer>
                                 <DropDownContainer
                                     isOpen={isOpen.languages}
-                                    setIsOpen={() => {
-                                        setIsOpen(prev => ({
-                                            ...prev,
-                                            languages: false,
-                                        }));
-                                    }}
+                                    setIsOpen={() => setIsOpenField('languages', false)}
                                     className="left-0 bottom-full"
                                 >
                                     <DropDownList list={languagesList} />

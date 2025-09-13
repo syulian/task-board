@@ -10,7 +10,7 @@ export default function DropDownAddGroup({ groupId }: IDropDownAddGroupProps) {
     const [value, setValue] = useState('');
 
     return (
-        <div className="flex flex-col gap-6 p-4 font-normal">
+        <div className="flex flex-col gap-6 p-4 font-normal min-w-72">
             <DefaultInput
                 onSubmit={() => {}}
                 onChange={event => setValue(event.target.value)}

@@ -1,11 +1,11 @@
 'use client';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineCalendarDays, HiOutlineTag } from 'react-icons/hi2';
+import { EditBoard } from '@features/EditBoard';
 import { setIsExpanded } from '@features/RightSidebar';
 import { SearchInput } from '@features/SearchInput';
-import { BoardPopup } from '@entities/Board';
 import { LabelPopup } from '@entities/Label';
-import { useAppDispatch, useAppSelector } from '@shared/lib';
+import { createStateController, useAppDispatch, useAppSelector } from '@shared/lib';
 import { DefaultButton, DropDownContainer, DropDownList, SettingsButton, Popup } from '@shared/ui';
 
 export default function Header() {
@@ -13,10 +13,13 @@ export default function Header() {
         dropDown: false,
         popup: false,
         edit: false,
+        label: false,
     });
 
     const isExpanded = useAppSelector(state => state.rightSidebar.isExpanded);
     const dispatch = useAppDispatch();
+
+    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const dropDownList = [
         {
@@ -25,11 +28,8 @@ export default function Header() {
                 {
                     label: 'Edit',
                     onClick: () => {
-                        setIsOpen(prev => ({
-                            ...prev,
-                            dropDown: false,
-                            edit: true,
-                        }));
+                        setIsOpenField('dropDown', false);
+                        setIsOpenField('edit', true);
                     },
                 },
                 {
@@ -40,28 +40,21 @@ export default function Header() {
         },
     ];
 
+    const openLabelPopup = () => {
+        setIsOpenField('edit', false);
+        setIsOpenField('label', true);
+    };
+
     return (
         <header className="py-4 flex items-center justify-between gap-4">
             <div className="flex gap-4 w-full">
                 <div className="flex relative">
-                    <SettingsButton
-                        onClick={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                dropDown: true,
-                            }))
-                        }
-                    >
+                    <SettingsButton onClick={() => setIsOpenField('dropDown', true)}>
                         Board name
                     </SettingsButton>
                     <DropDownContainer
                         isOpen={isOpen.dropDown}
-                        setIsOpen={() =>
-                            setIsOpen(prev => ({
-                                ...prev,
-                                dropDown: false,
-                            }))
-                        }
+                        setIsOpen={() => setIsOpenField('dropDown', false)}
                         className="left-0 top-full"
                     >
                         <DropDownList list={dropDownList} />
@@ -77,24 +70,12 @@ export default function Header() {
                         </DefaultButton>
                     </li>
                     <li>
-                        <DefaultButton
-                            onClick={() =>
-                                setIsOpen(prev => ({
-                                    ...prev,
-                                    popup: true,
-                                }))
-                            }
-                        >
+                        <DefaultButton onClick={() => setIsOpenField('popup', true)}>
                             <HiOutlineTag size={24} />
                         </DefaultButton>
                         <Popup
                             isOpen={isOpen.popup}
-                            setIsOpen={() =>
-                                setIsOpen(prev => ({
-                                    ...prev,
-                                    popup: false,
-                                }))
-                            }
+                            setIsOpen={() => setIsOpenField('popup', false)}
                         >
                             <LabelPopup />
                         </Popup>
@@ -106,16 +87,11 @@ export default function Header() {
                     </li>
                 </ul>
             </nav>
-            <Popup
-                isOpen={isOpen.edit}
-                setIsOpen={() =>
-                    setIsOpen(prev => ({
-                        ...prev,
-                        edit: false,
-                    }))
-                }
-            >
-                <BoardPopup />
+            <Popup isOpen={isOpen.edit} setIsOpen={() => setIsOpenField('edit', false)}>
+                <EditBoard openLabelPopup={openLabelPopup} />
+            </Popup>
+            <Popup isOpen={isOpen.label} setIsOpen={() => setIsOpenField('label', false)}>
+                <LabelPopup />
             </Popup>
         </header>
     );

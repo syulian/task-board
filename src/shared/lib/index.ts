@@ -1,6 +1,7 @@
 export { getDate } from './getDate/getDate';
 export { getShortDate } from './getShortDate/getShortDate';
 export { getHour } from './getHour/getHour';
+export { createStateController } from './setObjectState/setObjectState';
 export { useAppSelector, useAppDispatch } from './hooks/useRedux/useRedux';
 export { default as useDragAndDrop } from './hooks/useDragAndDrop/useDragAndDrop';
 export { default as useParentDragAndDrop } from './hooks/useParentDragAndDrop/useParentDragAndDrop';

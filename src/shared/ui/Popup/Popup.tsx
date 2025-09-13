@@ -1,15 +1,15 @@
 'use client';
-import React, { Dispatch, ReactNode, SetStateAction, useRef, useState } from 'react';
+import React, { ReactNode, useRef, useState } from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
-import { DefaultButton } from '@shared/ui';
+import DefaultButton from '@shared/ui/Button/DefaultButton/DefaultButton';
 import './popup.animation.css';
 import './popup-section.animation.css';
 
 interface IPopupProps {
-    children: ReactNode;
     isOpen: boolean;
-    setIsOpen: Dispatch<SetStateAction<boolean>>;
+    setIsOpen: () => void;
+    children: ReactNode;
 }
 
 export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
@@ -33,7 +33,7 @@ export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
                     className="fixed z-40 inset-0 bg-background-dark/80"
                     ref={popupRef}
                     role="presentation"
-                    onClick={() => setIsOpen(false)}
+                    onClick={setIsOpen}
                 />
                 <CSSTransition
                     in={isSectionOpen}
@@ -47,7 +47,7 @@ export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
                         ref={sectionRef}
                     >
                         <span className="flex justify-end">
-                            <DefaultButton onClick={() => setIsOpen(false)}>
+                            <DefaultButton onClick={setIsOpen}>
                                 <HiMiniXMark aria-hidden="true" size={24} />
                             </DefaultButton>
                         </span>
