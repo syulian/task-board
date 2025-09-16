@@ -1,13 +1,12 @@
+import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
+
 export interface TaskSchema {
     id: string;
     order: number;
     title: string;
+    complete?: boolean;
     body: string;
-    attachments?: {
-        type: string;
-        value: string;
-        checked: boolean;
-    }[];
+    subtasks?: SubtaskSchema[];
     labels: {
         name: string;
         color: string;

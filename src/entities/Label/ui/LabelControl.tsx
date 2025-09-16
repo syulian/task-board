@@ -2,16 +2,11 @@
 import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
-import { LabelSchema, useLabelDragAndDropOrderContext } from '@entities/Label';
+import { useLabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
+import LabelSchema from '@entities/Label/model/types/LabelSchema';
+import ColorsDropDown from '@entities/Label/ui/ColorsDropDown';
 import { useOrderDragAndDrop } from '@shared/lib';
-import {
-    AddInput,
-    ColorButton,
-    DefaultButton,
-    Drag,
-    DropDownColor,
-    DropDownContainer,
-} from '@shared/ui';
+import { AddInput, ColorButton, DefaultButton, Drag, DropDownContainer } from '@shared/ui';
 
 interface ISearchInputProps {
     label: LabelSchema;
@@ -52,7 +47,7 @@ export default function LabelControl({ label }: ISearchInputProps) {
                     setIsOpen={() => setIsOpen(false)}
                     className="left-0 top-full"
                 >
-                    <DropDownColor />
+                    <ColorsDropDown />
                 </DropDownContainer>
             </div>
             <AddInput

@@ -15,7 +15,7 @@ interface ITaskCardProps {
 }
 
 export default function TaskCard({ task, list }: ITaskCardProps) {
-    const { body, title, labels, attachments } = task;
+    const { body, title, labels, subtasks, complete } = task;
 
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
         useTaskDragAndDropContext();
@@ -34,7 +34,7 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
     return (
         <div
             className={clsx(
-                'flex flex-col gap-2 border-surface-dark border rounded-sm bg-surface-light p-2 mt-2 cursor-pointer',
+                'flex flex-col gap-2 border border-surface-dark rounded-sm bg-surface-light p-2 mt-2 cursor-pointer relative',
                 isDragOver && currentItem && 'border-dashed border-surface-lighter',
             )}
             draggable
@@ -44,19 +44,24 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             onDragOver={onDragOver}
             onDrop={onDrop}
         >
+            {complete && (
+                <p className="absolute top-0 right-4 py-1 px-2 rounded-b-sm bg-green-800 font-semibold text-sm border-b border-surface-dark opacity-80">
+                    Complete
+                </p>
+            )}
             <p className="font-semibold">{title}</p>
             <div className="text-sm text-gray-400">
                 <Markdown>{body}</Markdown>
-                {attachments && (
+                {subtasks && (
                     <>
                         <span className="flex gap-2 items-center py-2">
                             <HiMiniCheck size={14} fontWeight="bold" color="white" />
-                            {attachments.filter(a => a.checked).length}/{attachments.length}
+                            {subtasks.filter(s => s.checked).length}/{subtasks.length}
                         </span>
                         <div className="flex flex-col gap-1">
-                            {attachments.map(a => (
-                                <Checkbox key={a.value} onChange={() => {}} state={a.checked}>
-                                    {a.value}
+                            {subtasks.map(s => (
+                                <Checkbox key={s.id} onChange={() => {}} state={s.checked}>
+                                    {s.value}
                                 </Checkbox>
                             ))}
                         </div>

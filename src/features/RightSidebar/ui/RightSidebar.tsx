@@ -9,7 +9,7 @@ import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
 import { setIsExpanded } from '@features/RightSidebar';
 import { getDate, getShortDate, getHour, useAppSelector, useAppDispatch } from '@shared/lib';
-import { DefaultButton, DropDownContainer, DropDownList } from '@shared/ui';
+import { DefaultButton, DropDownContainer, ListDropDown } from '@shared/ui';
 import './right-sidebar.animation.css';
 
 export default function RightSidebar() {
@@ -94,7 +94,7 @@ export default function RightSidebar() {
                                 setIsOpen={() => setIsOpen(false)}
                                 className="right-0"
                             >
-                                <DropDownList list={dropDownList} />
+                                <ListDropDown list={dropDownList} />
                             </DropDownContainer>
                         </div>
                     </div>

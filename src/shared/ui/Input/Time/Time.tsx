@@ -1,0 +1,48 @@
+import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
+
+interface ITimeProps {
+    minutes: number;
+    hours: number;
+    setMinutes: Dispatch<SetStateAction<number>>;
+    setHours: Dispatch<SetStateAction<number>>;
+}
+
+export default function Time({ minutes, hours, setMinutes, setHours }: ITimeProps) {
+    const handleHoursInput = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.target.value);
+        if (isNaN(value)) return;
+
+        if (Number(value) > 23) return setHours(23);
+        if (Number(value) < 0) return setHours(0);
+        setHours(value);
+    };
+
+    const handleMinutesInput = (event: ChangeEvent<HTMLInputElement>) => {
+        const value = Number(event.target.value);
+        if (isNaN(value)) return;
+
+        if (Number(value) > 59) return setMinutes(59);
+        if (Number(value) < 0) return setMinutes(0);
+        setMinutes(value);
+    };
+
+    return (
+        <span className="flex justify-between items-center border border-surface-lighter rounded-md bg-surface-dark w-20">
+            <input
+                className="w-8 text-center appearance-none outline-none caret-surface-lighter"
+                type="text"
+                onChange={handleHoursInput}
+                maxLength={2}
+                value={hours}
+            />
+            :
+            <input
+                className="w-8 text-center appearance-none outline-none caret-surface-lighter"
+                type="text"
+                onChange={handleMinutesInput}
+                maxLength={2}
+                value={minutes}
+            />
+        </span>
+    );
+}

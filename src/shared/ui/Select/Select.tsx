@@ -13,16 +13,16 @@ export default function Select({ list, selected, setSelected }: ISelectProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="relative min-w-56">
+        <div className="flex relative min-w-0">
             <button
-                className="flex items-center justify-between gap-2 bg-surface-dark border border-surface-lighter px-4 py-1 rounded-sm cursor-pointer w-full"
+                className="flex items-center justify-between gap-2 bg-surface-dark border border-surface-lighter px-4 py-1 rounded-sm cursor-pointer w-full truncate"
                 onClick={() => setIsOpen(prev => !prev)}
             >
-                {selected.label}
-                <HiMiniChevronDown size={24} />
+                <span className="truncate overflow-hidden">{selected.label}</span>
+                <HiMiniChevronDown className="min-h-6 min-w-6" />
             </button>
             {isOpen && (
-                <ul className="absolute bg-surface-dark w-full rounded-b-sm">
+                <ul className="absolute top-full bg-surface-dark w-full rounded-b-sm overflow-y-auto max-h-54">
                     {list.map(l => (
                         <li key={l.id}>
                             <button

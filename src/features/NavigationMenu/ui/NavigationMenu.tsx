@@ -3,9 +3,14 @@ import { clsx } from 'clsx';
 import React, { useRef, useState } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
-import { BoardItem, BoardsGroupSchema, useBoardDragAndDropContext } from '@entities/Board';
+import {
+    BoardItem,
+    BoardsGroupSchema,
+    AddBoardDropDown,
+    useBoardDragAndDropContext,
+} from '@entities/Board';
 import { createStateController, useParentDragAndDrop } from '@shared/lib';
-import { DropDownContainer, Tooltip, DropDownAddBoard } from '@shared/ui';
+import { DropDownContainer, Tooltip } from '@shared/ui';
 import './list.animation.css';
 
 interface INavigationMenuProps {
@@ -87,7 +92,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 setIsOpen={() => setIsOpenField('add', false)}
                 className="right-0 top-0"
             >
-                <DropDownAddBoard groupId={group.id} />
+                <AddBoardDropDown groupId={group.id} />
             </DropDownContainer>
         </section>
     );

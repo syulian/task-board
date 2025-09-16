@@ -13,17 +13,15 @@ import {
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
-import { BoardDragAndDropContext, BoardLinkSchema, BoardsGroupSchema } from '@entities/Board';
+import {
+    BoardDragAndDropContext,
+    BoardLinkSchema,
+    BoardsGroupSchema,
+    AddGroupDropDown,
+} from '@entities/Board';
 import { SignInPopup, SignUpPopup } from '@entities/User';
 import { createStateController } from '@shared/lib';
-import {
-    DropDownAddGroup,
-    DropDownContainer,
-    DropDownList,
-    NavButton,
-    Popup,
-    Tooltip,
-} from '@shared/ui';
+import { DropDownContainer, ListDropDown, NavButton, Popup, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
@@ -256,7 +254,7 @@ export default function LeftSidebar() {
                             setIsOpen={() => setIsOpenField('add', false)}
                             className="left-0 bottom-0"
                         >
-                            <DropDownAddGroup />
+                            <AddGroupDropDown />
                         </DropDownContainer>
                     </Tooltip>
                     <div className="flex items-center rounded-lg hover:bg-surface-light transition duration-300 ease-in-out">
@@ -277,21 +275,21 @@ export default function LeftSidebar() {
                                     setIsOpen={() => setIsOpenField('settings', false)}
                                     className="left-0 bottom-full"
                                 >
-                                    <DropDownList list={dropDownList} />
+                                    <ListDropDown list={dropDownList} />
                                 </DropDownContainer>
                                 <DropDownContainer
                                     isOpen={isOpen.themes}
                                     setIsOpen={() => setIsOpenField('themes', false)}
                                     className="left-0 bottom-full"
                                 >
-                                    <DropDownList list={themesList} />
+                                    <ListDropDown list={themesList} />
                                 </DropDownContainer>
                                 <DropDownContainer
                                     isOpen={isOpen.languages}
                                     setIsOpen={() => setIsOpenField('languages', false)}
                                     className="left-0 bottom-full"
                                 >
-                                    <DropDownList list={languagesList} />
+                                    <ListDropDown list={languagesList} />
                                 </DropDownContainer>
                             </div>
                         )}

@@ -14,7 +14,7 @@ export default function Board() {
     const [currentGroup, setCurrentGroup] = useState<TasksGroupSchema | null>(null);
     const [currentOrder, setCurrentOrder] = useState<TasksGroupSchema | null>(null);
 
-    const [list, setList] = useState([
+    const [list, setList] = useState<TasksGroupSchema[]>([
         {
             id: '1',
             order: 1,
@@ -24,15 +24,18 @@ export default function Board() {
                     id: '1',
                     order: 1,
                     title: 'Website creation',
+                    complete: true,
                     body: '*Need to create a new task! Need to create a new task!* \n\n *Need to create a new task! Need to create a new task!*',
-                    attachments: [
+                    subtasks: [
                         {
-                            type: 'checkbox',
+                            id: '1',
+                            order: 1,
                             value: 'Easy to use',
                             checked: true,
                         },
                         {
-                            type: 'checkbox',
+                            id: '2',
+                            order: 2,
                             value: 'No Internet needed',
                             checked: false,
                         },

@@ -10,7 +10,7 @@ interface IDragProps {
 export default function Drag({ onDragStart, onDragEnd, target, children }: IDragProps) {
     return (
         <span
-            className="flex items-end font-bold cursor-pointer"
+            className="flex items-center font-bold cursor-grab"
             draggable
             onDragStart={e => {
                 onDragStart(e);
@@ -20,7 +20,7 @@ export default function Drag({ onDragStart, onDragEnd, target, children }: IDrag
             }}
             onDragEnd={onDragEnd}
         >
-            <p className="text-2xl text-surface-lighter w-6 text-center">⣿</p>
+            <p className="text-3xl text-surface-lighter w-6 ">⋮⋮</p>
             {children}
         </span>
     );

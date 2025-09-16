@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import { HiOutlinePlusSmall } from 'react-icons/hi2';
-import { LabelControl, LabelDragAndDropOrderContext, LabelSchema } from '@entities/Label';
-import { AddInput, ColorButton, DefaultButton, DropDownColor, DropDownContainer } from '@shared/ui';
+import { LabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
+import LabelSchema from '@entities/Label/model/types/LabelSchema';
+import ColorsDropDown from '@entities/Label/ui/ColorsDropDown';
+import LabelControl from '@entities/Label/ui/LabelControl';
+import { AddInput, ColorButton, DefaultButton, DropDownContainer } from '@shared/ui';
 
 const colorsList = [
     {
@@ -57,7 +60,7 @@ export default function LabelPopup() {
                         setIsOpen={() => setIsOpen(false)}
                         className="left-0 top-full"
                     >
-                        <DropDownColor />
+                        <ColorsDropDown />
                     </DropDownContainer>
                 </div>
                 <AddInput onSubmit={() => {}} placeholder="Type here and press 'Enter'" />

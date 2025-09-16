@@ -3,11 +3,11 @@ import { clsx } from 'clsx';
 import React from 'react';
 import ListItemSchema from '@shared/types/ListItemSchema';
 
-interface IDropDownListProps {
+interface IListDropDownProps {
     list: ListItemSchema[];
 }
 
-export default function DropDownList({ list }: IDropDownListProps) {
+export default function ListDropDown({ list }: IListDropDownProps) {
     return (
         <ul className="flex flex-col" role="menu">
             {list.map((l, i) => (

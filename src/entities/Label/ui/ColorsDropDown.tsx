@@ -2,7 +2,7 @@
 import React from 'react';
 import { ColorButton } from '@shared/ui';
 
-interface IDropDownColorProps {
+interface IColorsDropDownProps {
     list?: {
         color: string;
         onClick: () => void;
@@ -60,9 +60,9 @@ const colorList = [
     },
 ];
 
-export default function DropDownColor({ list }: IDropDownColorProps) {
+export default function ColorsDropDown({ list }: IColorsDropDownProps) {
     return (
-        <ul className="flex flex-wrap justify-between gap-4 p-4 max-w-54" role="menu">
+        <ul className="flex flex-wrap justify-between gap-4 p-2 max-w-54" role="menu">
             <li className="w-full">
                 <p className="font-semibold text-center">Select Color</p>
             </li>

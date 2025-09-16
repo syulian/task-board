@@ -1,12 +1,12 @@
 'use client';
 import React, { useState } from 'react';
-import { HiOutlineBookOpen, HiOutlineCalendarDays, HiOutlineTag } from 'react-icons/hi2';
+import { HiOutlineBookOpen, HiOutlineTag } from 'react-icons/hi2';
 import { EditBoard } from '@features/EditBoard';
 import { setIsExpanded } from '@features/RightSidebar';
 import { SearchInput } from '@features/SearchInput';
 import { LabelPopup } from '@entities/Label';
 import { createStateController, useAppDispatch, useAppSelector } from '@shared/lib';
-import { DefaultButton, DropDownContainer, DropDownList, SettingsButton, Popup } from '@shared/ui';
+import { DefaultButton, DropDownContainer, ListDropDown, SettingsButton, Popup } from '@shared/ui';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState({
@@ -57,18 +57,13 @@ export default function Header() {
                         setIsOpen={() => setIsOpenField('dropDown', false)}
                         className="left-0 top-full"
                     >
-                        <DropDownList list={dropDownList} />
+                        <ListDropDown list={dropDownList} />
                     </DropDownContainer>
                 </div>
                 <SearchInput onChange={() => {}} />
             </div>
             <nav>
                 <ul className="flex">
-                    <li>
-                        <DefaultButton onClick={() => {}}>
-                            <HiOutlineCalendarDays size={24} />
-                        </DefaultButton>
-                    </li>
                     <li>
                         <DefaultButton onClick={() => setIsOpenField('popup', true)}>
                             <HiOutlineTag size={24} />

@@ -2,23 +2,16 @@
 import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
+import { ColorsDropDown } from '@entities/Label';
 import {
     TaskCard,
-    TaskPopup,
+    EditTask,
     TasksGroupSchema,
     useTaskDragAndDropContext,
     useTaskDragAndDropOrderContext,
 } from '@entities/Task';
 import { createStateController, useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
-import {
-    DefaultButton,
-    AddButton,
-    DropDownContainer,
-    DropDownList,
-    DropDownColor,
-    Drag,
-    Popup,
-} from '@shared/ui';
+import { DefaultButton, AddButton, DropDownContainer, ListDropDown, Drag, Popup } from '@shared/ui';
 
 interface IListProps {
     list: TasksGroupSchema;
@@ -108,7 +101,7 @@ export default function List({ list }: IListProps) {
                     <DefaultButton onClick={() => {}}>
                         <HiMiniPlus size={24} />
                     </DefaultButton>
-                    <DefaultButton onClick={() => setIsOpenField('settings', false)}>
+                    <DefaultButton onClick={() => setIsOpenField('settings', true)}>
                         <HiEllipsisHorizontal size={24} />
                     </DefaultButton>
                     <DropDownContainer
@@ -116,14 +109,14 @@ export default function List({ list }: IListProps) {
                         setIsOpen={() => setIsOpenField('settings', false)}
                         className="right-0 top-full"
                     >
-                        <DropDownList list={editList} />
+                        <ListDropDown list={editList} />
                     </DropDownContainer>
                     <DropDownContainer
                         isOpen={isOpen.colors}
                         setIsOpen={() => setIsOpenField('colors', false)}
                         className="right-0 top-full"
                     >
-                        <DropDownColor />
+                        <ColorsDropDown />
                     </DropDownContainer>
                 </span>
             </div>
@@ -140,7 +133,7 @@ export default function List({ list }: IListProps) {
             </div>
             <AddButton onClick={() => setIsOpenField('popup', true)} />
             <Popup isOpen={isOpen.popup} setIsOpen={() => setIsOpenField('popup', false)}>
-                <TaskPopup />
+                <EditTask />
             </Popup>
         </li>
     );

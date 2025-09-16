@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { LabelEdit } from '@entities/Label';
-import { DefaultInput, Select } from '@shared/ui';
+import { DefaultInput, LabelEdit, SecondButton, Select } from '@shared/ui';
 
 interface IEditBoardProps {
     openLabelPopup: () => void;
@@ -44,8 +43,14 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
             <DefaultInput
                 onSubmit={() => {}}
                 onChange={() => {}}
-                placeholder="Enter board name"
-                label="Board Name"
+                placeholder="Enter task name"
+                label="Task Name"
+            />
+            <DefaultInput
+                onSubmit={() => {}}
+                onChange={() => {}}
+                placeholder="Enter task name"
+                label="Task Name"
             />
             <span className="flex justify-between items-center w-full">
                 <b>Group</b>
@@ -54,12 +59,7 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
             <hr className="text-surface-lighter" />
             <b>Labels</b>
             <div className="flex flex-wrap gap-2">
-                <button
-                    className="py-1 px-2 rounded-sm bg-surface-dark border hover:bg-surface-light transition duration-200 ease-in-out border-surface-lighter cursor-pointer"
-                    onClick={openLabelPopup}
-                >
-                    Configure Labels
-                </button>
+                <SecondButton onClick={openLabelPopup}>Configure Labels</SecondButton>
                 {board.labels.map(l => (
                     <LabelEdit key={l.name} name={l.name} color={l.color} onClick={() => {}} />
                 ))}
