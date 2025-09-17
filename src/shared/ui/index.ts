@@ -18,4 +18,3 @@ export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as Drag } from './Drag/Drag';
 export { default as Popup } from './Popup/Popup';
 export { default as Select } from './Select/Select';
-export { default as Calendar } from './Calendar/Calendar';

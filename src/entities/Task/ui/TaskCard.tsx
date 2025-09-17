@@ -6,7 +6,7 @@ import Markdown from 'react-markdown';
 import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
 import { TaskSchema } from '@entities/Task/model/types/TaskSchema';
 import { TasksGroupSchema } from '@entities/Task/model/types/TasksGroupSchema';
-import { useDragAndDrop } from '@shared/lib';
+import { getDate, useDragAndDrop } from '@shared/lib';
 import { Label, Checkbox } from '@shared/ui';
 
 interface ITaskCardProps {
@@ -15,7 +15,7 @@ interface ITaskCardProps {
 }
 
 export default function TaskCard({ task, list }: ITaskCardProps) {
-    const { body, title, labels, subtasks, complete } = task;
+    const { body, title, labels, subtasks, complete, dueDate } = task;
 
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
         useTaskDragAndDropContext();
@@ -44,9 +44,16 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             onDragOver={onDragOver}
             onDrop={onDrop}
         >
-            {complete && (
-                <p className="absolute top-0 right-4 py-1 px-2 rounded-b-sm bg-green-800 font-semibold text-sm border-b border-surface-dark opacity-80">
-                    Complete
+            {(complete || dueDate) && (
+                <p
+                    className={clsx(
+                        'absolute top-0 right-4 py-1 px-2 bg-background-dark rounded-b-sm font-semibold text-sm border-b border-l border-r border-surface-dark opacity-80',
+                        complete
+                            ? 'bg-green-800'
+                            : dueDate && (dueDate >= new Date() ? 'text-blue-400' : 'text-red-400'),
+                    )}
+                >
+                    {complete ? 'Complete' : dueDate && getDate(dueDate)}
                 </p>
             )}
             <p className="font-semibold">{title}</p>

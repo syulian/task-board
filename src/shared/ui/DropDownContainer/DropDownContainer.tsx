@@ -31,7 +31,7 @@ export default function DropDownContainer({
                 <div className="fixed z-40 inset-0" role="presentation" onClick={setIsOpen} />
                 <div
                     className={clsx(
-                        'absolute z-50 bg-background-dark border border-surface-light rounded-md p-2 min-w-58 max-h-86 overflow-y-scroll',
+                        'absolute z-50 bg-background-dark border border-surface-light rounded-md p-2 min-w-58  overflow-y-scroll',
                         className,
                     )}
                     ref={dropDownRef}

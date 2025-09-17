@@ -51,6 +51,7 @@ export default function Board() {
                     id: '2',
                     order: 2,
                     title: 'Website creation',
+                    dueDate: new Date(2025, 10, 2),
                     body: '*Need to create a new task! Need to create a new task!*',
                     labels: [
                         {

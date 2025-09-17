@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { HiMiniTag } from 'react-icons/hi2';
 import { SubtaskDragAndDropOrderContext } from '@entities/Task/model/context/subtaskDragAndDropOrderContext';
 import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
+import Calendar from '@entities/Task/ui/Calendar';
 import SubtaskControl from '@entities/Task/ui/SubtaskControl';
-import { createStateController } from '@shared/lib';
+import { createStateController, getDate, getHour } from '@shared/lib';
 import {
     AddInput,
     DefaultInput,
@@ -11,7 +12,6 @@ import {
     LabelEdit,
     SecondButton,
     Select,
-    Calendar,
 } from '@shared/ui';
 import LabelsDropDown from './LabelsDropDown';
 
@@ -35,6 +35,7 @@ const cards = [
 
 export default function EditTask() {
     const [currentOrder, setCurrentOrder] = useState<SubtaskSchema | null>(null);
+
     const [subtasks, setSubtasks] = useState([
         {
             id: '1',
@@ -49,16 +50,15 @@ export default function EditTask() {
             checked: false,
         },
     ]);
-
     const [isOpen, setIsOpen] = useState({
         labels: false,
         calendar: false,
     });
-
     const [selected, setSelected] = useState({
         id: '1',
         label: 'To Do',
     });
+    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
@@ -95,7 +95,24 @@ export default function EditTask() {
                 </span>
                 <span className="flex justify-between items-center w-full">
                     <b>Due Date</b>
-                    <Calendar />
+                    <div className="relative">
+                        <SecondButton onClick={() => setIsOpenField('calendar', true)}>
+                            {selectedDate
+                                ? `${getDate(selectedDate)}, ${getHour(selectedDate)}`
+                                : 'None'}
+                        </SecondButton>
+                        <DropDownContainer
+                            isOpen={isOpen.calendar}
+                            setIsOpen={() => setIsOpenField('calendar', false)}
+                            className="left-full -bottom-48"
+                        >
+                            <Calendar
+                                setSelectedDate={setSelectedDate}
+                                selectedDate={selectedDate}
+                                setIsOpen={() => setIsOpenField('calendar', false)}
+                            />
+                        </DropDownContainer>
+                    </div>
                 </span>
                 <DefaultInput
                     onSubmit={() => {}}

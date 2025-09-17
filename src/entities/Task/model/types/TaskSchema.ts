@@ -5,6 +5,7 @@ export interface TaskSchema {
     order: number;
     title: string;
     complete?: boolean;
+    dueDate?: Date;
     body: string;
     subtasks?: SubtaskSchema[];
     labels: {

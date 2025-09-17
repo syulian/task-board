@@ -9,20 +9,20 @@ interface ITimeProps {
 
 export default function Time({ minutes, hours, setMinutes, setHours }: ITimeProps) {
     const handleHoursInput = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value);
+        const value = +event.target.value;
         if (isNaN(value)) return;
 
-        if (Number(value) > 23) return setHours(23);
-        if (Number(value) < 0) return setHours(0);
+        if (+value > 23) return setHours(23);
+        if (+value < 0) return setHours(0);
         setHours(value);
     };
 
     const handleMinutesInput = (event: ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value);
+        const value = +event.target.value;
         if (isNaN(value)) return;
 
-        if (Number(value) > 59) return setMinutes(59);
-        if (Number(value) < 0) return setMinutes(0);
+        if (+value > 59) return setMinutes(59);
+        if (+value < 0) return setMinutes(0);
         setMinutes(value);
     };
 
