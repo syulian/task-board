@@ -1,6 +1,7 @@
 'use client';
 import { clsx } from 'clsx';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React, { useRef, useState } from 'react';
 import {
     HiMiniChevronDoubleLeft,
@@ -20,6 +21,7 @@ import {
     AddGroupDropDown,
 } from '@entities/Board';
 import { SignInPopup, SignUpPopup } from '@entities/User';
+import logo from '@shared/assets/images/website-logo.png';
 import { createStateController } from '@shared/lib';
 import { DropDownContainer, ListDropDown, NavButton, Popup, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
@@ -41,6 +43,7 @@ export default function LeftSidebar() {
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const sidebarRef = useRef<HTMLElement>(null);
+    const router = useRouter();
 
     const [groups, setGroups] = useState<BoardsGroupSchema[]>([
         {
@@ -198,13 +201,8 @@ export default function LeftSidebar() {
             >
                 <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden h-full">
                     <Tooltip text="Task Board" isExpanded={isExpanded}>
-                        <NavButton onClick={() => {}}>
-                            <Image
-                                alt="logo"
-                                src="/icons/apple-touch-icon.png"
-                                width={24}
-                                height={24}
-                            />
+                        <NavButton onClick={() => router.push('/')}>
+                            <Image alt="logo" src={logo} width={24} height={24} priority />
                             {isExpanded && <p>Task Board</p>}
                         </NavButton>
                     </Tooltip>
@@ -220,12 +218,6 @@ export default function LeftSidebar() {
                     <Popup isOpen={isOpen.signUp} setIsOpen={() => setIsOpenField('signUp', false)}>
                         <SignUpPopup openSignIn={openSignIn} />
                     </Popup>
-                    <Tooltip text="Synced" isExpanded={isExpanded}>
-                        <NavButton onClick={() => {}}>
-                            <HiOutlineCloud aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>Synced</p>}
-                        </NavButton>
-                    </Tooltip>
                     <BoardDragAndDropContext
                         value={{
                             currentItem: currentItem,

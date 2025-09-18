@@ -67,10 +67,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 unmountOnExit
             >
                 <div
-                    className={clsx(
-                        'flex flex-col overflow-y-scroll max-h-125',
-                        !group.items.length && 'h-9',
-                    )}
+                    className={clsx('flex flex-col', !group.items.length && 'h-9')}
                     ref={listRef}
                     onDragOver={onDragOver}
                     onDrop={onDrop}

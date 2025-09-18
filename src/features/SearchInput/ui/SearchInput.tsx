@@ -25,15 +25,12 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
     useEffect(() => {
         const userAgent = navigator.userAgent.toLowerCase();
 
-        OS.forEach(n => {
+        for (const n of OS) {
             if (userAgent.includes(n)) {
-                if (userAgent.includes('mac')) {
-                    setCommand('use ⌘ F');
-                } else {
-                    setCommand('use ⊞ F');
-                }
+                setCommand(userAgent.includes('mac') ? ' or use ⌘ F' : ' or use ⊞ F');
+                break;
             }
-        });
+        }
     }, []);
 
     const labels = [
@@ -87,7 +84,7 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
                 type="search"
                 onChange={onChange}
                 aria-label="Search"
-                placeholder={`Start typing ${command} to search ...`}
+                placeholder={`Start typing${command} to search...`}
             />
             <CSSTransition
                 in={isFocused}
