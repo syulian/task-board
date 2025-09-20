@@ -4,8 +4,8 @@ import React, { useRef, useState } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import {
-    BoardItem,
-    BoardsGroupSchema,
+    BoardLink,
+    IBoardsGroup,
     AddBoardDropDown,
     useBoardDragAndDropContext,
 } from '@entities/Board';
@@ -14,7 +14,7 @@ import { DropDownContainer, Tooltip } from '@shared/ui';
 import './list.animation.css';
 
 interface INavigationMenuProps {
-    group: BoardsGroupSchema;
+    group: IBoardsGroup;
     isExpanded: boolean;
 }
 
@@ -74,7 +74,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 >
                     {group.items.map((b, index) => (
                         <Tooltip key={index} text={b.text} isExpanded={isExpanded}>
-                            <BoardItem
+                            <BoardLink
                                 group={group}
                                 isExpanded={isExpanded}
                                 board={b}

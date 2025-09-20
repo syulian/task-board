@@ -12,6 +12,7 @@
     "dependencies": {
         "@babel/runtime": "^7.28.2",
         "@reduxjs/toolkit": "^2.9.0",
+        "@tanstack/react-query": "^5.89.0",
         "clsx": "^2.1.1",
         "mongoose": "^8.18.1",
         "next": "15.4.6",

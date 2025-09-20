@@ -1,12 +1,7 @@
-'use client';
 import React, { useState } from 'react';
 import { ConfirmButton, DefaultInput } from '@shared/ui';
 
-interface IAddGroupDropDownProps {
-    groupId?: string;
-}
-
-export default function AddGroupDropDown({ groupId }: IAddGroupDropDownProps) {
+export default function AddGroupDropDown() {
     const [value, setValue] = useState('');
 
     return (

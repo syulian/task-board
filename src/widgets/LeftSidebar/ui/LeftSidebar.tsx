@@ -7,7 +7,6 @@ import {
     HiMiniChevronDoubleLeft,
     HiOutlinePlusCircle,
     HiOutlineCog8Tooth,
-    HiOutlineCloud,
     HiOutlineUserCircle,
     HiMiniChevronDoubleRight,
     HiMiniCheck,
@@ -16,8 +15,8 @@ import { CSSTransition } from 'react-transition-group';
 import { NavigationMenu } from '@features/NavigationMenu';
 import {
     BoardDragAndDropContext,
-    BoardLinkSchema,
-    BoardsGroupSchema,
+    IBoardLink,
+    IBoardsGroup,
     AddGroupDropDown,
 } from '@entities/Board';
 import { SignInPopup, SignUpPopup } from '@entities/User';
@@ -27,8 +26,8 @@ import { DropDownContainer, ListDropDown, NavButton, Popup, Tooltip } from '@sha
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
-    const [currentItem, setCurrentItem] = useState<BoardLinkSchema | null>(null);
-    const [currentGroup, setCurrentGroup] = useState<BoardsGroupSchema | null>(null);
+    const [currentItem, setCurrentItem] = useState<IBoardLink | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<IBoardsGroup | null>(null);
 
     const [isExpanded, setIsExpanded] = useState(true);
     const [isOpen, setIsOpen] = useState({
@@ -45,58 +44,7 @@ export default function LeftSidebar() {
     const sidebarRef = useRef<HTMLElement>(null);
     const router = useRouter();
 
-    const [groups, setGroups] = useState<BoardsGroupSchema[]>([
-        {
-            id: '1',
-            order: 1,
-            name: 'My Boards',
-            items: [
-                {
-                    id: '1',
-                    order: 1,
-                    href: '/1',
-                    text: '💀 Website',
-                },
-                {
-                    id: '2',
-                    order: 2,
-                    href: '/2',
-                    text: '🎃 PWA',
-                },
-            ],
-        },
-        {
-            id: '2',
-            order: 2,
-            name: 'Another Boards',
-            items: [
-                {
-                    id: '3',
-                    order: 1,
-                    href: '/3',
-                    text: '1',
-                },
-                {
-                    id: '4',
-                    order: 2,
-                    href: '/4',
-                    text: '2',
-                },
-                {
-                    id: '5',
-                    order: 3,
-                    href: '/5',
-                    text: '3',
-                },
-                {
-                    id: '6',
-                    order: 4,
-                    href: '/6',
-                    text: '4',
-                },
-            ],
-        },
-    ]);
+    const [groups, setGroups] = useState<IBoardsGroup[]>([]);
 
     const dropDownList = [
         {
