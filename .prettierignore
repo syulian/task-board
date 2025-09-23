@@ -4,9 +4,6 @@
 # Node
 node_modules
 
-# Backend
-server
-
 # Static
 **/*.css
 **/*.scss

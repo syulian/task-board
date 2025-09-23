@@ -7,13 +7,18 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "prettier": "npx prettier . --write"
+        "prettier": "npx prettier . --write",
+        "codegen": "graphql-codegen --config codegen.ts"
     },
     "dependencies": {
+        "@apollo/client": "^4.0.5",
+        "@apollo/server": "^5.0.0",
+        "@as-integrations/next": "^4.0.0",
         "@babel/runtime": "^7.28.2",
         "@reduxjs/toolkit": "^2.9.0",
-        "@tanstack/react-query": "^5.89.0",
         "clsx": "^2.1.1",
+        "graphql": "^16.11.0",
+        "graphql-tag": "^2.12.6",
         "mongoose": "^8.18.1",
         "next": "15.4.6",
         "react": "19.1.0",
@@ -26,6 +31,7 @@
     "devDependencies": {
         "@eslint/eslintrc": "^3",
         "@feature-sliced/eslint-config": "^0.1.1",
+        "@graphql-codegen/cli": "6.0.0",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",
@@ -41,6 +47,8 @@
         "eslint-plugin-react-refresh": "^0.4.20",
         "prettier": "^3.6.2",
         "tailwindcss": "^4",
-        "typescript": "^5"
+        "typescript": "^5.9.2",
+        "@graphql-codegen/introspection": "5.0.0",
+        "@graphql-codegen/client-preset": "5.0.1"
     }
 }

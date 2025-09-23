@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import React, { ReactNode } from 'react';
+import { ApolloClientProvider } from '@app/providers/ApolloClientProvider';
 import { StoreProvider } from '@app/providers/StoreProvider';
 import { LeftSidebar } from '@widgets/LeftSidebar';
 import { RightSidebar } from '@features/RightSidebar';
@@ -29,13 +30,15 @@ export function RootLayout({ children }: IRootLayoutProps) {
     return (
         <html lang="en">
             <body>
-                <StoreProvider>
-                    <div className="flex">
-                        <LeftSidebar />
-                        {children}
-                        <RightSidebar />
-                    </div>
-                </StoreProvider>
+                <ApolloClientProvider>
+                    <StoreProvider>
+                        <div className="flex">
+                            <LeftSidebar />
+                            {children}
+                            <RightSidebar />
+                        </div>
+                    </StoreProvider>
+                </ApolloClientProvider>
             </body>
         </html>
     );

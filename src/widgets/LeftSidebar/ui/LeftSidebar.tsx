@@ -1,8 +1,9 @@
 'use client';
+import { useQuery } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
     HiMiniChevronDoubleLeft,
     HiOutlinePlusCircle,
@@ -12,6 +13,7 @@ import {
     HiMiniCheck,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
+import { GET_BOARDS_GROUPS } from '@widgets/LeftSidebar/api/getBoardsGroups';
 import { NavigationMenu } from '@features/NavigationMenu';
 import {
     BoardDragAndDropContext,
@@ -44,7 +46,14 @@ export default function LeftSidebar() {
     const sidebarRef = useRef<HTMLElement>(null);
     const router = useRouter();
 
+    const { data, loading } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS);
     const [groups, setGroups] = useState<IBoardsGroup[]>([]);
+
+    useEffect(() => {
+        if (!loading && data?.getBoardsGroups) {
+            setGroups(data.getBoardsGroups);
+        }
+    }, [data, loading]);
 
     const dropDownList = [
         {

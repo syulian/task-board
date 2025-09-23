@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import React from 'react';
+import getBoardById from '@pages/BoardPage/api/getBoardById';
 import { Board } from '@widgets/Board';
 import { Header } from '@widgets/Header';
 
@@ -9,9 +10,10 @@ type Params = {
 
 export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
     const { id } = await params;
+    const data = await getBoardById(id);
 
     return {
-        title: id,
+        title: data?.name || 'Board',
     };
 }
 

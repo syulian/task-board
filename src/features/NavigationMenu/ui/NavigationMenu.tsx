@@ -67,13 +67,13 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 unmountOnExit
             >
                 <div
-                    className={clsx('flex flex-col', !group.items.length && 'h-9')}
+                    className={clsx('flex flex-col', !group.items?.length && 'h-9')}
                     ref={listRef}
                     onDragOver={onDragOver}
                     onDrop={onDrop}
                 >
-                    {group.items.map((b, index) => (
-                        <Tooltip key={index} text={b.text} isExpanded={isExpanded}>
+                    {group.items?.map((b, index) => (
+                        <Tooltip key={index} text={b.name} isExpanded={isExpanded}>
                             <BoardLink
                                 group={group}
                                 isExpanded={isExpanded}
