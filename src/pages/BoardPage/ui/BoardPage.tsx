@@ -5,16 +5,20 @@ import { Board } from '@widgets/Board';
 import { Header } from '@widgets/Header';
 
 type Params = {
-    id: string;
+    params: Promise<{ id: string }>;
 };
 
-export async function generateMetadata({ params }: { params: Promise<Params> }): Promise<Metadata> {
-    const { id } = await params;
-    const data = await getBoardById(id);
+export async function generateMetadata({ params }: Params): Promise<Metadata> {
+    try {
+        const { id } = await params;
+        const data = await getBoardById(id);
 
-    return {
-        title: data?.name || 'Board',
-    };
+        return { title: data?.name || 'Board' };
+    } catch (error) {
+        console.error(error);
+    }
+
+    return { title: 'Board' };
 }
 
 export async function BoardPage() {

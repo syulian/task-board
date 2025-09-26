@@ -2,19 +2,19 @@
 import React, { useState } from 'react';
 import { List } from '@features/List';
 import {
-    TaskSchema,
-    TasksGroupSchema,
+    ITask,
+    IListSchema,
     TaskDragAndDropContext,
     TaskDragAndDropOrderContext,
 } from '@entities/Task';
 import { AddInput } from '@shared/ui';
 
 export default function Board() {
-    const [currentItem, setCurrentItem] = useState<TaskSchema | null>(null);
-    const [currentGroup, setCurrentGroup] = useState<TasksGroupSchema | null>(null);
-    const [currentOrder, setCurrentOrder] = useState<TasksGroupSchema | null>(null);
+    const [currentItem, setCurrentItem] = useState<ITask | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<IListSchema | null>(null);
+    const [currentOrder, setCurrentOrder] = useState<IListSchema | null>(null);
 
-    const [list, setList] = useState<TasksGroupSchema[]>([
+    const [list, setList] = useState<IListSchema[]>([
         {
             id: '1',
             order: 1,

@@ -1,11 +1,12 @@
 'use client';
 import { clsx } from 'clsx';
 import Link from 'next/link';
-import React, { useState } from 'react';
-import { IBoardLink, IBoardsGroup, useBoardDragAndDropContext } from '@entities/Board';
+import React from 'react';
+import { IBoardLink, IBoardsGroup } from '@entities/Board';
+import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
+import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
 import { PAGES } from '@shared/config';
-import { useDragAndDrop } from '@shared/lib';
-import { DropDownContainer, ListDropDown } from '@shared/ui';
+import { DropDownContainer, InlineInput, ListDropDown } from '@shared/ui';
 
 interface IMenuItemProps {
     group: IBoardsGroup;
@@ -14,43 +15,18 @@ interface IMenuItemProps {
 }
 
 export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) {
-    const [isOpen, setIsOpen] = useState(false);
-    const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
-        useBoardDragAndDropContext();
+    const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop, currentItem } =
+        useBoardLink(group, board);
 
-    const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop } = useDragAndDrop(
-        group,
-        board,
-        {
-            currentItem,
-            setGroups,
-            setCurrentItem,
-            setCurrentGroup,
-            currentGroup,
-        },
-    );
-
-    const editList = [
-        {
-            children: [
-                {
-                    label: 'Rename',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Delete',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
+    const { disabled, isOpen, setIsOpen, handleBoardRename, contextMenu } =
+        useLinkContextMenu(board);
 
     return (
         <>
             <Link
                 href={PAGES.BOARD(board.id)}
                 className={clsx(
-                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-surface-light truncate',
+                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-surface-light ',
                     isExpanded ? 'pl-12' : 'pl-4',
                     isDragOver && currentItem && 'bg-surface-light',
                 )}
@@ -66,7 +42,15 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
                 }}
             >
                 {isExpanded ? (
-                    board.name
+                    !disabled ? (
+                        <InlineInput
+                            value={board.name}
+                            disabled={disabled}
+                            onBlur={handleBoardRename}
+                        />
+                    ) : (
+                        board.name
+                    )
                 ) : (
                     <p className="w-6 text-center bg-surface-light rounded-full">
                         {Array.from(board.name)[0] ?? '?'}
@@ -74,11 +58,11 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
                 )}
             </Link>
             <DropDownContainer
-                isOpen={isOpen}
+                isOpen={isOpen && isExpanded}
                 setIsOpen={() => setIsOpen(false)}
                 className="right-0 top-0"
             >
-                <ListDropDown list={editList} />
+                <ListDropDown list={contextMenu} />
             </DropDownContainer>
         </>
     );

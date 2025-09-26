@@ -8,8 +8,9 @@ import {
     IBoardsGroup,
     AddBoardDropDown,
     useBoardDragAndDropContext,
+    IBoardLink,
 } from '@entities/Board';
-import { createStateController, useParentDragAndDrop } from '@shared/lib';
+import { createStateController, useParentDragAndDrop, useSortedItems } from '@shared/lib';
 import { DropDownContainer, Tooltip } from '@shared/ui';
 import './list.animation.css';
 
@@ -33,6 +34,8 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
         setGroups,
         currentGroup,
     });
+
+    const sortedItems = useSortedItems<IBoardLink>(group.items);
 
     return (
         <section className="relative">
@@ -72,8 +75,8 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                     onDragOver={onDragOver}
                     onDrop={onDrop}
                 >
-                    {group.items?.map((b, index) => (
-                        <Tooltip key={index} text={b.name} isExpanded={isExpanded}>
+                    {sortedItems?.map((b, index) => (
+                        <Tooltip key={b.id} text={b.name} isExpanded={isExpanded}>
                             <BoardLink
                                 group={group}
                                 isExpanded={isExpanded}

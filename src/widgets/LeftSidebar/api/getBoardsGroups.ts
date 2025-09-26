@@ -10,6 +10,7 @@ export const GET_BOARDS_GROUPS = gql`
                 id
                 order
                 name
+                groupId
             }
         }
     }

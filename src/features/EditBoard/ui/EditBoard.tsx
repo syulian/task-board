@@ -43,14 +43,8 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
             <DefaultInput
                 onSubmit={() => {}}
                 onChange={() => {}}
-                placeholder="Enter task name"
-                label="Task Name"
-            />
-            <DefaultInput
-                onSubmit={() => {}}
-                onChange={() => {}}
-                placeholder="Enter task name"
-                label="Task Name"
+                placeholder="Enter board name"
+                label="Board Name"
             />
             <span className="flex justify-between items-center w-full">
                 <b>Group</b>

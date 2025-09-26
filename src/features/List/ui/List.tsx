@@ -6,7 +6,7 @@ import { ColorsDropDown } from '@entities/Label';
 import {
     TaskCard,
     EditTask,
-    TasksGroupSchema,
+    IListSchema,
     useTaskDragAndDropContext,
     useTaskDragAndDropOrderContext,
 } from '@entities/Task';
@@ -14,7 +14,7 @@ import { createStateController, useOrderDragAndDrop, useParentDragAndDrop } from
 import { DefaultButton, AddButton, DropDownContainer, ListDropDown, Drag, Popup } from '@shared/ui';
 
 interface IListProps {
-    list: TasksGroupSchema;
+    list: IListSchema;
 }
 
 export default function List({ list }: IListProps) {

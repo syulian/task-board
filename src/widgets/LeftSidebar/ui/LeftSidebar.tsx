@@ -157,10 +157,10 @@ export default function LeftSidebar() {
                 ref={sidebarRef}
             >
                 <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden h-full">
-                    <Tooltip text="Task Board" isExpanded={isExpanded}>
+                    <Tooltip text="TaskBoard" isExpanded={isExpanded}>
                         <NavButton onClick={() => router.push('/')}>
                             <Image alt="logo" src={logo} width={24} height={24} priority />
-                            {isExpanded && <p>Task Board</p>}
+                            {isExpanded && <p>TaskBoard</p>}
                         </NavButton>
                     </Tooltip>
                     <Tooltip text="Profile" isExpanded={isExpanded}>

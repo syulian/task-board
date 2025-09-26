@@ -1,20 +1,22 @@
 'use client';
 import { clsx } from 'clsx';
-import React from 'react';
+import React, { useState } from 'react';
 import { HiMiniCheck } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
+import { EditTask } from '@entities/Task';
 import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
-import { TaskSchema } from '@entities/Task/model/types/TaskSchema';
-import { TasksGroupSchema } from '@entities/Task/model/types/TasksGroupSchema';
+import { IListSchema } from '@entities/Task/model/types/IListSchema';
+import { ITask } from '@entities/Task/model/types/ITask';
 import { getDate, useDragAndDrop } from '@shared/lib';
-import { Label, Checkbox } from '@shared/ui';
+import { Label, Checkbox, Popup, StopPropagation } from '@shared/ui';
 
 interface ITaskCardProps {
-    task: TaskSchema;
-    list: TasksGroupSchema;
+    task: ITask;
+    list: IListSchema;
 }
 
 export default function TaskCard({ task, list }: ITaskCardProps) {
+    const [isOpen, setIsOpen] = useState(false);
     const { body, title, labels, subtasks, complete, dueDate } = task;
 
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
@@ -33,6 +35,9 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
 
     return (
         <div
+            role="button"
+            tabIndex={0}
+            aria-label={`Edit task ${task.title}`}
             className={clsx(
                 'flex flex-col gap-2 border border-surface-dark rounded-sm bg-surface-light p-2 mt-2 cursor-pointer relative',
                 isDragOver && currentItem && 'border-dashed border-surface-lighter',
@@ -43,6 +48,13 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             onDragStart={onDragStart}
             onDragOver={onDragOver}
             onDrop={onDrop}
+            onClick={() => setIsOpen(true)}
+            onKeyDown={e => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    setIsOpen(true);
+                }
+            }}
         >
             {(complete || dueDate) && (
                 <p
@@ -65,13 +77,15 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
                             <HiMiniCheck size={14} fontWeight="bold" color="white" />
                             {subtasks.filter(s => s.checked).length}/{subtasks.length}
                         </span>
-                        <div className="flex flex-col gap-1">
-                            {subtasks.map(s => (
-                                <Checkbox key={s.id} onChange={() => {}} state={s.checked}>
-                                    {s.value}
-                                </Checkbox>
-                            ))}
-                        </div>
+                        <StopPropagation>
+                            <div className="flex flex-col gap-1">
+                                {subtasks.map(s => (
+                                    <Checkbox key={s.id} onChange={() => {}} state={s.checked}>
+                                        {s.value}
+                                    </Checkbox>
+                                ))}
+                            </div>
+                        </StopPropagation>
                     </>
                 )}
             </div>
@@ -80,6 +94,11 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
                     <Label key={l.name} name={l.name} color={l.color} />
                 ))}
             </div>
+            <StopPropagation>
+                <Popup isOpen={isOpen} setIsOpen={() => setIsOpen(false)}>
+                    <EditTask />
+                </Popup>
+            </StopPropagation>
         </div>
     );
 }

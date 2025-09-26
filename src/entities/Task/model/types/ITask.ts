@@ -1,6 +1,6 @@
 import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
 
-export interface TaskSchema {
+export interface ITask {
     id: string;
     order: number;
     title: string;

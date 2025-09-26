@@ -11,6 +11,7 @@ const useDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>(
         setCurrentGroup: (group: TG | null) => void;
         setGroups: Dispatch<SetStateAction<TG[]>>;
     },
+    onReorder?: (updated: TG[]) => void,
 ) => {
     const [isDragOver, setIsDragOver] = useState(false);
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } = ctx;
@@ -45,15 +46,14 @@ const useDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>(
 
         if (!currentGroup || !currentItem) return;
 
-        setGroups(prev =>
-            prev.map(g => {
+        setGroups(prev => {
+            const updated = prev.map(g => {
                 let updatedItems = g.items.filter(b => b.id !== currentItem.id);
 
                 if (g.id === group.id) {
-                    const dropIndex = updatedItems.findIndex(b => b.id === item.id);
-                    const newItem = { ...currentItem, order: item.order - 1 };
+                    const dropIndex = updatedItems.indexOf(item);
 
-                    updatedItems.splice(dropIndex, 0, newItem);
+                    updatedItems.splice(dropIndex, 0, currentItem);
                     updatedItems = updatedItems.map((b, i) => ({ ...b, order: i }));
                 }
 
@@ -61,8 +61,11 @@ const useDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>(
                     ...g,
                     items: updatedItems,
                 };
-            }),
-        );
+            });
+
+            onReorder?.(updated);
+            return updated;
+        });
 
         setCurrentGroup(null);
         setCurrentItem(null);

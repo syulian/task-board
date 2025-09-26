@@ -1,5 +1,6 @@
-'use client';
-import React, { useState } from 'react';
+import { useMutation } from '@apollo/client/react';
+import React, { FormEvent, useState } from 'react';
+import { CREATE_BOARD } from '@entities/Board/api/createBoard';
 import { ConfirmButton, DefaultInput } from '@shared/ui';
 
 interface IAddBoardDropDownProps {
@@ -7,19 +8,30 @@ interface IAddBoardDropDownProps {
 }
 
 export default function AddBoardDropDown({ groupId }: IAddBoardDropDownProps) {
+    const [newBoard, { loading, error }] = useMutation(CREATE_BOARD, {
+        refetchQueries: ['GetBoardsGroups'],
+    });
     const [value, setValue] = useState('');
 
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (loading || !value.length) return;
+
+        await newBoard({ variables: { name: value, order: 1, groupId } });
+        setValue('');
+    };
+
     return (
-        <div className="flex flex-col gap-6 p-4 font-normal">
+        <form className="flex flex-col gap-6 p-4 font-normal" onSubmit={handleSubmit}>
             <DefaultInput
-                onSubmit={() => {}}
                 onChange={event => setValue(event.target.value)}
                 placeholder="Enter name..."
                 label="Board Name"
+                value={value}
             />
-            <ConfirmButton onClick={() => {}} ariaLabel="Add Board" disabled={!!value.length}>
+            <ConfirmButton type="submit" ariaLabel="Add Board" disabled={!value.length}>
                 Add Board
             </ConfirmButton>
-        </div>
+        </form>
     );
 }

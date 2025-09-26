@@ -1,12 +1,12 @@
 import React, { ChangeEvent } from 'react';
 
 interface IDefaultInputProps {
-    type?: string;
+    type?: 'text' | 'password';
     placeholder?: string;
     label: string;
     value?: string;
     onChange: (event: ChangeEvent<HTMLInputElement>) => void;
-    onSubmit: () => void;
+    onSubmit?: () => void;
 }
 
 export default function DefaultInput({
@@ -15,14 +15,7 @@ export default function DefaultInput({
     label,
     value,
     onChange,
-    onSubmit,
 }: IDefaultInputProps) {
-    const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-        if (event.key === 'Enter') {
-            onSubmit();
-        }
-    };
-
     return (
         <div className="flex flex-col gap-1.5">
             <label htmlFor={label}>{label}</label>
@@ -30,7 +23,6 @@ export default function DefaultInput({
                 className="w-full border border-surface-lighter bg-surface-dark outline-none caret-surface-lighter py-1 px-2 rounded-md h-10.5"
                 type={type}
                 onChange={onChange}
-                onKeyDown={handleOnKeyDown}
                 value={value}
                 placeholder={placeholder}
                 id={label}

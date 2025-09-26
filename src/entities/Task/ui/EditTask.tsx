@@ -63,7 +63,7 @@ export default function EditTask() {
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     return (
-        <div className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-3xl">
+        <div className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-3xl cursor-auto">
             <div className="flex flex-col gap-6 pr-6 border-r border-surface-lighter">
                 <DefaultInput
                     onSubmit={() => {}}
