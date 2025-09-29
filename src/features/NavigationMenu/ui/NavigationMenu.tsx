@@ -1,8 +1,9 @@
 'use client';
 import { clsx } from 'clsx';
-import React, { useRef, useState } from 'react';
+import React, { useRef } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
+import useGroupContextMenu from '@features/NavigationMenu/lib/hooks/useGroupContextMenu';
 import {
     BoardLink,
     IBoardsGroup,
@@ -10,8 +11,8 @@ import {
     useBoardDragAndDropContext,
     IBoardLink,
 } from '@entities/Board';
-import { createStateController, useParentDragAndDrop, useSortedItems } from '@shared/lib';
-import { DropDownContainer, Tooltip } from '@shared/ui';
+import { useParentDragAndDrop, useSortedItems } from '@shared/lib';
+import { DropDownContainer, InlineInput, ListDropDown, Tooltip } from '@shared/ui';
 import './list.animation.css';
 
 interface INavigationMenuProps {
@@ -20,13 +21,7 @@ interface INavigationMenuProps {
 }
 
 export default function NavigationMenu({ group, isExpanded }: INavigationMenuProps) {
-    const [isOpen, setIsOpen] = useState({
-        group: true,
-        add: false,
-    });
     const listRef = useRef(null);
-
-    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const { currentItem, setGroups, currentGroup } = useBoardDragAndDropContext();
     const { onDragOver, onDrop } = useParentDragAndDrop(group, {
@@ -35,26 +30,40 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
         currentGroup,
     });
 
+    const { disabled, handleBoardsGroupRename, contextMenu, isOpen, setIsOpenField } =
+        useGroupContextMenu(group);
     const sortedItems = useSortedItems<IBoardLink>(group.items);
 
     return (
         <section className="relative">
             <Tooltip text={group.name} isExpanded={isExpanded}>
-                <div className="flex items-center w-full rounded-lg hover:bg-surface-light text-gray-300 font-bold transition duration-300 ease-in-out">
+                <div className="flex items-center w-full rounded-lg hover:bg-bg-neutral font-bold transition duration-300 ease-in-out">
                     <button
                         className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
                         onClick={() => setIsOpenField('group', !isOpen.group)}
+                        onContextMenu={event => {
+                            event.preventDefault();
+                            setIsOpenField('menu', !isOpen.menu);
+                        }}
                     >
                         {isOpen.group ? (
                             <HiMiniChevronDown aria-hidden="true" className="min-w-6 min-h-6" />
                         ) : (
                             <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
                         )}
-                        {isExpanded && <p>{group.name}</p>}
+                        {!disabled ? (
+                            <InlineInput
+                                value={group.name}
+                                disabled={disabled}
+                                onBlur={handleBoardsGroupRename}
+                            />
+                        ) : (
+                            group.name
+                        )}
                     </button>
                     {isExpanded && (
                         <button
-                            className="ml-auto py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg absolute left-[251px]"
+                            className="ml-auto py-1.5 px-4 cursor-pointer text-text-primary hover:bg-bg-neutral-lighter rounded-lg absolute left-[251px]"
                             onClick={() => setIsOpenField('add', true)}
                         >
                             <HiOutlinePlusSmall aria-hidden="true" size={24} />
@@ -93,6 +102,13 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                 className="right-0 top-0"
             >
                 <AddBoardDropDown groupId={group.id} />
+            </DropDownContainer>
+            <DropDownContainer
+                isOpen={isOpen.menu && isExpanded}
+                setIsOpen={() => setIsOpenField('menu', false)}
+                className="right-0 top-0"
+            >
+                <ListDropDown list={contextMenu} />
             </DropDownContainer>
         </section>
     );

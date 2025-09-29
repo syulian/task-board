@@ -5,7 +5,7 @@ import React from 'react';
 import { IBoardLink, IBoardsGroup } from '@entities/Board';
 import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
 import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
-import { PAGES } from '@shared/config';
+import { Router } from '@shared/config';
 import { DropDownContainer, InlineInput, ListDropDown } from '@shared/ui';
 
 interface IMenuItemProps {
@@ -24,11 +24,11 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
     return (
         <>
             <Link
-                href={PAGES.BOARD(board.id)}
+                href={Router.BOARD(board.id)}
                 className={clsx(
-                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-surface-light ',
+                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-bg-neutral truncate',
                     isExpanded ? 'pl-12' : 'pl-4',
-                    isDragOver && currentItem && 'bg-surface-light',
+                    isDragOver && currentItem && 'bg-bg-neutral',
                 )}
                 draggable
                 onDragOver={onDragOver}
@@ -52,7 +52,7 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
                         board.name
                     )
                 ) : (
-                    <p className="w-6 text-center bg-surface-light rounded-full">
+                    <p className="w-6 text-center bg-bg-neutral rounded-full">
                         {Array.from(board.name)[0] ?? '?'}
                     </p>
                 )}

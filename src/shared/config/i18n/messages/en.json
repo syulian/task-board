@@ -1,0 +1,26 @@
+{
+  "LeftSidebar": {
+    "logo": "TaskBoard",
+    "profile": {
+      "signIn": "Sign in",
+      "signUp": "Sign up"
+    },
+    "groups": {
+      "addGroup": "Add Group"
+    },
+    "settings": "Settings",
+    "theme": "Theme",
+    "themes": {
+      "light": "Light",
+      "dark": "Dark",
+      "system": "System"
+    },
+    "language": "Language",
+    "languages": {
+      "english": "English",
+      "ukrainian": "Ukrainian"
+    },
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar"
+  }
+}

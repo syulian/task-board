@@ -86,8 +86,8 @@ export default function List({ list }: IListProps) {
     return (
         <li
             className={clsx(
-                'flex flex-col border-surface-light border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative',
-                isDragOverOrder && currentOrder && 'border-dashed border-surface-lighter',
+                'flex flex-col border-bg-neutral border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative',
+                isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}

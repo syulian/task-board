@@ -30,8 +30,8 @@ export default function SubtaskControl({ subtask }: ISubtaskControlProps) {
     return (
         <div
             className={clsx(
-                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border border-surface-light',
-                isDragOverOrder && currentOrder && 'border-dashed border-surface-lighter',
+                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border border-bg-neutral',
+                isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}

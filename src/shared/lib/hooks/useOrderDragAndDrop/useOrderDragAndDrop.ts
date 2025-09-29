@@ -1,3 +1,4 @@
+'use client';
 import { Dispatch, DragEvent, SetStateAction, useState } from 'react';
 import { ItemSchema } from '@shared/types';
 

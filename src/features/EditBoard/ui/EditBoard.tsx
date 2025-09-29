@@ -50,7 +50,7 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
                 <b>Group</b>
                 <Select list={groups} selected={selected} setSelected={setSelected} />
             </span>
-            <hr className="text-surface-lighter" />
+            <hr className="text-bg-neutral-lighter" />
             <b>Labels</b>
             <div className="flex flex-wrap gap-2">
                 <SecondButton onClick={openLabelPopup}>Configure Labels</SecondButton>

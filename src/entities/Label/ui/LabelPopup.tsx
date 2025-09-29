@@ -68,7 +68,7 @@ export default function LabelPopup() {
                     <HiOutlinePlusSmall size={24} />
                 </DefaultButton>
             </div>
-            <hr className="text-surface-lighter" />
+            <hr className="text-bg-neutral-lighter" />
             <LabelDragAndDropOrderContext
                 value={{
                     currentOrder: currentOrder,

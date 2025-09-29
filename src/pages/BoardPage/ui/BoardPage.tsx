@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export async function BoardPage() {
     return (
-        <main className="flex flex-col bg-background-dark w-screen min-w-80 p-4">
+        <main className="flex flex-col bg-bg-primary w-screen min-w-80 p-4">
             <Header />
             <Board />
         </main>

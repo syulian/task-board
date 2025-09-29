@@ -3,29 +3,32 @@ import { useQuery } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import React, { useEffect, useRef, useState } from 'react';
 import {
     HiMiniChevronDoubleLeft,
-    HiOutlinePlusCircle,
-    HiOutlineCog8Tooth,
-    HiOutlineUserCircle,
     HiMiniChevronDoubleRight,
-    HiMiniCheck,
+    HiOutlineCog8Tooth,
+    HiOutlinePlusCircle,
+    HiOutlineUserCircle,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { GET_BOARDS_GROUPS } from '@widgets/LeftSidebar/api/getBoardsGroups';
+import { LanguageDropDown } from '@features/LanguageDropDown';
 import { NavigationMenu } from '@features/NavigationMenu';
+import { ThemeDropDown } from '@features/ThemeDropDown';
 import {
+    AddGroupDropDown,
     BoardDragAndDropContext,
     IBoardLink,
     IBoardsGroup,
-    AddGroupDropDown,
 } from '@entities/Board';
 import { SignInPopup, SignUpPopup } from '@entities/User';
 import logo from '@shared/assets/images/website-logo.png';
 import { createStateController } from '@shared/lib';
 import { DropDownContainer, ListDropDown, NavButton, Popup, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
+import { useSession } from 'next-auth/react';
 
 export default function LeftSidebar() {
     const [currentItem, setCurrentItem] = useState<IBoardLink | null>(null);
@@ -54,6 +57,8 @@ export default function LeftSidebar() {
             setGroups(data.getBoardsGroups);
         }
     }, [data, loading]);
+
+    const t = useTranslations('LeftSidebar');
 
     const dropDownList = [
         {
@@ -96,50 +101,6 @@ export default function LeftSidebar() {
         },
     ];
 
-    const themesList = [
-        {
-            title: 'Theme',
-            children: [
-                {
-                    label: 'Light',
-                    onClick: () => {},
-                },
-                {
-                    label: (
-                        <>
-                            Dark <HiMiniCheck size={18} fontWeight="bold" color="white" />
-                        </>
-                    ),
-                    onClick: () => {},
-                },
-                {
-                    label: 'System',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
-
-    const languagesList = [
-        {
-            title: 'Language',
-            children: [
-                {
-                    label: (
-                        <>
-                            English <HiMiniCheck size={18} fontWeight="bold" color="white" />
-                        </>
-                    ),
-                    onClick: () => {},
-                },
-                {
-                    label: 'Ukraine',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
-
     const openSignUp = () => {
         setIsOpenField('signIn', false);
         setIsOpenField('signUp', true);
@@ -150,23 +111,27 @@ export default function LeftSidebar() {
         setIsOpenField('signIn', true);
     };
 
+    const session = useSession();
+
+    console.log(session);
+
     return (
         <CSSTransition in={isExpanded} nodeRef={sidebarRef} timeout={300} classNames="left-sidebar">
             <aside
-                className="flex flex-col max-w-85 w-full bg-surface-dark h-screen border-surface-light border-r"
+                className="flex flex-col max-w-85 w-full bg-bg-secondary h-screen border-bg-neutral border-r"
                 ref={sidebarRef}
             >
                 <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden h-full">
                     <Tooltip text="TaskBoard" isExpanded={isExpanded}>
                         <NavButton onClick={() => router.push('/')}>
-                            <Image alt="logo" src={logo} width={24} height={24} priority />
-                            {isExpanded && <p>TaskBoard</p>}
+                            <Image alt={t('logo')} src={logo} width={24} height={24} priority />
+                            {isExpanded && <p>{t('logo')}</p>}
                         </NavButton>
                     </Tooltip>
-                    <Tooltip text="Profile" isExpanded={isExpanded}>
+                    <Tooltip text={t('profile.signIn')} isExpanded={isExpanded}>
                         <NavButton onClick={() => setIsOpenField('signIn', true)}>
                             <HiOutlineUserCircle aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>Sign in</p>}
+                            {isExpanded && <p>{t('profile.signIn')}</p>}
                         </NavButton>
                     </Tooltip>
                     <Popup isOpen={isOpen.signIn} setIsOpen={() => setIsOpenField('signIn', false)}>
@@ -189,14 +154,14 @@ export default function LeftSidebar() {
                         ))}
                     </BoardDragAndDropContext>
                 </div>
-                <div className="flex flex-col gap-2 mt-auto p-4 border-t border-surface-light sticky z-30 bottom-0 bg-surface-dark">
-                    <Tooltip text="Add Group" isExpanded={isExpanded}>
+                <div className="flex flex-col gap-2 mt-auto p-4 border-t border-bg-neutral sticky z-30 bottom-0 bg-bg-secondary">
+                    <Tooltip text={t('groups.addGroup')} isExpanded={isExpanded}>
                         <NavButton
                             onClick={() => setIsOpenField('add', true)}
-                            ariaLabel="Add Group"
+                            ariaLabel={t('groups.addGroup')}
                         >
                             <HiOutlinePlusCircle aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>Add Group</p>}
+                            {isExpanded && <p>{t('groups.addGroup')}</p>}
                         </NavButton>
                         <DropDownContainer
                             isOpen={isOpen.add}
@@ -206,7 +171,7 @@ export default function LeftSidebar() {
                             <AddGroupDropDown />
                         </DropDownContainer>
                     </Tooltip>
-                    <div className="flex items-center rounded-lg hover:bg-surface-light transition duration-300 ease-in-out">
+                    <div className="flex items-center rounded-lg hover:bg-bg-neutral transition duration-300 ease-in-out">
                         {isExpanded && (
                             <div className="relative w-full">
                                 <button
@@ -217,7 +182,7 @@ export default function LeftSidebar() {
                                         aria-hidden="true"
                                         className="min-w-6 min-h-6"
                                     />
-                                    <p>Settings</p>
+                                    <p>{t('settings')}</p>
                                 </button>
                                 <DropDownContainer
                                     isOpen={isOpen.settings}
@@ -226,25 +191,20 @@ export default function LeftSidebar() {
                                 >
                                     <ListDropDown list={dropDownList} />
                                 </DropDownContainer>
-                                <DropDownContainer
+                                <ThemeDropDown
                                     isOpen={isOpen.themes}
                                     setIsOpen={() => setIsOpenField('themes', false)}
-                                    className="left-0 bottom-full"
-                                >
-                                    <ListDropDown list={themesList} />
-                                </DropDownContainer>
-                                <DropDownContainer
+                                />
+                                <LanguageDropDown
                                     isOpen={isOpen.languages}
                                     setIsOpen={() => setIsOpenField('languages', false)}
-                                    className="left-0 bottom-full"
-                                >
-                                    <ListDropDown list={languagesList} />
-                                </DropDownContainer>
+                                />
                             </div>
                         )}
                         <button
+                            aria-label={isExpanded ? t('collapse') : t('expand')}
                             className={clsx(
-                                'py-1.5 px-4 cursor-pointer text-white hover:bg-surface-lighter rounded-lg',
+                                'py-1.5 px-4 cursor-pointer text-text-primary hover:bg-bg-neutral-lighter rounded-lg',
                                 isExpanded && 'ml-auto',
                             )}
                             onClick={() => setIsExpanded(prev => !prev)}

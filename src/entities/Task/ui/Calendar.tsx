@@ -78,8 +78,8 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
                             key={i}
                             className={clsx(
                                 'flex items-center justify-center w-11.5 h-11.5 p-4 rounded-sm cursor-pointer',
-                                today && 'border border-surface-lighter',
-                                isSelected && 'bg-surface-lighter/50',
+                                today && 'border border-bg-neutral-lighter',
+                                isSelected && 'bg-bg-neutral-lighter/50',
                             )}
                             role="gridcell"
                             aria-selected={!!isSelected}

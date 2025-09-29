@@ -1,3 +1,4 @@
+'use client';
 import { Dispatch, DragEvent, SetStateAction, useState } from 'react';
 import { GroupSchema, ItemSchema } from '@shared/types';
 

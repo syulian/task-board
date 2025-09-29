@@ -13,6 +13,7 @@ export { default as Time } from './Input/Time/Time';
 export { default as InlineInput } from './Input/InlineInput/InlineInput';
 export { default as Label } from './Label/Label';
 export { default as LabelEdit } from './Label/LabelEdit';
+export { default as LabelChecked } from './Label/LabelChecked';
 export { default as DropDownContainer } from './DropDownContainer/DropDownContainer';
 export { default as ListDropDown } from './ListDropDown/ListDropDown';
 export { default as Tooltip } from './Tooltip/Tooltip';

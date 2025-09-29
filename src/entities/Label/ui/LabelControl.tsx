@@ -8,11 +8,11 @@ import ColorsDropDown from '@entities/Label/ui/ColorsDropDown';
 import { useOrderDragAndDrop } from '@shared/lib';
 import { AddInput, ColorButton, DefaultButton, Drag, DropDownContainer } from '@shared/ui';
 
-interface ISearchInputProps {
+interface ILabelControlProps {
     label: LabelSchema;
 }
 
-export default function LabelControl({ label }: ISearchInputProps) {
+export default function LabelControl({ label }: ILabelControlProps) {
     const [isOpen, setIsOpen] = useState(false);
     const { setCurrentOrder, currentOrder, setOrders } = useLabelDragAndDropOrderContext();
 
@@ -32,8 +32,8 @@ export default function LabelControl({ label }: ISearchInputProps) {
     return (
         <div
             className={clsx(
-                'flex items-center gap-2 px-4 py-1 relative drag-target rounded-md border border-surface-light',
-                isDragOverOrder && currentOrder && 'border-dashed border-surface-lighter',
+                'flex items-center gap-2 px-4 py-1 relative drag-target rounded-md border border-bg-neutral',
+                isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}

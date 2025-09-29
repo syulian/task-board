@@ -1,1 +1,1 @@
-export { BoardPage as default, generateMetadata } from '@pages/BoardPage/';
+export { BoardPage as default, generateMetadata } from '@pages/BoardPage';

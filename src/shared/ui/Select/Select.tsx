@@ -15,18 +15,18 @@ export default function Select({ list, selected, setSelected }: ISelectProps) {
     return (
         <div className="flex relative min-w-0">
             <button
-                className="flex items-center justify-between gap-2 bg-surface-dark border border-surface-lighter px-4 py-1 rounded-sm cursor-pointer w-full truncate"
+                className="flex items-center justify-between gap-2 bg-bg-secondary border border-bg-neutral-lighter px-4 py-1 rounded-sm cursor-pointer w-full truncate"
                 onClick={() => setIsOpen(prev => !prev)}
             >
                 <span className="truncate overflow-hidden">{selected.label}</span>
                 <HiMiniChevronDown className="min-h-6 min-w-6" />
             </button>
             {isOpen && (
-                <ul className="absolute top-full bg-surface-dark w-full rounded-b-sm overflow-y-auto max-h-54">
+                <ul className="absolute top-full bg-bg-secondary w-full rounded-b-sm overflow-y-auto max-h-54">
                     {list.map(l => (
                         <li key={l.id}>
                             <button
-                                className="cursor-pointer hover:bg-surface-light py-1 px-4 rounded-sm text-white w-full text-left truncate"
+                                className="cursor-pointer hover:bg-bg-neutral py-1 px-4 rounded-sm text-white w-full text-left truncate"
                                 onClick={() => {
                                     setIsOpen(false);
                                     setSelected(l);

@@ -1,3 +1,4 @@
+'use client';
 import { createContext, useContext, Dispatch, SetStateAction } from 'react';
 import { ItemSchema } from '@shared/types';
 

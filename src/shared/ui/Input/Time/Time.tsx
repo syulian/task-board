@@ -27,9 +27,9 @@ export default function Time({ minutes, hours, setMinutes, setHours }: ITimeProp
     };
 
     return (
-        <span className="flex justify-between items-center border border-surface-lighter rounded-md bg-surface-dark w-20">
+        <span className="flex justify-between items-center border border-bg-neutral-lighter rounded-md bg-bg-secondary w-20">
             <input
-                className="w-8 text-center appearance-none outline-none caret-surface-lighter"
+                className="w-8 text-center appearance-none outline-none caret-bg-neutral-lighter"
                 type="text"
                 onChange={handleHoursInput}
                 maxLength={2}
@@ -37,7 +37,7 @@ export default function Time({ minutes, hours, setMinutes, setHours }: ITimeProp
             />
             :
             <input
-                className="w-8 text-center appearance-none outline-none caret-surface-lighter"
+                className="w-8 text-center appearance-none outline-none caret-bg-neutral-lighter"
                 type="text"
                 onChange={handleMinutesInput}
                 maxLength={2}

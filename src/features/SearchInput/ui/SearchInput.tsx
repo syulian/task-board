@@ -47,15 +47,15 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
     const filters = [
         {
             name: 'No Label',
-            color: '#1d2126',
+            color: '#323232',
         },
         {
             name: 'Due Date',
-            color: '#1d2126',
+            color: '#323232',
         },
         {
             name: 'Complete',
-            color: '#1d2126',
+            color: '#323232',
         },
         ...labels,
     ];
@@ -69,7 +69,7 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
 
     return (
         <div
-            className="flex items-center border-surface-light border w-full max-w-sm p-2 gap-2 rounded-sm relative"
+            className="flex items-center border-bg-neutral border w-full max-w-sm p-2 gap-2 rounded-sm relative"
             onFocus={() => setIsFocused(true)}
             onBlur={e => {
                 if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -80,7 +80,7 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
         >
             <HiMagnifyingGlass size={24} />
             <input
-                className="w-full outline-none text-sm caret-surface-light h-6"
+                className="w-full outline-none text-sm caret-bg-neutral h-6"
                 type="search"
                 onChange={onChange}
                 aria-label="Search"
@@ -94,7 +94,7 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
                 unmountOnExit
             >
                 <ul
-                    className="absolute left-0 top-[calc(100%+4px)] z-20 flex flex-wrap gap-2 w-full bg-background-dark  rounded-b-md p-4 "
+                    className="absolute left-0 top-[calc(100%+4px)] z-20 flex flex-wrap gap-2 w-full bg-bg-primary  rounded-b-md p-4"
                     ref={ulRef}
                 >
                     {filters.map((f, i) => (
@@ -102,9 +102,9 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
                             <button
                                 style={{ backgroundColor: f.color }}
                                 className={clsx(
-                                    'py-0.5 px-2 rounded-sm cursor-pointer border-2 border-background-dark',
+                                    'py-0.5 px-2 rounded-sm cursor-pointer border-2 border-bg-neutral-lighter/0 text-text-secondary',
                                     filter.some(el => el.name === f.name) &&
-                                        'border-surface-lighter',
+                                        'border-bg-neutral-lighter/100',
                                 )}
                                 onClick={() => handleFilter(f)}
                             >

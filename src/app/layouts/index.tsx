@@ -1,7 +1,12 @@
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
+import { NextIntlClientProvider } from 'next-intl';
+import { getMessages } from 'next-intl/server';
 import React, { ReactNode } from 'react';
 import { ApolloClientProvider } from '@app/providers/ApolloClientProvider';
+import { NextAuthProvider } from '@app/providers/NextAuthProvider';
 import { StoreProvider } from '@app/providers/StoreProvider';
+import { ThemeProvider } from '@app/providers/ThemeProvider';
 import { LeftSidebar } from '@widgets/LeftSidebar';
 import { RightSidebar } from '@features/RightSidebar';
 import '../styles';
@@ -26,17 +31,28 @@ export const metadata: Metadata = {
     manifest: '/icons/site.webmanifest',
 };
 
-export function RootLayout({ children }: IRootLayoutProps) {
+export async function RootLayout({ children }: IRootLayoutProps) {
+    const store = await cookies();
+    const locale = store.get('locale')?.value || 'en';
+
+    const messages = await getMessages();
+
     return (
-        <html lang="en">
+        <html lang={locale}>
             <body>
                 <ApolloClientProvider>
                     <StoreProvider>
-                        <div className="flex">
-                            <LeftSidebar />
-                            {children}
-                            <RightSidebar />
-                        </div>
+                        <ThemeProvider>
+                            <NextAuthProvider>
+                                <NextIntlClientProvider messages={messages}>
+                                    <div className="flex">
+                                        <LeftSidebar />
+                                        {children}
+                                        <RightSidebar />
+                                    </div>
+                                </NextIntlClientProvider>
+                            </NextAuthProvider>
+                        </ThemeProvider>
                     </StoreProvider>
                 </ApolloClientProvider>
             </body>

@@ -39,8 +39,8 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             tabIndex={0}
             aria-label={`Edit task ${task.title}`}
             className={clsx(
-                'flex flex-col gap-2 border border-surface-dark rounded-sm bg-surface-light p-2 mt-2 cursor-pointer relative',
-                isDragOver && currentItem && 'border-dashed border-surface-lighter',
+                'flex flex-col gap-2 border border-bg-secondary bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
+                isDragOver && currentItem && 'border-dashed border-bg-neutral-lighter',
             )}
             draggable
             onDragLeave={onDragLeave}
@@ -59,9 +59,9 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             {(complete || dueDate) && (
                 <p
                     className={clsx(
-                        'absolute top-0 right-4 py-1 px-2 bg-background-dark rounded-b-sm font-semibold text-sm border-b border-l border-r border-surface-dark opacity-80',
+                        'absolute top-0 right-4 py-1 px-2 bg-bg-primary rounded-b-sm font-semibold text-sm border-b border-l border-r border-bg-secondary opacity-80',
                         complete
-                            ? 'bg-green-800'
+                            ? 'bg-green-800 text-text-secondary'
                             : dueDate && (dueDate >= new Date() ? 'text-blue-400' : 'text-red-400'),
                     )}
                 >
@@ -73,8 +73,8 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
                 <Markdown>{body}</Markdown>
                 {subtasks && (
                     <>
-                        <span className="flex gap-2 items-center py-2">
-                            <HiMiniCheck size={14} fontWeight="bold" color="white" />
+                        <span className="flex gap-2 items-center py-2 text-text-primary">
+                            <HiMiniCheck size={14} fontWeight="bold" />
                             {subtasks.filter(s => s.checked).length}/{subtasks.length}
                         </span>
                         <StopPropagation>

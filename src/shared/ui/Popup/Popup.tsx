@@ -30,7 +30,7 @@ export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
         >
             <>
                 <div
-                    className="fixed z-40 inset-0 bg-background-dark/80"
+                    className="fixed z-40 inset-0 bg-bg-primary/80"
                     ref={popupRef}
                     role="presentation"
                     onClick={setIsOpen}
@@ -43,7 +43,7 @@ export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
                     unmountOnExit
                 >
                     <section
-                        className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2 border border-surface-lighter bg-surface-light p-4 rounded-md"
+                        className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2 border border-bg-neutral-lighter bg-bg-neutral p-4 rounded-md"
                         ref={sectionRef}
                     >
                         <span className="flex justify-end">

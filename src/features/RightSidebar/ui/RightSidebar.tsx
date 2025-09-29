@@ -76,11 +76,11 @@ export default function RightSidebar() {
             unmountOnExit
         >
             <aside
-                className="max-w-85 bg-surface-dark h-screen p-4 border-surface-light border-l shadow-xl/90"
+                className="max-w-85 bg-bg-secondary h-screen p-4 border-bg-neutral border-l shadow-xl/90"
                 ref={sidebarRef}
             >
                 <div className="min-w-77 flex flex-col gap-6 overflow-y-scroll ">
-                    <div className="flex items-center py-4 border-b border-surface-lighter h-18.5">
+                    <div className="flex items-center py-4 border-b border-bg-neutral-lighter h-18.5">
                         <p className="font-semibold flex-1 text-center">Upcoming Tasks</p>
                         <div className="relative">
                             <DefaultButton
@@ -106,7 +106,7 @@ export default function RightSidebar() {
                             {p.tasks.map(t => (
                                 <div key={t.time} className="flex gap-4">
                                     <time className="font-semibold">{getHour(t.time)}</time>
-                                    <div className="flex flex-col bg-surface-light p-2 rounded-sm text-sm">
+                                    <div className="flex flex-col bg-bg-neutral p-2 rounded-sm text-sm">
                                         <Markdown>{t.body}</Markdown>
                                         <div className="flex flex-col gap-1 font-semibold mt-4">
                                             <span className="flex gap-2 items-center">

@@ -20,7 +20,7 @@ export default function DefaultInput({
         <div className="flex flex-col gap-1.5">
             <label htmlFor={label}>{label}</label>
             <input
-                className="w-full border border-surface-lighter bg-surface-dark outline-none caret-surface-lighter py-1 px-2 rounded-md h-10.5"
+                className="w-full border border-bg-neutral-lighter bg-bg-secondary outline-none caret-bg-neutral-lighter py-1 px-2 rounded-md h-10.5"
                 type={type}
                 onChange={onChange}
                 value={value}

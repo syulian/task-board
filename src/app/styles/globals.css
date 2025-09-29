@@ -3,37 +3,35 @@
 
 @tailwind utilities;
 
-:root {
-    --background: #1e2228;
-    --foreground: #252931;
-}
-
 @theme {
-    --color-background-dark: #121619;
-    --color-surface-dark: #16191d;
-    --color-surface-light: #1d2126;
-    --color-surface-lighter: #69788a;
+    --color-bg-primary: #121619;
+    --color-bg-secondary: #16191d;
+    --color-bg-neutral: #1d2126;
+    --color-bg-neutral-lighter: #69788a;
+    --color-text-primary: #ffffff;
+    --color-text-secondary: #dadada;
 }
 
-@theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-}
-
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #121619;
-        --foreground: #ededed;
-    }
+[data-theme="light"] {
+    --color-bg-primary: #f8f9fa;
+    --color-bg-secondary: #f1f2f3;
+    --color-bg-neutral: #eaebec;
+    --color-bg-neutral-lighter: #c3c3c5;
+    --color-text-primary: #636363;
+    --color-text-secondary: #dadada;
 }
 
 body {
-    background: var(--background);
-    color: var(--foreground);
+    background: var(--color-bg-primary);
+    color: var(--color-text-primary);
     font-family: "Sans-serif", sans-serif;
+}
+
+body * {
+    @apply transition-colors duration-300;
 }
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: #1d2126 #1d2126;
+    scrollbar-color: var(--color-bg-secondary) var(--color-bg-secondary);
 }

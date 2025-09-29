@@ -1,3 +1,3 @@
-export const PAGES = {
+export const Router = {
     BOARD: (boardId: string) => `/board/${boardId}`,
 };

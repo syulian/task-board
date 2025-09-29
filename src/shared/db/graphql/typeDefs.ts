@@ -68,5 +68,7 @@ export const typeDefs = gql`
         updateBoard(id: ID!, name: String!): Board!
         updateBoardsOrders(boards: [BoardInput!]!): [BoardsGroup!]!
         createBoardsGroup(name: String!, order: Int): BoardsGroup!
+        deleteBoardsGroup(id: ID!): ID!
+        updateBoardsGroup(id: ID!, name: String!): BoardsGroup!
     }
 `;

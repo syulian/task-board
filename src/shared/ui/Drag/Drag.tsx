@@ -20,7 +20,7 @@ export default function Drag({ onDragStart, onDragEnd, target, children }: IDrag
             }}
             onDragEnd={onDragEnd}
         >
-            <p className="text-3xl text-surface-lighter w-6 ">⋮⋮</p>
+            <p className="text-3xl text-bg-neutral-lighter w-6 ">⋮⋮</p>
             {children}
         </span>
     );

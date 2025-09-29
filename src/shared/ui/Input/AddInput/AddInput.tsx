@@ -21,10 +21,10 @@ export default function AddInput({ value, placeholder, onSubmit }: IAddInputProp
     };
 
     return (
-        <div className="flex items-center border-surface-lighter bg-surface-dark border w-full p-2 gap-2 rounded-sm h-10.5">
+        <div className="flex items-center border-bg-neutral-lighter bg-bg-secondary border w-full p-2 gap-2 rounded-sm h-10.5">
             <HiOutlinePlusCircle size={24} />
             <input
-                className="w-full outline-none text-sm caret-surface-lighter "
+                className="w-full outline-none text-sm caret-bg-neutral-lighter "
                 type="search"
                 onChange={onChange}
                 onKeyDown={handleOnKeyDown}

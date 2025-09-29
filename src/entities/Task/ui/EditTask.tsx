@@ -64,7 +64,7 @@ export default function EditTask() {
 
     return (
         <div className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-3xl cursor-auto">
-            <div className="flex flex-col gap-6 pr-6 border-r border-surface-lighter">
+            <div className="flex flex-col gap-6 pr-6 border-r border-bg-neutral-lighter">
                 <DefaultInput
                     onSubmit={() => {}}
                     onChange={() => {}}

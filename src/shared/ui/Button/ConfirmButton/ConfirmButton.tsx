@@ -19,8 +19,8 @@ export default function ConfirmButton({
     return (
         <button
             className={clsx(
-                'flex items-center justify-center gap-2 font-bold py-2 border border-surface-lighter bg-surface-light cursor-pointer rounded-lg w-full text-surface-lighter transition duration-200 ease-in-out',
-                !disabled ? 'hover:bg-surface-lighter text-white' : '',
+                'flex items-center justify-center gap-2 font-bold py-2 border border-bg-neutral-lighter bg-bg-neutral cursor-pointer rounded-sm w-full text-bg-neutral-lighter transition duration-200 ease-in-out',
+                !disabled ? 'hover:bg-bg-neutral-lighter text-white' : '',
             )}
             onClick={onClick}
             aria-label={ariaLabel}

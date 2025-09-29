@@ -1,0 +1,26 @@
+{
+  "LeftSidebar": {
+    "logo": "Таскборд",
+    "profile": {
+      "signIn": "Увійти",
+      "signUp": "Зареєструватися"
+    },
+    "groups": {
+      "addGroup": "Додати групу"
+    },
+    "settings": "Налаштування",
+    "theme": "Тема",
+    "themes": {
+      "light": "Світла",
+      "dark": "Темна",
+      "system": "Система"
+    },
+    "language": "Мова",
+    "languages": {
+      "english": "Англійська",
+      "ukrainian": "Українська"
+    },
+    "collapse": "Згорнути",
+    "expand": "Розгорнути"
+  }
+}

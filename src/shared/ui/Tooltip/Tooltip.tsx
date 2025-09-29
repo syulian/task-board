@@ -37,7 +37,7 @@ export default function Tooltip({ text, children, isExpanded = true }: ITooltipP
             {show &&
                 createPortal(
                     <p
-                        className="absolute -translate-y-1/2 p-2 border border-surface-light bg-surface-dark text-white rounded-sm text-sm text-nowrap select-none"
+                        className="absolute -translate-y-1/2 p-2 border border-bg-neutral bg-bg-secondary text-text-primary rounded-sm text-sm text-nowrap select-none"
                         role="tooltip"
                         style={{
                             left: coords.x,
