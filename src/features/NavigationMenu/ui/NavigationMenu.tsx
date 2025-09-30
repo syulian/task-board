@@ -51,15 +51,16 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                         ) : (
                             <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
                         )}
-                        {!disabled ? (
-                            <InlineInput
-                                value={group.name}
-                                disabled={disabled}
-                                onBlur={handleBoardsGroupRename}
-                            />
-                        ) : (
-                            group.name
-                        )}
+                        {isExpanded &&
+                            (!disabled ? (
+                                <InlineInput
+                                    value={group.name}
+                                    disabled={disabled}
+                                    onBlur={handleBoardsGroupRename}
+                                />
+                            ) : (
+                                group.name
+                            ))}
                     </button>
                     {isExpanded && (
                         <button

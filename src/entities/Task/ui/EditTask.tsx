@@ -7,7 +7,7 @@ import SubtaskControl from '@entities/Task/ui/SubtaskControl';
 import { createStateController, getDate, getHour } from '@shared/lib';
 import {
     AddInput,
-    DefaultInput,
+    FormField,
     DropDownContainer,
     LabelEdit,
     SecondButton,
@@ -65,8 +65,7 @@ export default function EditTask() {
     return (
         <div className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-3xl cursor-auto">
             <div className="flex flex-col gap-6 pr-6 border-r border-bg-neutral-lighter">
-                <DefaultInput
-                    onSubmit={() => {}}
+                <FormField
                     onChange={() => {}}
                     placeholder="Enter task name..."
                     label="Task Name"
@@ -114,8 +113,7 @@ export default function EditTask() {
                         </DropDownContainer>
                     </div>
                 </span>
-                <DefaultInput
-                    onSubmit={() => {}}
+                <FormField
                     onChange={() => {}}
                     placeholder="Enter description..."
                     label="Description"

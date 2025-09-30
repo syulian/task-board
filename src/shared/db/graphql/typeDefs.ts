@@ -57,6 +57,13 @@ export const typeDefs = gql`
         groupId: ID!
     }
 
+    type User {
+        id: ID!
+        name: String!
+        email: String!
+        password: String!
+    }
+
     type Query {
         getBoardsGroups: [BoardsGroup!]!
         getBoardByGroupId(groupId: ID!): [Board!]!
@@ -70,5 +77,6 @@ export const typeDefs = gql`
         createBoardsGroup(name: String!, order: Int): BoardsGroup!
         deleteBoardsGroup(id: ID!): ID!
         updateBoardsGroup(id: ID!, name: String!): BoardsGroup!
+        createUser(email: String!, name: String!, password: String!): User!
     }
 `;

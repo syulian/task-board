@@ -1,7 +1,7 @@
 import { useMutation } from '@apollo/client/react';
 import React, { FormEvent, useState } from 'react';
 import { CREATE_BOARD } from '@entities/Board/api/createBoard';
-import { ConfirmButton, DefaultInput } from '@shared/ui';
+import { ConfirmButton, FormField } from '@shared/ui';
 
 interface IAddBoardDropDownProps {
     groupId: string;
@@ -23,13 +23,13 @@ export default function AddBoardDropDown({ groupId }: IAddBoardDropDownProps) {
 
     return (
         <form className="flex flex-col gap-6 p-4 font-normal" onSubmit={handleSubmit}>
-            <DefaultInput
+            <FormField
                 onChange={event => setValue(event.target.value)}
                 placeholder="Enter name..."
                 label="Board Name"
                 value={value}
             />
-            <ConfirmButton type="submit" ariaLabel="Add Board" disabled={!value.length}>
+            <ConfirmButton type="submit" ariaLabel="Add Board">
                 Add Board
             </ConfirmButton>
         </form>

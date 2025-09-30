@@ -1,9 +1,6 @@
+import bcrypt from 'bcrypt';
 import dbConnect from '@shared/db/db';
-import Board from '@shared/db/model/Board';
-import BoardsGroup from '@shared/db/model/BoardsGroup';
-import Label from '@shared/db/model/Label';
-import List from '@shared/db/model/List';
-import Task from '@shared/db/model/Task';
+import { Board, BoardsGroup, Label, List, Task, User } from '@shared/db/model';
 
 export const resolvers = {
     Query: {
@@ -109,6 +106,18 @@ export const resolvers = {
             await BoardsGroup.updateOne({ _id: id }, { $set: { name } });
 
             return BoardsGroup.findById(id);
+        },
+        createUser: async (
+            _: any,
+            { name, email, password }: { name: string; email: string; password: string },
+        ) => {
+            await dbConnect();
+            const exists = await User.findOne({ email });
+
+            if (exists) throw new Error('User already exists');
+
+            const hashed = await bcrypt.hash(password, 10);
+            return User.create({ name, email, password: hashed });
         },
     },
     BoardsGroup: {

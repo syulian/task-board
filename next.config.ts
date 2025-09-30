@@ -4,7 +4,17 @@ import createNextIntlPlugin from 'next-intl/plugin';
 const nextIntl = createNextIntlPlugin('./src/shared/config/i18n/request.ts');
 
 const nextConfig: NextConfig = {
-    /* config options here */
+    images: {
+        remotePatterns: [
+            {
+                protocol: 'https',
+                hostname: 'lh3.googleusercontent.com',
+                port: '',
+                pathname: '/*/**',
+                search: '',
+            },
+        ],
+    },
 };
 
 export default nextIntl(nextConfig);

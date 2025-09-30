@@ -10,10 +10,10 @@ import {
     HiMiniChevronDoubleRight,
     HiOutlineCog8Tooth,
     HiOutlinePlusCircle,
-    HiOutlineUserCircle,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { GET_BOARDS_GROUPS } from '@widgets/LeftSidebar/api/getBoardsGroups';
+import { Auth } from '@features/Auth';
 import { LanguageDropDown } from '@features/LanguageDropDown';
 import { NavigationMenu } from '@features/NavigationMenu';
 import { ThemeDropDown } from '@features/ThemeDropDown';
@@ -23,12 +23,10 @@ import {
     IBoardLink,
     IBoardsGroup,
 } from '@entities/Board';
-import { SignInPopup, SignUpPopup } from '@entities/User';
 import logo from '@shared/assets/images/website-logo.png';
 import { createStateController } from '@shared/lib';
-import { DropDownContainer, ListDropDown, NavButton, Popup, Tooltip } from '@shared/ui';
+import { DropDownContainer, ListDropDown, NavButton, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
-import { useSession } from 'next-auth/react';
 
 export default function LeftSidebar() {
     const [currentItem, setCurrentItem] = useState<IBoardLink | null>(null);
@@ -39,8 +37,6 @@ export default function LeftSidebar() {
         settings: false,
         themes: false,
         languages: false,
-        signIn: false,
-        signUp: false,
         add: false,
     });
 
@@ -101,20 +97,6 @@ export default function LeftSidebar() {
         },
     ];
 
-    const openSignUp = () => {
-        setIsOpenField('signIn', false);
-        setIsOpenField('signUp', true);
-    };
-
-    const openSignIn = () => {
-        setIsOpenField('signUp', false);
-        setIsOpenField('signIn', true);
-    };
-
-    const session = useSession();
-
-    console.log(session);
-
     return (
         <CSSTransition in={isExpanded} nodeRef={sidebarRef} timeout={300} classNames="left-sidebar">
             <aside
@@ -128,18 +110,7 @@ export default function LeftSidebar() {
                             {isExpanded && <p>{t('logo')}</p>}
                         </NavButton>
                     </Tooltip>
-                    <Tooltip text={t('profile.signIn')} isExpanded={isExpanded}>
-                        <NavButton onClick={() => setIsOpenField('signIn', true)}>
-                            <HiOutlineUserCircle aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>{t('profile.signIn')}</p>}
-                        </NavButton>
-                    </Tooltip>
-                    <Popup isOpen={isOpen.signIn} setIsOpen={() => setIsOpenField('signIn', false)}>
-                        <SignInPopup openSignUp={openSignUp} />
-                    </Popup>
-                    <Popup isOpen={isOpen.signUp} setIsOpen={() => setIsOpenField('signUp', false)}>
-                        <SignUpPopup openSignIn={openSignIn} />
-                    </Popup>
+                    <Auth isExpanded={isExpanded} />
                     <BoardDragAndDropContext
                         value={{
                             currentItem: currentItem,

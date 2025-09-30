@@ -3,7 +3,8 @@
     "logo": "TaskBoard",
     "profile": {
       "signIn": "Sign in",
-      "signUp": "Sign up"
+      "signUp": "Sign up",
+      "signOut": "Sign out"
     },
     "groups": {
       "addGroup": "Add Group"

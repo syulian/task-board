@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DefaultInput, LabelEdit, SecondButton, Select } from '@shared/ui';
+import { FormField, LabelEdit, SecondButton, Select } from '@shared/ui';
 
 interface IEditBoardProps {
     openLabelPopup: () => void;
@@ -40,8 +40,7 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
 
     return (
         <div className="flex justify-center flex-col gap-6 px-8 pb-9 w-112">
-            <DefaultInput
-                onSubmit={() => {}}
+            <FormField
                 onChange={() => {}}
                 placeholder="Enter board name"
                 label="Board Name"

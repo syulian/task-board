@@ -5,29 +5,30 @@ interface INavButtonProps {
     children: ReactNode;
     onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
     ariaLabel?: string;
-    disabled?: boolean;
     type?: 'button' | 'submit';
+    error?: string;
 }
 
 export default function ConfirmButton({
     children,
     onClick,
     ariaLabel,
-    disabled = false,
     type = 'button',
+    error,
 }: INavButtonProps) {
     return (
-        <button
-            className={clsx(
-                'flex items-center justify-center gap-2 font-bold py-2 border border-bg-neutral-lighter bg-bg-neutral cursor-pointer rounded-sm w-full text-bg-neutral-lighter transition duration-200 ease-in-out',
-                !disabled ? 'hover:bg-bg-neutral-lighter text-white' : '',
-            )}
-            onClick={onClick}
-            aria-label={ariaLabel}
-            disabled={disabled}
-            type={type}
-        >
-            {children}
-        </button>
+        <div className="relative">
+            <button
+                className={clsx(
+                    'flex items-center justify-center gap-2 font-bold py-2 border border-bg-neutral-lighter bg-bg-neutral cursor-pointer rounded-sm w-full text-white transition duration-200 ease-in-out hover:bg-bg-primary',
+                )}
+                onClick={onClick}
+                aria-label={ariaLabel}
+                type={type}
+            >
+                {children}
+            </button>
+            <span className="absolute -bottom-6 text-sm text-red-700">{error}</span>
+        </div>
     );
 }
