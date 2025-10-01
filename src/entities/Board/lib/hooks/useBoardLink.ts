@@ -38,7 +38,7 @@ const useBoardLink = (group: IBoardsGroup, board: IBoardLink) => {
         onDragStart,
         onDragEnd,
         onDrop,
-        currentItem
+        currentItem,
     };
 };
 

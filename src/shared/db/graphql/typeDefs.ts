@@ -23,6 +23,11 @@ export const typeDefs = gql`
         boardId: ID!
     }
 
+    input LabelInput {
+        id: ID!
+        order: Int
+    }
+
     type List {
         id: ID!
         order: Int
@@ -67,6 +72,7 @@ export const typeDefs = gql`
     type Query {
         getBoardsGroups: [BoardsGroup!]!
         getBoardByGroupId(groupId: ID!): [Board!]!
+        getLabels(boardId: ID!): [Label!]!
     }
 
     type Mutation {
@@ -78,5 +84,9 @@ export const typeDefs = gql`
         deleteBoardsGroup(id: ID!): ID!
         updateBoardsGroup(id: ID!, name: String!): BoardsGroup!
         createUser(email: String!, name: String!, password: String!): User!
+        createLabel(name: String!, color: String!, order: Int, boardId: ID!): Label!
+        deleteLabel(id: ID!): ID!
+        updateLabel(id: ID!, name: String!, color: String!): Label!
+        updateLabelsOrders(labels: [LabelInput!]!): [Label!]!
     }
 `;

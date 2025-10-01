@@ -5,20 +5,13 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniArrowRight } from 'react-icons/hi2';
 import { z } from 'zod';
+import UserSignInSchema from '@entities/User/model/types/UserSignInSchema';
 import { ConfirmButton, FormField, GoogleButton } from '@shared/ui';
 
 interface ISignInPopupProps {
     openSignUp: () => void;
     setIsOpen: () => void;
 }
-
-const UserSignInSchema = z.object({
-    email: z.email(),
-    password: z
-        .string()
-        .min(8, { message: 'Password is too short' })
-        .max(25, { message: 'Password is too long' }),
-});
 
 type UserSignInValues = z.infer<typeof UserSignInSchema>;
 
@@ -31,16 +24,21 @@ export default function SignInPopup({ openSignUp, setIsOpen }: ISignInPopupProps
     } = useForm({ resolver: zodResolver(UserSignInSchema) });
 
     const onSubmit = async (data: UserSignInValues) => {
-        const res = await signIn('credentials', {
-            redirect: false,
-            email: data.email,
-            password: data.password,
-        });
+        setError('');
 
-        if (res?.error) setError(res?.error);
-        else {
-            setError('');
+        try {
+            const newSignIn = await signIn('credentials', {
+                redirect: false,
+                email: data.email,
+                password: data.password,
+            });
+
+            if (newSignIn?.error) return setError(newSignIn.error);
+
             setIsOpen();
+        } catch (e) {
+            const newError = e as Error;
+            setError(newError.message);
         }
     };
 

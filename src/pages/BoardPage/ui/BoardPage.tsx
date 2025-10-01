@@ -11,8 +11,8 @@ type Params = {
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
     try {
         const { id } = await params;
-        const data = await getBoardById(id);
 
+        const data = await getBoardById(id);
         return { title: data?.name || 'Board' };
     } catch (error) {
         console.error(error);

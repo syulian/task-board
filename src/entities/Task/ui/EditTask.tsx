@@ -1,5 +1,8 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { HiMiniTag } from 'react-icons/hi2';
+import { z } from 'zod';
 import { SubtaskDragAndDropOrderContext } from '@entities/Task/model/context/subtaskDragAndDropOrderContext';
 import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
 import Calendar from '@entities/Task/ui/Calendar';
@@ -33,8 +36,24 @@ const cards = [
     },
 ];
 
+const TaskSchema = z.object({
+    name: z
+        .string()
+        .min(4, { message: 'Task name is too short' })
+        .max(30, { message: 'Task name is too long' }),
+    description: z.string().max(800, { message: 'Task description is too long' }),
+});
+
+type TaskValues = z.infer<typeof TaskSchema>;
+
 export default function EditTask() {
     const [currentOrder, setCurrentOrder] = useState<SubtaskSchema | null>(null);
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({ resolver: zodResolver(TaskSchema) });
 
     const [subtasks, setSubtasks] = useState([
         {
@@ -66,7 +85,9 @@ export default function EditTask() {
         <div className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-3xl cursor-auto">
             <div className="flex flex-col gap-6 pr-6 border-r border-bg-neutral-lighter">
                 <FormField
-                    onChange={() => {}}
+                    error={errors.name}
+                    name="name"
+                    register={register}
                     placeholder="Enter task name..."
                     label="Task Name"
                 />
@@ -114,7 +135,9 @@ export default function EditTask() {
                     </div>
                 </span>
                 <FormField
-                    onChange={() => {}}
+                    error={errors.description}
+                    name="description"
+                    register={register}
                     placeholder="Enter description..."
                     label="Description"
                 />

@@ -11,6 +11,7 @@ export default function ColorButton({ color, onClick }: IColorButtonProps) {
             style={{ backgroundColor: color }}
             className="p-6 cursor-pointer rounded-lg border border-bg-neutral-lighter"
             onClick={onClick}
+            type="button"
         />
     );
 }

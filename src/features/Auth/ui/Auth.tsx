@@ -19,7 +19,7 @@ export default function Auth({ isExpanded }: IAuthProps) {
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
-    const session = useSession();
+    const { data: session } = useSession();
     const t = useTranslations('LeftSidebar');
 
     const openSignUp = () => {
@@ -34,13 +34,13 @@ export default function Auth({ isExpanded }: IAuthProps) {
 
     return (
         <>
-            {session.data?.user ? (
+            {session?.user ? (
                 <Tooltip text={t('profile.signOut')} isExpanded={isExpanded}>
                     <NavButton onClick={() => signOut({ redirect: false })}>
-                        {session.data.user.image ? (
+                        {session.user.image ? (
                             <Image
-                                alt={session.data.user.email!}
-                                src={session.data.user.image}
+                                alt={session.user.email!}
+                                src={session.user.image}
                                 width={24}
                                 height={24}
                                 className="rounded-full"
@@ -48,7 +48,7 @@ export default function Auth({ isExpanded }: IAuthProps) {
                             />
                         ) : (
                             <span className="min-h-6 min-w-6 rounded-full bg-bg-secondary outline outline-bg-neutral-lighter">
-                                {session.data.user.name![0]}
+                                {session.user.name![0]}
                             </span>
                         )}
                         {isExpanded && <p>{t('profile.signOut')}</p>}

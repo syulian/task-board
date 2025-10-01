@@ -7,24 +7,13 @@ import { useForm } from 'react-hook-form';
 import { HiMiniArrowRight } from 'react-icons/hi2';
 import { z } from 'zod';
 import { CREATE_USER } from '@entities/User/api/createUser';
+import UserSignUpSchema from '@entities/User/model/types/UserSignUpSchema';
 import { ConfirmButton, FormField, GoogleButton } from '@shared/ui';
 
 interface ISignUpPopupProps {
     openSignIn: () => void;
     setIsOpen: () => void;
 }
-
-const UserSignUpSchema = z.object({
-    name: z
-        .string()
-        .min(4, { message: 'Name is too short' })
-        .max(50, { message: 'Name is too long' }),
-    email: z.email(),
-    password: z
-        .string()
-        .min(8, { message: 'Password is too short' })
-        .max(25, { message: 'Password is too long' }),
-});
 
 type UserSignUpValues = z.infer<typeof UserSignUpSchema>;
 
@@ -39,22 +28,27 @@ export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps
     } = useForm({ resolver: zodResolver(UserSignUpSchema) });
 
     const onSubmit = async (data: UserSignUpValues) => {
-        if (createUserLoading) return;
+        setError('');
 
-        await createUser({
-            variables: { name: data.name, email: data.email, password: data.password },
-        });
+        try {
+            if (createUserLoading) return;
 
-        const res = await signIn('credentials', {
-            redirect: false,
-            email: data.email,
-            password: data.password,
-        });
+            await createUser({
+                variables: { name: data.name, email: data.email, password: data.password },
+            });
 
-        if (res?.error) setError(res?.error);
-        else {
-            setError('');
+            const newSignIn = await signIn('credentials', {
+                redirect: false,
+                email: data.email,
+                password: data.password,
+            });
+
+            if (newSignIn?.error) return setError(newSignIn.error);
+
             setIsOpen();
+        } catch (e) {
+            const newError = e as Error;
+            setError(newError.message);
         }
     };
 
@@ -64,7 +58,7 @@ export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps
             onSubmit={handleSubmit(onSubmit)}
         >
             <b className="text-lg">Sign up</b>
-            <div className="flex justify-center flex-col gap-6">
+            <div className="flex justify-center flex-col gap-8">
                 <FormField
                     error={errors.email}
                     name="email"

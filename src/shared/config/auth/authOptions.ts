@@ -17,7 +17,9 @@ export const authOptions: AuthOptions = {
                 password: { label: 'password', type: 'password', required: true },
             },
             async authorize(credentials) {
-                if (!credentials?.email || !credentials.password) return null;
+                if (!credentials?.email || !credentials.password) {
+                    throw new Error('Required fields are missing');
+                }
 
                 await dbConnect();
                 const user = await User.findOne({ email: credentials!.email });

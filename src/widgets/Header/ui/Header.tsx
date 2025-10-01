@@ -1,12 +1,13 @@
 'use client';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineTag } from 'react-icons/hi2';
+import { BoardInfo } from '@features/BoardInfo';
 import { EditBoard } from '@features/EditBoard';
 import { setIsExpanded } from '@features/RightSidebar';
 import { SearchInput } from '@features/SearchInput';
 import { LabelPopup } from '@entities/Label';
 import { createStateController, useAppDispatch, useAppSelector } from '@shared/lib';
-import { DefaultButton, DropDownContainer, ListDropDown, SettingsButton, Popup } from '@shared/ui';
+import { DefaultButton, Popup } from '@shared/ui';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState({
@@ -21,25 +22,6 @@ export default function Header() {
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
-    const dropDownList = [
-        {
-            title: '2 Lists, 3 Cards',
-            children: [
-                {
-                    label: 'Edit',
-                    onClick: () => {
-                        setIsOpenField('dropDown', false);
-                        setIsOpenField('edit', true);
-                    },
-                },
-                {
-                    label: 'Delete',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
-
     const openLabelPopup = () => {
         setIsOpenField('edit', false);
         setIsOpenField('label', true);
@@ -48,18 +30,7 @@ export default function Header() {
     return (
         <header className="py-4 flex items-center justify-between gap-4">
             <div className="flex gap-4 w-full">
-                <div className="flex relative">
-                    <SettingsButton onClick={() => setIsOpenField('dropDown', true)}>
-                        Board name
-                    </SettingsButton>
-                    <DropDownContainer
-                        isOpen={isOpen.dropDown}
-                        setIsOpen={() => setIsOpenField('dropDown', false)}
-                        className="left-0 top-full"
-                    >
-                        <ListDropDown list={dropDownList} />
-                    </DropDownContainer>
-                </div>
+                <BoardInfo />
                 <SearchInput onChange={() => {}} />
             </div>
             <nav>

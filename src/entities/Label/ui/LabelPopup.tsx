@@ -1,73 +1,65 @@
-import React, { useState } from 'react';
+'use client';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { HiOutlinePlusSmall } from 'react-icons/hi2';
+import { z } from 'zod';
+import { CREATE_LABEL } from '@entities/Label/api/createLabel';
+import { GET_LABELS } from '@entities/Label/api/getLabels';
 import { LabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
+import ILabel from '@entities/Label/model/types/ILabel';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
-import ColorsDropDown from '@entities/Label/ui/ColorsDropDown';
-import LabelControl from '@entities/Label/ui/LabelControl';
-import { AddInput, ColorButton, DefaultButton, DropDownContainer } from '@shared/ui';
+import LabelController from '@entities/Label/ui/LabelController';
+import LabelDrag from '@entities/Label/ui/LabelDrag';
+import { useSortedItems } from '@shared/lib';
+import { DefaultButton } from '@shared/ui';
 
-const colorsList = [
-    {
-        color: '#d62828',
-        onClick: () => {},
-    },
-    {
-        color: '#f77f00',
-        onClick: () => {},
-    },
-    {
-        color: '#fcbf49',
-        onClick: () => {},
-    },
-];
+type LabelValues = z.infer<typeof LabelSchema>;
 
 export default function LabelPopup() {
-    const [isOpen, setIsOpen] = useState(false);
-    const [currentOrder, setCurrentOrder] = useState<LabelSchema | null>(null);
+    const [currentOrder, setCurrentOrder] = useState<ILabel | null>(null);
+    const [labels, setLabels] = useState<ILabel[]>([]);
 
-    const [labels, setLabels] = useState<LabelSchema[]>([
-        {
-            id: '1',
-            order: 1,
-            color: '#d62828',
-            name: 'Important',
-            onClick: () => {},
-        },
-        {
-            id: '2',
-            order: 2,
-            color: '#f77f00',
-            name: 'Handy',
-            onClick: () => {},
-        },
-        {
-            id: '3',
-            order: 3,
-            color: '#fcbf49',
-            name: 'Nice',
-            onClick: () => {},
-        },
-    ]);
+    const params = useParams<{ id: string }>();
+
+    const { data, loading: getLabelsLoading } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
+        variables: { boardId: params?.id },
+    });
+    const [newLabel, { loading: createLabelLoading }] = useMutation(CREATE_LABEL, {
+        refetchQueries: ['GetLabels'],
+    });
+
+    useEffect(() => {
+        if (!getLabelsLoading && data?.getLabels) {
+            setLabels(data.getLabels);
+        }
+    }, [data, getLabelsLoading]);
+
+    const { control, handleSubmit } = useForm({
+        resolver: zodResolver(LabelSchema),
+        defaultValues: { color: '#d62828', name: '' },
+    });
+
+    const onSubmit = async (data: LabelValues) => {
+        if (createLabelLoading || !params) return;
+        await newLabel({
+            variables: { name: data.name, color: data.color, order: 1, boardId: params.id },
+        });
+    };
+
+    const sortedLabels = useSortedItems<ILabel>(labels);
 
     return (
         <div className="flex justify-center flex-col gap-4 px-8 pb-9">
             <p className="font-bold text-center">Configure Labels</p>
-            <div className="flex items-center gap-2 pl-12 pr-4">
-                <div className="relative">
-                    <ColorButton color={colorsList[0].color} onClick={() => setIsOpen(true)} />
-                    <DropDownContainer
-                        isOpen={isOpen}
-                        setIsOpen={() => setIsOpen(false)}
-                        className="left-0 top-full"
-                    >
-                        <ColorsDropDown />
-                    </DropDownContainer>
-                </div>
-                <AddInput onSubmit={() => {}} placeholder="Type here and press 'Enter'" />
-                <DefaultButton onClick={() => {}}>
+            <form className="flex items-center gap-2 pl-12 pr-4" onSubmit={handleSubmit(onSubmit)}>
+                <LabelController control={control} />
+                <DefaultButton type="submit">
                     <HiOutlinePlusSmall size={24} />
                 </DefaultButton>
-            </div>
+            </form>
             <hr className="text-bg-neutral-lighter" />
             <LabelDragAndDropOrderContext
                 value={{
@@ -76,8 +68,8 @@ export default function LabelPopup() {
                     setOrders: setLabels,
                 }}
             >
-                {labels.map(l => (
-                    <LabelControl label={l} key={l.id} />
+                {sortedLabels.map(l => (
+                    <LabelDrag label={l} key={l.id} />
                 ))}
             </LabelDragAndDropOrderContext>
         </div>

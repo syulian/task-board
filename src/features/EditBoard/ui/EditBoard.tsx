@@ -1,9 +1,21 @@
+import { zodResolver } from '@hookform/resolvers/zod';
 import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { FormField, LabelEdit, SecondButton, Select } from '@shared/ui';
 
 interface IEditBoardProps {
     openLabelPopup: () => void;
 }
+
+const BoardSchema = z.object({
+    name: z
+        .string()
+        .min(4, { message: 'Board name is too short' })
+        .max(40, { message: 'Board name is too long' }),
+});
+
+type BoardValues = z.infer<typeof BoardSchema>;
 
 export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
     const [selected, setSelected] = useState({
@@ -38,10 +50,18 @@ export default function EditBoard({ openLabelPopup }: IEditBoardProps) {
         },
     ];
 
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({ resolver: zodResolver(BoardSchema) });
+
     return (
         <div className="flex justify-center flex-col gap-6 px-8 pb-9 w-112">
             <FormField
-                onChange={() => {}}
+                register={register}
+                name="name"
+                error={errors.name}
                 placeholder="Enter board name"
                 label="Board Name"
             />

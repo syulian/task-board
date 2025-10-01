@@ -9,6 +9,7 @@ const useOrderDragAndDrop = <TO extends ItemSchema>(
         setCurrentOrder: (group: TO | null) => void;
         setOrders: Dispatch<SetStateAction<TO[]>>;
     },
+    onReorder?: (updated: TO[]) => void,
 ) => {
     const [isDragOverOrder, setIsDragOverOrder] = useState(false);
     const { currentOrder, setCurrentOrder, setOrders } = ctx;
@@ -49,6 +50,7 @@ const useOrderDragAndDrop = <TO extends ItemSchema>(
             updatedOrders.splice(dropIndex, 0, newItem);
             updatedOrders = updatedOrders.map((g, i) => ({ ...g, order: i }));
 
+            onReorder?.(updatedOrders);
             return updatedOrders;
         });
 
