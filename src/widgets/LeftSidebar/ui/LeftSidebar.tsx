@@ -12,7 +12,6 @@ import {
     HiOutlinePlusCircle,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
-import { GET_BOARDS_GROUPS } from '@widgets/LeftSidebar/api/getBoardsGroups';
 import { Auth } from '@features/Auth';
 import { LanguageDropDown } from '@features/LanguageDropDown';
 import { NavigationMenu } from '@features/NavigationMenu';
@@ -22,6 +21,7 @@ import {
     BoardDragAndDropContext,
     IBoardLink,
     IBoardsGroup,
+    GET_BOARDS_GROUPS,
 } from '@entities/Board';
 import logo from '@shared/assets/images/website-logo.png';
 import { createStateController } from '@shared/lib';
@@ -29,7 +29,7 @@ import { DropDownContainer, ListDropDown, NavButton, Tooltip } from '@shared/ui'
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
-    const [currentItem, setCurrentItem] = useState<IBoardLink | null>(null);
+    const [currentItem, setCurrentItem] = useState<IBoard | null>(null);
     const [currentGroup, setCurrentGroup] = useState<IBoardsGroup | null>(null);
 
     const [isExpanded, setIsExpanded] = useState(true);

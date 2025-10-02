@@ -1,8 +1,7 @@
 'use client';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineTag } from 'react-icons/hi2';
-import { BoardInfo } from '@features/BoardInfo';
-import { EditBoard } from '@features/EditBoard';
+import { BoardInfo } from '@features/EditBoard';
 import { setIsExpanded } from '@features/RightSidebar';
 import { SearchInput } from '@features/SearchInput';
 import { LabelPopup } from '@entities/Label';
@@ -11,21 +10,13 @@ import { DefaultButton, Popup } from '@shared/ui';
 
 export default function Header() {
     const [isOpen, setIsOpen] = useState({
-        dropDown: false,
         popup: false,
-        edit: false,
-        label: false,
     });
 
     const isExpanded = useAppSelector(state => state.rightSidebar.isExpanded);
     const dispatch = useAppDispatch();
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
-
-    const openLabelPopup = () => {
-        setIsOpenField('edit', false);
-        setIsOpenField('label', true);
-    };
 
     return (
         <header className="py-4 flex items-center justify-between gap-4">
@@ -53,12 +44,6 @@ export default function Header() {
                     </li>
                 </ul>
             </nav>
-            <Popup isOpen={isOpen.edit} setIsOpen={() => setIsOpenField('edit', false)}>
-                <EditBoard openLabelPopup={openLabelPopup} />
-            </Popup>
-            <Popup isOpen={isOpen.label} setIsOpen={() => setIsOpenField('label', false)}>
-                <LabelPopup />
-            </Popup>
         </header>
     );
 }

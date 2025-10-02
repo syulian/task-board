@@ -2,7 +2,7 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import React from 'react';
-import { IBoardLink, IBoardsGroup } from '@entities/Board';
+import { IBoard, IBoardsGroup } from '@entities/Board';
 import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
 import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
 import { Router } from '@shared/config';
@@ -10,7 +10,7 @@ import { DropDownContainer, InlineInput, ListDropDown } from '@shared/ui';
 
 interface IMenuItemProps {
     group: IBoardsGroup;
-    board: IBoardLink;
+    board: IBoard;
     isExpanded: boolean;
 }
 

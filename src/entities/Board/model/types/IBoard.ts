@@ -1,4 +1,4 @@
-export default interface IBoardLink {
+export default interface IBoard {
     __typename: string;
     id: string;
     order: number;

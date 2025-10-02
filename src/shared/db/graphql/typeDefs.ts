@@ -71,14 +71,14 @@ export const typeDefs = gql`
 
     type Query {
         getBoardsGroups: [BoardsGroup!]!
-        getBoardByGroupId(groupId: ID!): [Board!]!
+        getBoard(boardId: ID!): Board!
         getLabels(boardId: ID!): [Label!]!
     }
 
     type Mutation {
         createBoard(name: String!, order: Int, groupId: ID!): Board!
         deleteBoard(id: ID!): ID!
-        updateBoard(id: ID!, name: String!): Board!
+        updateBoard(id: ID!, name: String, groupId: ID): Board!
         updateBoardsOrders(boards: [BoardInput!]!): [BoardsGroup!]!
         createBoardsGroup(name: String!, order: Int): BoardsGroup!
         deleteBoardsGroup(id: ID!): ID!

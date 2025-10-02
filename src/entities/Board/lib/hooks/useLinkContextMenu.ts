@@ -2,18 +2,16 @@ import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
 import { DELETE_BOARD } from '@entities/Board/api/deleteBoard';
 import { UPDATE_BOARD } from '@entities/Board/api/updateBoard';
-import IBoardLink from '@entities/Board/model/types/IBoardLink';
+import IBoard from '@entities/Board/model/types/IBoard';
 
-const useLinkContextMenu = (board: IBoardLink) => {
+const useLinkContextMenu = (board: IBoard) => {
     const [disabled, setDisabled] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
 
     const [deleteBoard, { loading: deleteBoardLoading }] = useMutation(DELETE_BOARD, {
         refetchQueries: ['GetBoardsGroups'],
     });
-    const [updateBoard, { loading: updateBoardLoading }] = useMutation(UPDATE_BOARD, {
-        refetchQueries: ['GetBoardsGroups'],
-    });
+    const [updateBoard, { loading: updateBoardLoading }] = useMutation(UPDATE_BOARD);
 
     const handleBoardRename = async (name: string) => {
         if (updateBoardLoading) return;

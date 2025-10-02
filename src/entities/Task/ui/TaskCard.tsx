@@ -39,7 +39,7 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             tabIndex={0}
             aria-label={`Edit task ${task.title}`}
             className={clsx(
-                'flex flex-col gap-2 border border-bg-secondary bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
+                'flex flex-col gap-2 border border-bg-neutral bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
                 isDragOver && currentItem && 'border-dashed border-bg-neutral-lighter',
             )}
             draggable

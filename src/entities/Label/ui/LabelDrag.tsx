@@ -6,9 +6,9 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniCheck, HiMiniXMark } from 'react-icons/hi2';
 import { z } from 'zod';
-import { DELETE_LABEL } from '@entities/Label/api/deleteLabel';
 import { UPDATE_LABEL } from '@entities/Label/api/updateLabel';
-import useLabelDragAndDrop from '@entities/Label/lib/useLabelDragAndDrop';
+import useDeleteLabel from '@entities/Label/lib/hooks/useDeleteLabel';
+import useLabelDragAndDrop from '@entities/Label/lib/hooks/useLabelDragAndDrop';
 import ILabel from '@entities/Label/model/types/ILabel';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
 import LabelController from '@entities/Label/ui/LabelController';
@@ -21,12 +21,8 @@ interface ILabelsListProps {
 type LabelValues = z.infer<typeof LabelSchema>;
 
 export default function LabelDrag({ label }: ILabelsListProps) {
-    const [deleteLabel, { loading: deleteLabelLoading }] = useMutation(DELETE_LABEL, {
-        refetchQueries: ['GetLabels'],
-    });
-    const [updateLabel, { loading: updateLabelLoading }] = useMutation(UPDATE_LABEL, {
-        refetchQueries: ['GetLabels'],
-    });
+    const { deleteLabel } = useDeleteLabel();
+    const [updateLabel, { loading: updateLabelLoading }] = useMutation(UPDATE_LABEL);
 
     const { control, handleSubmit, formState, reset } = useForm({
         resolver: zodResolver(LabelSchema),
@@ -34,7 +30,7 @@ export default function LabelDrag({ label }: ILabelsListProps) {
     });
 
     const handleUpdate = async (data: LabelValues) => {
-        if (deleteLabelLoading || updateLabelLoading) return;
+        if (updateLabelLoading) return;
         await updateLabel({
             variables: { id: label.id, name: data.name, color: data.color },
         });

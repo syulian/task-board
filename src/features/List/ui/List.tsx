@@ -116,7 +116,7 @@ export default function List({ list }: IListProps) {
                         setIsOpen={() => setIsOpenField('colors', false)}
                         className="right-0 top-full"
                     >
-                        <ColorsDropDown />
+                        <ColorsDropDown onClick={(color) => {}} />
                     </DropDownContainer>
                 </span>
             </div>

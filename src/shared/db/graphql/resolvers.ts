@@ -8,9 +8,9 @@ export const resolvers = {
             await dbConnect();
             return BoardsGroup.find();
         },
-        getBoardByGroupId: async (_: any, { groupId }: { groupId: string }) => {
+        getBoard: async (_: any, { boardId }: { boardId: string }) => {
             await dbConnect();
-            return Board.find({ groupId });
+            return Board.findById(boardId);
         },
         getLabels: async (_: any, { boardId }: { boardId: string }) => {
             await dbConnect();
@@ -43,9 +43,12 @@ export const resolvers = {
 
             return id;
         },
-        updateBoard: async (_: any, { id, name }: { id: string; name: string }) => {
+        updateBoard: async (
+            _: any,
+            { id, name, groupId }: { id: string; name?: string; groupId?: string },
+        ) => {
             await dbConnect();
-            await Board.updateOne({ _id: id }, { $set: { name } });
+            await Board.updateOne({ _id: id }, { $set: { name, groupId } });
 
             return Board.findById(id);
         },

@@ -1,13 +1,13 @@
 'use client';
-import { useMutation, useQuery } from '@apollo/client/react';
+import { useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiOutlinePlusSmall } from 'react-icons/hi2';
 import { z } from 'zod';
-import { CREATE_LABEL } from '@entities/Label/api/createLabel';
 import { GET_LABELS } from '@entities/Label/api/getLabels';
+import useNewLabel from '@entities/Label/lib/hooks/useNewLabel';
 import { LabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
 import ILabel from '@entities/Label/model/types/ILabel';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
@@ -23,12 +23,10 @@ export default function LabelPopup() {
     const [labels, setLabels] = useState<ILabel[]>([]);
 
     const params = useParams<{ id: string }>();
+    const { newLabel, createLabelLoading } = useNewLabel(params?.id);
 
     const { data, loading: getLabelsLoading } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
         variables: { boardId: params?.id },
-    });
-    const [newLabel, { loading: createLabelLoading }] = useMutation(CREATE_LABEL, {
-        refetchQueries: ['GetLabels'],
     });
 
     useEffect(() => {

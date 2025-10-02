@@ -1,6 +1,6 @@
 'use client';
 import React, { Dispatch, SetStateAction, useState } from 'react';
-import { HiMiniChevronDown } from 'react-icons/hi2';
+import { HiMiniChevronDown, HiMiniChevronUp } from 'react-icons/hi2';
 import SelectItemSchema from '@shared/types/SelectItemSchema';
 
 interface ISelectProps {
@@ -17,9 +17,14 @@ export default function Select({ list, selected, setSelected }: ISelectProps) {
             <button
                 className="flex items-center justify-between gap-2 bg-bg-secondary border border-bg-neutral-lighter px-4 py-1 rounded-sm cursor-pointer w-full truncate"
                 onClick={() => setIsOpen(prev => !prev)}
+                type="button"
             >
                 <span className="truncate overflow-hidden">{selected.label}</span>
-                <HiMiniChevronDown className="min-h-6 min-w-6" />
+                {isOpen ? (
+                    <HiMiniChevronUp className="min-h-6 min-w-6" />
+                ) : (
+                    <HiMiniChevronDown className="min-h-6 min-w-6" />
+                )}
             </button>
             {isOpen && (
                 <ul className="absolute top-full bg-bg-secondary w-full rounded-b-sm overflow-y-auto max-h-54">
