@@ -1,20 +1,28 @@
 'use client';
+import { useMutation } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
-import { ColorsDropDown } from '@entities/Label';
+import { CREATE_LIST } from '@features/List/api/createList';
+import { DELETE_LIST } from '@features/List/api/deleteList';
+import { UPDATE_LIST } from '@features/List/api/updateList';
+import useListDragAndDrop from '@features/List/lib/hooks/useListDragAndDrop';
+import EditTask from '@features/List/ui/EditTask';
+import { COLORS, ColorsDropDown } from '@entities/Label';
+import { TaskCard, IList } from '@entities/Task';
+import { createStateController } from '@shared/lib';
 import {
-    TaskCard,
-    EditTask,
-    IListSchema,
-    useTaskDragAndDropContext,
-    useTaskDragAndDropOrderContext,
-} from '@entities/Task';
-import { createStateController, useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
-import { DefaultButton, AddButton, DropDownContainer, ListDropDown, Drag, Popup } from '@shared/ui';
+    DefaultButton,
+    AddButton,
+    DropDownContainer,
+    ListDropDown,
+    Drag,
+    Popup,
+    InlineInput,
+} from '@shared/ui';
 
 interface IListProps {
-    list: IListSchema;
+    list: IList;
 }
 
 export default function List({ list }: IListProps) {
@@ -24,37 +32,27 @@ export default function List({ list }: IListProps) {
         popup: false,
     });
 
-    const { currentItem, currentGroup, setGroups } = useTaskDragAndDropContext();
-    const { setCurrentOrder, currentOrder, setOrders } = useTaskDragAndDropOrderContext();
-
-    const { onDragOver, onDrop } = useParentDragAndDrop(list, {
-        currentItem,
-        setGroups,
-        currentGroup,
-    });
-
-    const {
-        isDragOverOrder,
-        onDragOverOrder,
-        onDragLeaveOrder,
-        onDragStartOrder,
-        onDragEndOrder,
-        onDropOrder,
-    } = useOrderDragAndDrop(list, {
-        currentOrder,
-        setCurrentOrder,
-        setOrders,
-    });
-
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
+
+    const [createList] = useMutation(CREATE_LIST, { refetchQueries: ['GetLists'] });
+    const [deleteList] = useMutation(DELETE_LIST, { refetchQueries: ['GetLists'] });
+    const [updateList, { loading: updateListLoading }] = useMutation(UPDATE_LIST);
 
     const editList = [
         {
-            title: '2 Cards',
+            title: `${list.items.length} Tasks`,
             children: [
                 {
                     label: 'Add List',
-                    onClick: () => {},
+                    onClick: async () => {
+                        await createList({
+                            variables: {
+                                name: 'New List',
+                                color: COLORS[COLORS.length - 1],
+                                boardId: list.boardId,
+                            },
+                        });
+                    },
                 },
             ],
         },
@@ -62,7 +60,10 @@ export default function List({ list }: IListProps) {
             children: [
                 {
                     label: 'Rename',
-                    onClick: () => {},
+                    onClick: () => {
+                        setDisabled(false);
+                        setIsOpenField('settings', false);
+                    },
                 },
                 {
                     label: 'Change Color',
@@ -77,11 +78,32 @@ export default function List({ list }: IListProps) {
             children: [
                 {
                     label: 'Delete',
-                    onClick: () => {},
+                    onClick: () => deleteList({ variables: { id: list.id } }),
                 },
             ],
         },
     ];
+
+    const [disabled, setDisabled] = useState(true);
+
+    const handleListUpdate = async (name?: string, color?: string) => {
+        if (updateListLoading) return;
+
+        setDisabled(true);
+        await updateList({ variables: { id: list.id, name, color } });
+    };
+
+    const {
+        isDragOverOrder,
+        onDragOverOrder,
+        onDragLeaveOrder,
+        onDragStartOrder,
+        onDragEndOrder,
+        currentOrder,
+        onDropOrder,
+        onDragOver,
+        onDrop,
+    } = useListDragAndDrop(list);
 
     return (
         <li
@@ -93,12 +115,23 @@ export default function List({ list }: IListProps) {
             onDragLeave={onDragLeaveOrder}
             onDrop={onDropOrder}
         >
-            <div className="flex items-center justify-between pb-2 px-2 border-b-2 border-red-900 rounded-b-xs">
+            <div
+                className="flex items-center justify-between pb-2 px-2 border-b-2 rounded-b-xs"
+                style={{ borderBottomColor: list.color }}
+            >
                 <Drag onDragStart={onDragStartOrder} onDragEnd={onDragEndOrder} target="li">
-                    <p>{list.name}</p>
+                    {disabled ? (
+                        <p>{list.name}</p>
+                    ) : (
+                        <InlineInput
+                            value={list.name}
+                            disabled={disabled}
+                            onBlur={handleListUpdate}
+                        />
+                    )}
                 </Drag>
                 <span className="flex relative">
-                    <DefaultButton onClick={() => {}}>
+                    <DefaultButton onClick={() => setIsOpenField('popup', true)}>
                         <HiMiniPlus size={24} />
                     </DefaultButton>
                     <DefaultButton onClick={() => setIsOpenField('settings', true)}>
@@ -116,7 +149,12 @@ export default function List({ list }: IListProps) {
                         setIsOpen={() => setIsOpenField('colors', false)}
                         className="right-0 top-full"
                     >
-                        <ColorsDropDown onClick={(color) => {}} />
+                        <ColorsDropDown
+                            onClick={async color => {
+                                await handleListUpdate(undefined, color);
+                                setIsOpenField('colors', false);
+                            }}
+                        />
                     </DropDownContainer>
                 </span>
             </div>
@@ -133,7 +171,7 @@ export default function List({ list }: IListProps) {
             </div>
             <AddButton onClick={() => setIsOpenField('popup', true)} />
             <Popup isOpen={isOpen.popup} setIsOpen={() => setIsOpenField('popup', false)}>
-                <EditTask />
+                <EditTask list={list} />
             </Popup>
         </li>
     );

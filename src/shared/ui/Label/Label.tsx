@@ -9,7 +9,7 @@ export default function Label({ name, color }: ILabelProps) {
     return (
         <p
             style={{ backgroundColor: color }}
-            className="py-0.5 px-2 border border-bg-secondary rounded-sm text-sm text-text-secondary"
+            className="py-0.5 px-2 border border-bg-secondary rounded-sm text-sm text-text-primary"
         >
             {name}
         </p>

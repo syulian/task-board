@@ -3,16 +3,16 @@ import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { HiMiniCheck } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
-import { EditTask } from '@entities/Task';
+import EditTask from '@features/List/ui/EditTask';
 import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
-import { IListSchema } from '@entities/Task/model/types/IListSchema';
+import { IList } from '@entities/Task/model/types/IList';
 import { ITask } from '@entities/Task/model/types/ITask';
 import { getDate, useDragAndDrop } from '@shared/lib';
 import { Label, Checkbox, Popup, StopPropagation } from '@shared/ui';
 
 interface ITaskCardProps {
     task: ITask;
-    list: IListSchema;
+    list: IList;
 }
 
 export default function TaskCard({ task, list }: ITaskCardProps) {
@@ -96,7 +96,7 @@ export default function TaskCard({ task, list }: ITaskCardProps) {
             </div>
             <StopPropagation>
                 <Popup isOpen={isOpen} setIsOpen={() => setIsOpen(false)}>
-                    <EditTask />
+                    <EditTask task={task} />
                 </Popup>
             </StopPropagation>
         </div>

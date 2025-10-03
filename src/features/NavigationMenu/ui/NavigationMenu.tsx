@@ -9,7 +9,7 @@ import {
     IBoardsGroup,
     AddBoardDropDown,
     useBoardDragAndDropContext,
-    IBoardLink,
+    IBoard,
 } from '@entities/Board';
 import { useParentDragAndDrop, useSortedItems } from '@shared/lib';
 import { DropDownContainer, InlineInput, ListDropDown, Tooltip } from '@shared/ui';
@@ -32,7 +32,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
 
     const { disabled, handleBoardsGroupRename, contextMenu, isOpen, setIsOpenField } =
         useGroupContextMenu(group);
-    const sortedItems = useSortedItems<IBoardLink>(group.items);
+    const sortedItems = useSortedItems<IBoard>(group.items);
 
     return (
         <section className="relative">
@@ -52,14 +52,14 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                             <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
                         )}
                         {isExpanded &&
-                            (!disabled ? (
+                            (disabled ? (
+                                group.name
+                            ) : (
                                 <InlineInput
                                     value={group.name}
                                     disabled={disabled}
                                     onBlur={handleBoardsGroupRename}
                                 />
-                            ) : (
-                                group.name
                             ))}
                     </button>
                     {isExpanded && (

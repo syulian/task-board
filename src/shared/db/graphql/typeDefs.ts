@@ -32,8 +32,14 @@ export const typeDefs = gql`
         id: ID!
         order: Int
         name: String!
+        color: String!
         items: [Task]
         boardId: ID!
+    }
+
+    input ListInput {
+        id: ID!
+        order: Int
     }
 
     type Task {
@@ -73,6 +79,7 @@ export const typeDefs = gql`
         getBoardsGroups: [BoardsGroup!]!
         getBoard(boardId: ID!): Board!
         getLabels(boardId: ID!): [Label!]!
+        getLists(boardId: ID!): [List!]!
     }
 
     type Mutation {
@@ -88,5 +95,9 @@ export const typeDefs = gql`
         deleteLabel(id: ID!): ID!
         updateLabel(id: ID!, name: String!, color: String!): Label!
         updateLabelsOrders(labels: [LabelInput!]!): [Label!]!
+        createList(name: String!, color: String!, boardId: ID!): List!
+        deleteList(id: ID!): ID!
+        updateList(id: ID!, name: String, color: String, boardId: ID): List!
+        updateListsOrders(lists: [ListInput!]!): [List!]!
     }
 `;

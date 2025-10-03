@@ -19,7 +19,7 @@ import { ThemeDropDown } from '@features/ThemeDropDown';
 import {
     AddGroupDropDown,
     BoardDragAndDropContext,
-    IBoardLink,
+    IBoard,
     IBoardsGroup,
     GET_BOARDS_GROUPS,
 } from '@entities/Board';

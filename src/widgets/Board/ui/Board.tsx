@@ -1,87 +1,54 @@
 'use client';
-import React, { useState } from 'react';
-import { List } from '@features/List';
-import {
-    ITask,
-    IListSchema,
-    TaskDragAndDropContext,
-    TaskDragAndDropOrderContext,
-} from '@entities/Task';
+import { useMutation, useQuery } from '@apollo/client/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { List, CREATE_LIST, GET_LISTS } from '@features/List';
+import { COLORS } from '@entities/Label';
+import { ITask, IList, TaskDragAndDropContext, TaskDragAndDropOrderContext } from '@entities/Task';
+import { useSortedItems } from '@shared/lib';
 import { AddInput } from '@shared/ui';
 
-export default function Board() {
-    const [currentItem, setCurrentItem] = useState<ITask | null>(null);
-    const [currentGroup, setCurrentGroup] = useState<IListSchema | null>(null);
-    const [currentOrder, setCurrentOrder] = useState<IListSchema | null>(null);
+const ListSchema = z.object({
+    name: z
+        .string()
+        .min(4, { message: 'Task name is too short' })
+        .max(30, { message: 'Task name is too long' }),
+});
 
-    const [list, setList] = useState<IListSchema[]>([
+type ListValues = z.infer<typeof ListSchema>;
+
+export default function Board() {
+    const params = useParams<{ id: string }>();
+    const boardId = params?.id;
+
+    const [currentItem, setCurrentItem] = useState<ITask | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<IList | null>(null);
+    const [currentOrder, setCurrentOrder] = useState<IList | null>(null);
+    const [lists, setLists] = useState<IList[]>([]);
+
+    const [createList] = useMutation(CREATE_LIST, { refetchQueries: ['GetLists'] });
+    const { data: dataLists, loading: getListsLoading } = useQuery<{ getLists: IList[] }>(
+        GET_LISTS,
         {
-            id: '1',
-            order: 1,
-            name: 'To Do',
-            items: [
-                {
-                    id: '1',
-                    order: 1,
-                    title: 'Website creation',
-                    complete: true,
-                    body: '*Need to create a new task! Need to create a new task!* \n\n *Need to create a new task! Need to create a new task!*',
-                    subtasks: [
-                        {
-                            id: '1',
-                            order: 1,
-                            value: 'Easy to use',
-                            checked: true,
-                        },
-                        {
-                            id: '2',
-                            order: 2,
-                            value: 'No Internet needed',
-                            checked: false,
-                        },
-                    ],
-                    labels: [
-                        {
-                            name: 'Important',
-                            color: '#bd2424',
-                        },
-                    ],
-                },
-                {
-                    id: '2',
-                    order: 2,
-                    title: 'Website creation',
-                    dueDate: new Date(2025, 10, 2),
-                    body: '*Need to create a new task! Need to create a new task!*',
-                    labels: [
-                        {
-                            name: 'Nice',
-                            color: '#3ea9bc',
-                        },
-                    ],
-                },
-            ],
+            variables: { boardId },
         },
-        {
-            id: '2',
-            order: 2,
-            name: 'Doing',
-            items: [
-                {
-                    id: '3',
-                    order: 1,
-                    title: 'Website testing',
-                    body: '*Need to create a new task! Need to create a new task!*',
-                    labels: [
-                        {
-                            name: 'Nice',
-                            color: '#3ea9bc',
-                        },
-                    ],
-                },
-            ],
-        },
-    ]);
+    );
+
+    useEffect(() => {
+        if (!dataLists?.getLists || getListsLoading) return;
+        setLists(dataLists.getLists || []);
+    }, [dataLists, getListsLoading]);
+
+    const { control, handleSubmit } = useForm({ resolver: zodResolver(ListSchema) });
+
+    const onSubmit = async (data: ListValues) => {
+        await createList({ variables: { name: data.name, color: COLORS[0], boardId: boardId } });
+    };
+
+    const sortedLists = useSortedItems<IList>(lists);
 
     return (
         <section className="w-full flex gap-8 overflow-x-scroll pb-4">
@@ -91,28 +58,39 @@ export default function Board() {
                     setCurrentItem: setCurrentItem,
                     currentGroup: currentGroup,
                     setCurrentGroup: setCurrentGroup,
-                    setGroups: setList,
+                    setGroups: setLists,
                 }}
             >
                 <TaskDragAndDropOrderContext
                     value={{
                         currentOrder: currentOrder,
                         setCurrentOrder: setCurrentOrder,
-                        setOrders: setList,
+                        setOrders: setLists,
                     }}
                 >
-                    <nav>
-                        <ul className="flex gap-8">
-                            {list.map(l => (
-                                <List list={l} key={l.id} />
-                            ))}
-                        </ul>
-                    </nav>
+                    {sortedLists.length > 0 && (
+                        <nav>
+                            <ul className="flex gap-8">
+                                {sortedLists.map(l => (
+                                    <List list={l} key={l.id} />
+                                ))}
+                            </ul>
+                        </nav>
+                    )}
                 </TaskDragAndDropOrderContext>
             </TaskDragAndDropContext>
-            <div className="min-w-80">
-                <AddInput placeholder="Add List" onChange={() => {}} />
-            </div>
+            <form className="min-w-80" onSubmit={handleSubmit(onSubmit)}>
+                <Controller
+                    name="name"
+                    control={control}
+                    render={({ field }) => (
+                        <AddInput
+                            placeholder="Add list..."
+                            onChange={event => field.onChange(event.target.value)}
+                        />
+                    )}
+                />
+            </form>
         </section>
     );
 }

@@ -1,4 +1,4 @@
-export interface SubtaskSchema {
+export interface ISubtask {
     id: string;
     order: number;
     value: string;

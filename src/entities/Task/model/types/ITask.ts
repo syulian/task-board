@@ -1,4 +1,4 @@
-import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
+import { ISubtask } from '@entities/Task/model/types/ISubtask';
 
 export interface ITask {
     id: string;
@@ -6,10 +6,7 @@ export interface ITask {
     title: string;
     complete?: boolean;
     dueDate?: Date;
-    body: string;
-    subtasks?: SubtaskSchema[];
-    labels: {
-        name: string;
-        color: string;
-    }[];
+    body?: string;
+    subtasks?: ISubtask[];
+    labels?: string[];
 }

@@ -21,12 +21,8 @@ const useGroupContextMenu = (group: IBoardsGroup) => {
             refetchQueries: ['GetBoardsGroups'],
         },
     );
-    const [updateBoardsGroup, { loading: updateBoardsGroupLoading }] = useMutation(
-        UPDATE_BOARDS_GROUP,
-        {
-            refetchQueries: ['GetBoardsGroups'],
-        },
-    );
+    const [updateBoardsGroup, { loading: updateBoardsGroupLoading }] =
+        useMutation(UPDATE_BOARDS_GROUP);
 
     const handleBoardsGroupRename = async (name: string) => {
         if (updateBoardsGroupLoading) return;

@@ -8,6 +8,7 @@ const taskSchema = new Schema({
     dueDate: Date,
     body: String,
     subtasks: [subtaskSchema],
+    labels: [String],
     listId: { type: Schema.Types.ObjectId, ref: 'List' }!,
 });
 

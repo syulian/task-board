@@ -3,12 +3,12 @@ import { clsx } from 'clsx';
 import React from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { useSubtaskDragAndDropOrderContext } from '@entities/Task/model/context/subtaskDragAndDropOrderContext';
-import { SubtaskSchema } from '@entities/Task/model/types/SubtaskSchema';
+import { ISubtask } from '@entities/Task/model/types/ISubtask';
 import { useOrderDragAndDrop } from '@shared/lib';
 import { Checkbox, DefaultButton, Drag } from '@shared/ui';
 
 interface ISubtaskControlProps {
-    subtask: SubtaskSchema;
+    subtask: ISubtask;
 }
 
 export default function SubtaskControl({ subtask }: ISubtaskControlProps) {

@@ -1,8 +1,10 @@
 export { default as TaskCard } from './ui/TaskCard';
-export { default as EditTask } from './ui/EditTask';
-export { default as LabelsDropDown } from './ui/LabelsDropDown';
+export { default as Calendar } from './ui/Calendar';
+export { default as SubtaskControl } from './ui/SubtaskControl';
 export type { ITask } from './model/types/ITask';
-export type { IListSchema } from './model/types/IListSchema';
+export type { IList } from './model/types/IList';
+export type { ISubtask } from './model/types/ISubtask';
+export { SubtaskDragAndDropOrderContext } from './model/context/subtaskDragAndDropOrderContext';
 export {
     useTaskDragAndDropContext,
     TaskDragAndDropContext,
