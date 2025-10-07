@@ -12,6 +12,8 @@ const config = {
                 },
                 text: {
                     primary: 'var(--color-text-primary)',
+                    secondary: 'var(--color-text-secondary)',
+                    neutral: 'var(--color-text-neutral)',
                 },
             },
         },

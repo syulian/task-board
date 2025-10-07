@@ -16,6 +16,17 @@ export const GET_LISTS = gql`
                 dueDate
                 body
                 listId
+                subtasks {
+                    id
+                    order
+                    value
+                    checked
+                }
+                labels {
+                    id
+                    name
+                    color
+                }
             }
         }
     }

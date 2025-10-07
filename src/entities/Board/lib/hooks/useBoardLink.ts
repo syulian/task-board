@@ -1,9 +1,9 @@
 import { useMutation } from '@apollo/client/react';
-import { IBoardLink, IBoardsGroup, useBoardDragAndDropContext } from '@entities/Board';
+import { IBoard, IBoardsGroup, useBoardDragAndDropContext } from '@entities/Board';
 import { UPDATE_BOARDS_ORDERS } from '@entities/Board/api/updateBoardsOrders';
 import { clearTypename, useDragAndDrop } from '@shared/lib';
 
-const useBoardLink = (group: IBoardsGroup, board: IBoardLink) => {
+const useBoardLink = (group: IBoardsGroup, board: IBoard) => {
     const [updateOrders, { loading: ordersLoading }] = useMutation(UPDATE_BOARDS_ORDERS, {
         refetchQueries: ['GetBoardsGroups'],
     });

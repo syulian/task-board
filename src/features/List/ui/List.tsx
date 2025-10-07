@@ -8,8 +8,9 @@ import { DELETE_LIST } from '@features/List/api/deleteList';
 import { UPDATE_LIST } from '@features/List/api/updateList';
 import useListDragAndDrop from '@features/List/lib/hooks/useListDragAndDrop';
 import EditTask from '@features/List/ui/EditTask';
+import TaskInfo from '@features/List/ui/TaskInfo';
 import { COLORS, ColorsDropDown } from '@entities/Label';
-import { TaskCard, IList } from '@entities/Task';
+import { IList } from '@entities/Task';
 import { createStateController } from '@shared/lib';
 import {
     DefaultButton,
@@ -166,7 +167,7 @@ export default function List({ list }: IListProps) {
                 }}
             >
                 {list.items.map(t => (
-                    <TaskCard key={t.id} task={t} list={list} />
+                    <TaskInfo key={t.id} task={t} list={list} />
                 ))}
             </div>
             <AddButton onClick={() => setIsOpenField('popup', true)} />

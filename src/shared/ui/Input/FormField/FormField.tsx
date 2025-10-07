@@ -8,7 +8,6 @@ interface IDefaultInputProps<T extends FieldValues> {
     name: Path<T>;
     register: UseFormRegister<T>;
     error?: FieldError;
-    value?: string;
 }
 
 export default function FormField<T extends FieldValues>({
@@ -18,7 +17,6 @@ export default function FormField<T extends FieldValues>({
     name,
     register,
     error,
-    value,
 }: IDefaultInputProps<T>) {
     return (
         <div className="flex flex-col gap-1.5 relative">
@@ -26,7 +24,6 @@ export default function FormField<T extends FieldValues>({
             <input
                 className="w-full border border-bg-neutral-lighter bg-bg-secondary outline-none caret-bg-neutral-lighter py-1 px-2 rounded-md h-10.5"
                 type={type}
-                value={value}
                 placeholder={placeholder}
                 id={label}
                 {...register(name)}

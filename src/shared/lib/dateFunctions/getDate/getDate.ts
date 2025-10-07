@@ -7,13 +7,9 @@ export function getDate(date: string | Date) {
 
     const days = Math.floor((convertedDate.getTime() - currentDate.getTime()) / 86400000);
 
-    if (currentDate >= convertedDate) {
-        return 'Past Due';
-    } else if (days === 0) {
-        return 'Due Today';
-    } else if (days === 1) {
-        return 'Due Tomorrow';
-    } else {
-        return `Due in ${days} days`;
-    }
+    if (days < 0) return 'Past Due';
+    if (days === 0) return 'Due Today';
+    if (days === 1) return 'Due Tomorrow';
+
+    return `Due in ${days} days`;
 }

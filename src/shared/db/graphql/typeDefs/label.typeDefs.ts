@@ -1,0 +1,27 @@
+import { gql } from 'graphql-tag';
+
+export const labelTypeDefs = gql`
+    type Label {
+        id: ID!
+        order: Int
+        name: String!
+        color: String!
+        boardId: ID!
+    }
+
+    input LabelInput {
+        id: ID!
+        order: Int
+    }
+
+    extend type Query {
+        getLabels(boardId: ID!): [Label!]!
+    }
+
+    extend type Mutation {
+        createLabel(name: String!, color: String!, order: Int, boardId: ID!): Label!
+        deleteLabel(id: ID!): ID!
+        updateLabel(id: ID!, name: String!, color: String!): Label!
+        updateLabelsOrders(labels: [LabelInput!]!): [Label!]!
+    }
+`;

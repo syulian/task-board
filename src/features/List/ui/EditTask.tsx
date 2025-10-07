@@ -1,43 +1,24 @@
-import { useQuery } from '@apollo/client/react';
+import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
-import { HiMiniTag } from 'react-icons/hi2';
+import { HiMiniCheck, HiMiniTag } from 'react-icons/hi2';
 import { z } from 'zod';
 import { GET_LISTS } from '@features/List';
+import EditSubtasks from '@features/List/ui/EditSubtasks';
 import { GET_LABELS, ILabel, LabelDropDown } from '@entities/Label';
-import {
-    ISubtask,
-    Calendar,
-    SubtaskControl,
-    SubtaskDragAndDropOrderContext,
-    IList,
-    ITask,
-} from '@entities/Task';
+import { Calendar, CREATE_TASK, IList, ITask, TaskSchema, UPDATE_TASK } from '@entities/Task';
 import { createStateController, getDate, getHour } from '@shared/lib';
 import {
-    AddInput,
     FormField,
     DropDownContainer,
     LabelEdit,
     SecondButton,
     Select,
+    DefaultButton,
 } from '@shared/ui';
 import Textarea from '@shared/ui/Textarea/Textarea';
-
-const TaskSchema = z.object({
-    title: z
-        .string()
-        .min(4, { message: 'Task name is too short' })
-        .max(30, { message: 'Task name is too long' }),
-    list: z.object({
-        id: z.string(),
-        label: z.string(),
-    }),
-    description: z.string().max(800, { message: 'Task description is too long' }),
-    labels: z.string().array(),
-});
 
 type TaskValues = z.infer<typeof TaskSchema>;
 
@@ -50,12 +31,16 @@ export default function EditTask({ list, task }: IEditTaskProps) {
     const params = useParams<{ id: string }>();
     const boardId = params?.id;
 
+    const [createTask] = useMutation(CREATE_TASK, { refetchQueries: ['GetLists'] });
+    const [updateTask] = useMutation(UPDATE_TASK);
+
     const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
         variables: { boardId },
     });
     const { data: dataLists } = useQuery<{ getLists: IList[] }>(GET_LISTS, {
         variables: { boardId },
     });
+
     const labels = dataLabels?.getLabels ?? [];
     const lists =
         dataLists?.getLists.map(l => ({
@@ -63,43 +48,76 @@ export default function EditTask({ list, task }: IEditTaskProps) {
             label: l.name,
         })) ?? [];
 
-    const [currentOrder, setCurrentOrder] = useState<ISubtask | null>(null);
+    const initialValues = {
+        title: task?.title ?? '',
+        dueDate: task?.dueDate ? new Date(task.dueDate) : null,
+        body: task?.body ?? '',
+        subtasks: task?.subtasks ?? [],
+        labels: task?.labels?.map(l => l.id) ?? [],
+        list: {
+            id: list.id,
+            label: list.name,
+        },
+    };
 
     const {
+        reset,
         watch,
-        getValues,
-        setValue,
         control,
         register,
+        setValue,
+        getValues,
         handleSubmit,
-        formState: { errors },
+        formState: { errors, isDirty },
     } = useForm({
         resolver: zodResolver(TaskSchema),
-        defaultValues: {
-            title: task?.title,
-            list: {
-                id: list.id,
-                label: list.name,
-            },
-            labels: task?.labels || [],
-        },
+        defaultValues: initialValues,
     });
 
-    const taskLabels: ILabel[] = labels.filter(l => watch('labels').includes(l.id));
+    const taskLabels: ILabel[] = labels.filter(l => watch('labels')?.includes(l.id));
+    const dueDate = watch('dueDate');
 
-    const [subtasks, setSubtasks] = useState<ISubtask[]>([]);
     const [isOpen, setIsOpen] = useState({
         labels: false,
         calendar: false,
     });
 
-    const [selectedDate, setSelectedDate] = useState<Date | null>(null);
-
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
+    const onSubmit = async (data: TaskValues) => {
+        const newTask = {
+            listId: data.list.id,
+            title: data.title,
+            dueDate: data.dueDate,
+            body: data.body,
+            subtasks: data.subtasks,
+            labels: data.labels,
+        };
+
+        if (!task) {
+            await createTask({
+                variables: { task: newTask },
+            });
+        } else {
+            await updateTask({
+                variables: {
+                    task: {
+                        id: task.id,
+                        ...newTask,
+                    },
+                },
+            });
+        }
+
+        reset();
+    };
+
     return (
-        <form className="flex justify-center gap-6 px-8 pb-9 w-screen max-w-4xl cursor-auto">
-            <div className="flex flex-col gap-8 pr-6 border-r border-bg-neutral-lighter w-1/2">
+        <div className="relative flex justify-center gap-6 px-8 pb-9 w-screen max-w-4xl cursor-auto">
+            <form
+                className="flex flex-col gap-8 pr-6 border-r border-bg-neutral-lighter w-3/5"
+                onSubmit={handleSubmit(onSubmit)}
+            >
                 <FormField
                     error={errors.title}
                     name="title"
@@ -119,6 +137,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                             render={({ field }) => {
                                 const toggleLabel = (id: string) => {
                                     const value = field.value;
+                                    if (!value) return;
 
                                     const newLabels = value.includes(id)
                                         ? value.filter(l => l !== id)
@@ -150,7 +169,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                             onClick={() =>
                                 setValue(
                                     'labels',
-                                    getValues('labels').filter(id => id !== l.id),
+                                    getValues('labels')?.filter(id => id !== l.id),
                                 )
                             }
                         />
@@ -174,44 +193,40 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     <b>Due Date</b>
                     <div className="relative">
                         <SecondButton onClick={() => setIsOpenField('calendar', true)}>
-                            {selectedDate
-                                ? `${getDate(selectedDate)}, ${getHour(selectedDate)}`
-                                : 'None'}
+                            {dueDate ? `${getDate(dueDate)}, ${getHour(dueDate)}` : 'None'}
                         </SecondButton>
                         <DropDownContainer
                             isOpen={isOpen.calendar}
                             setIsOpen={() => setIsOpenField('calendar', false)}
                             className="left-full -bottom-48"
                         >
-                            <Calendar
-                                setSelectedDate={setSelectedDate}
-                                selectedDate={selectedDate}
-                                setIsOpen={() => setIsOpenField('calendar', false)}
+                            <Controller
+                                name="dueDate"
+                                control={control}
+                                render={({ field }) => (
+                                    <Calendar
+                                        setSelectedDate={newDate => field.onChange(newDate)}
+                                        selectedDate={field.value}
+                                        setIsOpen={() => setIsOpenField('calendar', false)}
+                                    />
+                                )}
                             />
                         </DropDownContainer>
                     </div>
                 </span>
-                <Textarea onChange={() => {}} />
-            </div>
-            <div className="flex flex-col gap-6 w-1/2">
-                <div className="flex flex-col gap-1.5">
-                    <b>Subtasks</b>
-                    <AddInput onChange={() => {}} placeholder="Type here and press 'Enter'" />
-                </div>
-                <div className="flex flex-col gap-1">
-                    <SubtaskDragAndDropOrderContext
-                        value={{
-                            currentOrder: currentOrder,
-                            setCurrentOrder: setCurrentOrder,
-                            setOrders: setSubtasks,
-                        }}
-                    >
-                        {subtasks.map(s => (
-                            <SubtaskControl key={s.id} subtask={s} />
-                        ))}
-                    </SubtaskDragAndDropOrderContext>
-                </div>
-            </div>
-        </form>
+                <Textarea
+                    error={errors.body}
+                    name="body"
+                    register={register}
+                    placeholder="Add description..."
+                />
+                {isDirty && (
+                    <DefaultButton type="submit" className="absolute bottom-0 right-0">
+                        <HiMiniCheck size={24} />
+                    </DefaultButton>
+                )}
+            </form>
+            <EditSubtasks task={task} setValue={setValue} />
+        </div>
     );
 }

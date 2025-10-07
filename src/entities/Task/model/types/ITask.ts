@@ -8,5 +8,9 @@ export interface ITask {
     dueDate?: Date;
     body?: string;
     subtasks?: ISubtask[];
-    labels?: string[];
+    labels?: {
+        id: string;
+        name: string;
+        color: string;
+    }[];
 }

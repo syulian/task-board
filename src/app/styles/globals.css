@@ -10,6 +10,7 @@
     --color-bg-neutral-lighter: #69788a;
     --color-text-primary: #ffffff;
     --color-text-secondary: #dadada;
+    --color-text-neutral: #8b8c8e;
 }
 
 [data-theme="light"] {
@@ -19,6 +20,7 @@
     --color-bg-neutral-lighter: #c3c3c5;
     --color-text-primary: #636363;
     --color-text-secondary: #dadada;
+    --color-text-neutral: #8b8c8e;
 }
 
 body {
@@ -33,5 +35,29 @@ body * {
 
 * {
     scrollbar-width: thin;
-    scrollbar-color: var(--color-bg-secondary) var(--color-bg-secondary);
+    scrollbar-color: var(--color-bg-neutral-lighter) rgba(255, 255, 255, 0);
+}
+
+h1 {
+    @apply text-4xl font-bold;
+}
+
+h2 {
+    @apply text-3xl font-semibold;
+}
+
+h3 {
+    @apply text-2xl;
+}
+
+h4 {
+    @apply text-xl;
+}
+
+h5 {
+    @apply text-lg;
+}
+
+h6 {
+    @apply text-base;
 }

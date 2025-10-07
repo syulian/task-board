@@ -10,7 +10,7 @@ interface IDragProps {
 export default function Drag({ onDragStart, onDragEnd, target, children }: IDragProps) {
     return (
         <span
-            className="flex items-center font-bold cursor-grab"
+            className="flex items-center font-bold cursor-grab select-none"
             draggable
             onDragStart={e => {
                 onDragStart(e);

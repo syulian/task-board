@@ -27,11 +27,33 @@ export default function SubtaskControl({ subtask }: ISubtaskControlProps) {
         setOrders,
     });
 
+    const handleUpdate = () => {
+        setOrders(prev => {
+            const newSubtasks = [...prev];
+            const index = newSubtasks.findIndex(s => s.id === subtask.id);
+
+            if (index < 0) return prev;
+
+            newSubtasks[index] = {
+                ...newSubtasks[index],
+                checked: !newSubtasks[index].checked,
+            };
+
+            return newSubtasks;
+        });
+    };
+
+    const handleDelete = () => {
+        setOrders(prev => prev.filter(s => s.id !== subtask.id));
+    };
+
     return (
         <div
             className={clsx(
-                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border border-bg-neutral',
-                isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
+                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border-dashed border',
+                isDragOverOrder && currentOrder
+                    ? 'border-bg-neutral-lighter'
+                    : 'border-transparent',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}
@@ -43,11 +65,11 @@ export default function SubtaskControl({ subtask }: ISubtaskControlProps) {
                     onDragEnd={onDragEndOrder}
                     target=".drag-target"
                 />
-                <Checkbox key={subtask.id} onChange={() => {}} state={subtask.checked}>
+                <Checkbox key={subtask.id} onChange={handleUpdate} state={subtask.checked}>
                     {subtask.value}
                 </Checkbox>
             </span>
-            <DefaultButton onClick={() => {}}>
+            <DefaultButton onClick={handleDelete}>
                 <HiMiniXMark size={18} />
             </DefaultButton>
         </div>

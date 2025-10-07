@@ -68,8 +68,9 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
                     <div key={i} className="w-11.5 h-11.5" role="gridcell" aria-hidden="true" />
                 ))}
                 {Array.from({ length: daysInMonth }).map((_, i) => {
-                    const isSelected =
-                        currentDate && isToday(i, +selectedYear.id, +selectedMonth.id, currentDate);
+                    const selected =
+                        currentDate &&
+                        isToday(i + 1, +selectedYear.id, +selectedMonth.id, currentDate);
 
                     const today = isToday(i + 1, +selectedYear.id, +selectedMonth.id, new Date());
 
@@ -79,12 +80,13 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
                             className={clsx(
                                 'flex items-center justify-center w-11.5 h-11.5 p-4 rounded-sm cursor-pointer',
                                 today && 'border border-bg-neutral-lighter',
-                                isSelected && 'bg-bg-neutral-lighter/50',
+                                selected && 'bg-bg-neutral-lighter/50',
                             )}
                             role="gridcell"
-                            aria-selected={!!isSelected}
+                            aria-selected={!!selected}
                             aria-label={`Select ${i + 1} ${selectedMonth.label} ${selectedYear.label}`}
-                            onClick={() => changeDay(i)}
+                            onClick={() => changeDay(i + 1)}
+                            type="button"
                         >
                             {i + 1}
                         </button>

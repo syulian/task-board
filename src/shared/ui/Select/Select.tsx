@@ -13,7 +13,7 @@ export default function Select({ list, selected, setSelected }: ISelectProps) {
     const [isOpen, setIsOpen] = useState(false);
 
     return (
-        <div className="flex relative min-w-0">
+        <div className="flex relative min-w-0 z-40">
             <button
                 className="flex items-center justify-between gap-2 bg-bg-secondary border border-bg-neutral-lighter px-4 py-1 rounded-sm cursor-pointer w-full truncate"
                 onClick={() => setIsOpen(prev => !prev)}

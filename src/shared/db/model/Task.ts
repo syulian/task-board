@@ -1,5 +1,4 @@
 import { model, models, Schema } from 'mongoose';
-import subtaskSchema from '@shared/db/model/Subtask';
 
 const taskSchema = new Schema({
     order: Number,
@@ -7,8 +6,14 @@ const taskSchema = new Schema({
     complete: Boolean,
     dueDate: Date,
     body: String,
-    subtasks: [subtaskSchema],
-    labels: [String],
+    subtasks: [
+        {
+            order: Number,
+            value: String!,
+            checked: Boolean,
+        },
+    ],
+    labels: [{ type: Schema.Types.ObjectId, ref: 'Label' }],
     listId: { type: Schema.Types.ObjectId, ref: 'List' }!,
 });
 
