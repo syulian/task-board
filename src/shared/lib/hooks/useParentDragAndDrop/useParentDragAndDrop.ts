@@ -1,4 +1,5 @@
-import { Dispatch, DragEvent, SetStateAction } from 'react';
+'use client';
+import { Dispatch, DragEvent, SetStateAction, useEffect, useRef } from 'react';
 import { GroupSchema, ItemSchema } from '@shared/types';
 
 const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>(
@@ -8,8 +9,17 @@ const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>
         currentGroup: TG | null;
         setGroups: Dispatch<SetStateAction<TG[]>>;
     },
+    onReorder?: (updated: TG[]) => void,
 ) => {
+    const lastUpdated = useRef<TG[]>(null);
     const { currentItem, setGroups, currentGroup } = ctx;
+
+    useEffect(() => {
+        if (lastUpdated.current) {
+            onReorder?.(lastUpdated.current);
+            lastUpdated.current = null;
+        }
+    }, [lastUpdated.current]);
 
     const onDragOver = (event: DragEvent<HTMLDivElement>) => {
         event.stopPropagation();
@@ -22,8 +32,8 @@ const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>
 
         if (!currentGroup || !currentItem || group.items.length) return;
 
-        setGroups(prev =>
-            prev.map(g => {
+        setGroups(prev => {
+            const updated = prev.map(g => {
                 const updatedItems = g.items.filter(b => b.id !== currentItem.id);
 
                 if (g.id === group.id) {
@@ -34,8 +44,11 @@ const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>
                     ...g,
                     items: updatedItems,
                 };
-            }),
-        );
+            });
+
+            lastUpdated.current = updated;
+            return updated;
+        });
     };
 
     return {

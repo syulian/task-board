@@ -11,6 +11,7 @@ import {
     useBoardDragAndDropContext,
     IBoard,
 } from '@entities/Board';
+import useBoardOnOrder from '@entities/Board/lib/hooks/useBoardOnOrder';
 import { useParentDragAndDrop, useSortedItems } from '@shared/lib';
 import { DropDownContainer, InlineInput, ListDropDown, Tooltip } from '@shared/ui';
 import './list.animation.css';
@@ -24,11 +25,15 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
     const listRef = useRef(null);
 
     const { currentItem, setGroups, currentGroup } = useBoardDragAndDropContext();
-    const { onDragOver, onDrop } = useParentDragAndDrop(group, {
-        currentItem,
-        setGroups,
-        currentGroup,
-    });
+    const { onDragOver, onDrop } = useParentDragAndDrop(
+        group,
+        {
+            currentItem,
+            setGroups,
+            currentGroup,
+        },
+        useBoardOnOrder(),
+    );
 
     const { disabled, handleBoardsGroupRename, contextMenu, isOpen, setIsOpenField } =
         useGroupContextMenu(group);

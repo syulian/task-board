@@ -1,7 +1,7 @@
 import { gql } from 'graphql-tag';
 
 export const UPDATE_LISTS_ORDERS = gql`
-    mutation UpdateListsOrders($lists: [ListInput!]!) {
+    mutation UpdateListsOrders($lists: [OrderInput!]!) {
         updateListsOrders(lists: $lists) {
             id
             order

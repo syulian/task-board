@@ -3,6 +3,7 @@ import React from 'react';
 import getBoardById from '@pages/BoardPage/api/getBoardById';
 import { Board } from '@widgets/Board';
 import { Header } from '@widgets/Header';
+import { RightSidebar } from '@features/RightSidebar';
 
 type Params = {
     params: Promise<{ id: string }>;
@@ -23,9 +24,12 @@ export async function generateMetadata({ params }: Params): Promise<Metadata> {
 
 export async function BoardPage() {
     return (
-        <main className="flex flex-col bg-bg-primary w-screen min-w-80 p-4">
-            <Header />
-            <Board />
-        </main>
+        <>
+            <main className="flex flex-col bg-bg-primary w-screen min-w-80 p-4">
+                <Header />
+                <Board />
+            </main>
+            <RightSidebar />
+        </>
     );
 }

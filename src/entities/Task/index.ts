@@ -1,7 +1,9 @@
 export { default as TaskCard } from './ui/TaskCard';
 export { default as Calendar } from './ui/Calendar';
 export { default as SubtaskControl } from './ui/SubtaskControl';
+export { default as TaskPlanned } from './ui/TaskPlanned';
 export type { ITask } from './model/types/ITask';
+export type { IGroupTask, IFullTask } from './model/types/IGroupTask';
 export type { IList } from './model/types/IList';
 export type { ISubtask } from './model/types/ISubtask';
 export { TaskSchema } from './model/types/TaskSchema';

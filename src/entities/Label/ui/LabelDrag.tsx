@@ -59,8 +59,10 @@ export default function LabelDrag({ label }: ILabelsListProps) {
     return (
         <form
             className={clsx(
-                'flex items-center gap-2 px-4 py-1 relative drag-target rounded-md border border-bg-neutral',
-                isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
+                'flex items-center gap-2 px-4 py-1 relative drag-target rounded-md border border-dashed',
+                isDragOverOrder && currentOrder
+                    ? 'border-bg-neutral-lighter'
+                    : 'border-transparent',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}

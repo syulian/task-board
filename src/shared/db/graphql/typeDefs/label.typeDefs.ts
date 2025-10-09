@@ -9,11 +9,6 @@ export const labelTypeDefs = gql`
         boardId: ID!
     }
 
-    input LabelInput {
-        id: ID!
-        order: Int
-    }
-
     extend type Query {
         getLabels(boardId: ID!): [Label!]!
     }
@@ -22,6 +17,6 @@ export const labelTypeDefs = gql`
         createLabel(name: String!, color: String!, order: Int, boardId: ID!): Label!
         deleteLabel(id: ID!): ID!
         updateLabel(id: ID!, name: String!, color: String!): Label!
-        updateLabelsOrders(labels: [LabelInput!]!): [Label!]!
+        updateLabelsOrders(labels: [OrderInput!]!): [Label!]!
     }
 `;

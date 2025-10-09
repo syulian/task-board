@@ -13,6 +13,7 @@ export { default as useOrderDragAndDrop } from './hooks/useOrderDragAndDrop/useO
 export { default as useTheme } from './hooks/useTheme/useTheme';
 export { default as useSortedItems } from './hooks/useSortedItems/useSortedItems';
 export { default as useLocale } from './hooks/useLocale/useLocale';
+export { default as useContextMenu } from './hooks/useContextMenu/useContextMenu';
 export { createDragAndDropContext } from './dragAndDropContext/dragAndDropContext';
 export { createDragAndDropOrderContext } from './dragAndDropOrderContext/dragAndDropOrderContext';
 export {

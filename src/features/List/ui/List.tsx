@@ -10,8 +10,8 @@ import useListDragAndDrop from '@features/List/lib/hooks/useListDragAndDrop';
 import EditTask from '@features/List/ui/EditTask';
 import TaskInfo from '@features/List/ui/TaskInfo';
 import { COLORS, ColorsDropDown } from '@entities/Label';
-import { IList } from '@entities/Task';
-import { createStateController } from '@shared/lib';
+import { IList, ITask } from '@entities/Task';
+import { createStateController, useSortedItems } from '@shared/lib';
 import {
     DefaultButton,
     AddButton,
@@ -106,6 +106,8 @@ export default function List({ list }: IListProps) {
         onDrop,
     } = useListDragAndDrop(list);
 
+    const sortedItems = useSortedItems<ITask>(list.items);
+
     return (
         <li
             className={clsx(
@@ -166,7 +168,7 @@ export default function List({ list }: IListProps) {
                     onDrop(e);
                 }}
             >
-                {list.items.map(t => (
+                {sortedItems?.map(t => (
                     <TaskInfo key={t.id} task={t} list={list} />
                 ))}
             </div>

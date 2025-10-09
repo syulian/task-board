@@ -29,6 +29,20 @@ export const taskTypeDefs = gql`
         listId: ID!
     }
 
+    type TaskGroupByDate {
+        date: Date!
+        tasks: [TaskGroup!]!
+    }
+
+    type TaskGroup {
+        id: ID!
+        title: String!
+        body: String
+        dueDate: Date
+        complete: Boolean
+        list: List!
+        board: Board!
+    }
     input TaskInput {
         listId: ID!
         title: String!
@@ -40,8 +54,9 @@ export const taskTypeDefs = gql`
 
     input TaskUpdateInput {
         id: ID!
-        listId: ID!
-        title: String!
+        listId: ID
+        title: String
+        order: Int
         complete: Boolean
         dueDate: Date
         body: String
@@ -49,9 +64,15 @@ export const taskTypeDefs = gql`
         labels: [ID]
     }
 
+    extend type Query {
+        getTasks: [TaskGroupByDate]
+    }
+
     extend type Mutation {
         createTask(task: TaskInput): Task!
         updateTask(task: TaskUpdateInput): Task!
+        deleteTask(taskId: ID!): ID!
         updateSubtask(taskId: String, subtaskId: String, checked: Boolean): Task!
+        updateTasksOrders(tasks: [TaskUpdateInput]): [List!]!
     }
 `;

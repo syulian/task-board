@@ -75,5 +75,5 @@ export const boardResolvers = {
 
             return BoardsGroup.find();
         },
-    }
-}
+    },
+};

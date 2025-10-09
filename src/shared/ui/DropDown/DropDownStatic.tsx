@@ -11,7 +11,7 @@ interface IDropDownContainerProps {
     className?: string;
 }
 
-export default function DropDownContainer({
+export default function DropDownStatic({
     children,
     isOpen,
     setIsOpen,

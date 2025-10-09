@@ -1,7 +1,7 @@
 import { Types } from 'mongoose';
 import dbConnect from '@shared/db/db';
 import { dateScalar } from '@shared/db/graphql/scalars';
-import { Label, Task } from '@shared/db/model';
+import { Label, List, Task } from '@shared/db/model';
 
 interface ITask {
     listId: string;
@@ -20,9 +20,71 @@ interface ITask {
 interface IUpdateTask extends ITask {
     id: string;
     complete?: boolean;
+    order?: number;
 }
 
 export const taskResolvers = {
+    Query: {
+        getTasks: async () => {
+            await dbConnect();
+
+            const grouped = await Task.aggregate([
+                {
+                    $match: {
+                        dueDate: {
+                            $gt: new Date(),
+                        },
+                    },
+                },
+                {
+                    $lookup: {
+                        from: 'lists',
+                        localField: 'listId',
+                        foreignField: '_id',
+                        as: 'list',
+                    },
+                },
+                { $unwind: '$list' },
+                {
+                    $lookup: {
+                        from: 'boards',
+                        localField: 'list.boardId',
+                        foreignField: '_id',
+                        as: 'board',
+                    },
+                },
+                { $unwind: '$board' },
+                {
+                    $group: {
+                        _id: {
+                            $dateToString: { format: '%Y-%m-%d', date: '$dueDate' },
+                        },
+                        tasks: { $push: '$$ROOT' },
+                    },
+                },
+                { $sort: { _id: 1 } },
+            ]);
+
+            return grouped.map(g => ({
+                date: g._id,
+                tasks: g.tasks.map((t: any) => ({
+                    id: t._id,
+                    title: t.title,
+                    body: t.body,
+                    dueDate: t.dueDate,
+                    complete: t.complete,
+                    board: {
+                        id: t.board._id,
+                        name: t.board.name,
+                    },
+                    list: {
+                        id: t.list._id,
+                        name: t.list.name,
+                    },
+                })),
+            }));
+        },
+    },
     Mutation: {
         createTask: async (_: any, { task }: { task: ITask }) => {
             await dbConnect();
@@ -79,15 +141,38 @@ export const taskResolvers = {
             { taskId, subtaskId, checked }: { taskId: string; subtaskId: string; checked: boolean },
         ) => {
             await dbConnect();
-            console.log(taskId, subtaskId, checked);
+
             await Task.updateOne(
-                { _id: taskId, 'subtasks.id': subtaskId },
+                { _id: taskId, 'subtasks._id': subtaskId },
                 { $set: { 'subtasks.$.checked': checked } },
             );
 
-            console.log(await Task.findOne({ _id: taskId, 'subtasks.id': subtaskId }));
-
             return Task.findById(taskId);
+        },
+        deleteTask: async (_: any, { taskId }: { taskId: string }) => {
+            await dbConnect();
+            await Task.deleteOne({ _id: taskId });
+
+            return taskId;
+        },
+        updateTasksOrders: async (_: any, { tasks }: { tasks: IUpdateTask[] }) => {
+            await dbConnect();
+            console.log(tasks);
+            await Promise.all(
+                tasks.map(t =>
+                    Task.updateOne(
+                        { _id: t.id },
+                        {
+                            $set: {
+                                order: t.order,
+                                listId: t.listId,
+                            },
+                        },
+                    ),
+                ),
+            );
+
+            return List.find();
         },
     },
     Task: {

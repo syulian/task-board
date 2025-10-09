@@ -1,16 +1,21 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import React from 'react';
 import { HiMiniCheck } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
-import { UPDATE_SUBTASK } from '@entities/Task/api/updateSubtask';
-import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
+import useTaskCard from '@entities/Task/lib/hooks/useTaskCard';
+import useTaskDragAndDrop from '@entities/Task/lib/hooks/useTaskDragAndDrop';
 import { IList } from '@entities/Task/model/types/IList';
 import { ITask } from '@entities/Task/model/types/ITask';
-import { getDate, useDragAndDrop } from '@shared/lib';
-import { Label, Checkbox, StopPropagation } from '@shared/ui';
+import {
+    Label,
+    Checkbox,
+    StopPropagation,
+    ListDropDown,
+    DropDownDynamic,
+    LabelComplete,
+} from '@shared/ui';
 
 interface ITaskCardProps {
     task: ITask;
@@ -21,26 +26,10 @@ interface ITaskCardProps {
 export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
     const { body, title, labels, subtasks, complete, dueDate } = task;
 
-    const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
-        useTaskDragAndDropContext();
-    const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop } = useDragAndDrop(
-        list,
-        task,
-        {
-            currentItem,
-            setGroups,
-            setCurrentItem,
-            setCurrentGroup,
-            currentGroup,
-        },
-    );
+    const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop, currentItem } =
+        useTaskDragAndDrop(task, list);
 
-    const [updateSubtask, { loading: updateSubtaskLoading }] = useMutation(UPDATE_SUBTASK);
-    const handleUpdate = async (checked: boolean, subtaskId: string) => {
-        if (updateSubtaskLoading) return;
-
-        await updateSubtask({ variables: { taskId: task.id, subtaskId, checked } });
-    };
+    const { onContextMenu, handleUpdate, menu, contextMenu, setField } = useTaskCard(task);
 
     return (
         <div
@@ -48,8 +37,8 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
             tabIndex={0}
             aria-label={`Edit task ${task.title}`}
             className={clsx(
-                'flex flex-col gap-2 border border-bg-neutral bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
-                isDragOver && currentItem && 'border-dashed border-bg-neutral-lighter',
+                'flex flex-col gap-2 border border-dashed bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
+                isDragOver && currentItem ? 'border-bg-neutral-lighter' : 'border-transparent',
             )}
             draggable
             onDragLeave={onDragLeave}
@@ -64,22 +53,9 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
                     setIsOpen();
                 }
             }}
+            onContextMenu={onContextMenu}
         >
-            {(complete || dueDate) && (
-                <p
-                    className={clsx(
-                        'absolute top-0 right-4 py-1 px-2 bg-bg-primary rounded-b-sm font-semibold text-sm border-b border-l border-r border-bg-secondary opacity-80',
-                        complete
-                            ? 'bg-green-800 text-text-secondary'
-                            : dueDate &&
-                                  (new Date(dueDate) >= new Date()
-                                      ? 'text-blue-400'
-                                      : 'text-red-400'),
-                    )}
-                >
-                    {complete ? 'Complete' : dueDate && getDate(dueDate)}
-                </p>
-            )}
+            {(complete || dueDate) && <LabelComplete complete={complete} dueDate={dueDate} />}
             <p className="font-semibold">{title}</p>
             <div className="text-sm text-gray-400">
                 <Markdown remarkPlugins={[remarkBreaks]}>{body ?? ''}</Markdown>
@@ -110,6 +86,13 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
                     <Label key={l.id} name={l.name} color={l.color} />
                 ))}
             </div>
+            <DropDownDynamic
+                coordinates={menu.coordinates}
+                isOpen={menu.state}
+                setIsOpen={() => setField('state', false)}
+            >
+                <ListDropDown list={contextMenu} />
+            </DropDownDynamic>
         </div>
     );
 }

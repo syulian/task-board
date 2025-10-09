@@ -1,6 +1,7 @@
 import { ISubtask } from '@entities/Task/model/types/ISubtask';
 
 export interface ITask {
+    __typename: string;
     id: string;
     order: number;
     title: string;
@@ -13,4 +14,5 @@ export interface ITask {
         name: string;
         color: string;
     }[];
+    listId: string;
 }

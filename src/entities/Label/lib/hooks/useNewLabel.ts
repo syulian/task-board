@@ -17,7 +17,7 @@ const useNewLabel = (boardId?: string) => {
 
                 if (!existing) return;
 
-                cache.writeQuery<{ getLabels: ILabel[] }>({
+                cache.writeQuery({
                     query: GET_LABELS,
                     variables: { boardId },
                     data: {

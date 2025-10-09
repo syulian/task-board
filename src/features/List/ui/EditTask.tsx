@@ -1,3 +1,4 @@
+import { Reference } from '@apollo/client';
 import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
@@ -32,7 +33,40 @@ export default function EditTask({ list, task }: IEditTaskProps) {
     const boardId = params?.id;
 
     const [createTask] = useMutation(CREATE_TASK, { refetchQueries: ['GetLists'] });
-    const [updateTask] = useMutation(UPDATE_TASK);
+    const [updateTask] = useMutation<{ updateTask: ITask }>(UPDATE_TASK, {
+        update(cache, { data }) {
+            const updated = data?.updateTask;
+            if (!updated) return;
+
+            const oldListId = list.id;
+            const newListId = updated.listId;
+
+            if (oldListId === newListId) return;
+
+            cache.modify({
+                id: cache.identify({ __typename: 'List', id: oldListId }),
+                fields: {
+                    items(existingRefs: readonly Reference[] = [], { readField }) {
+                        return existingRefs.filter(ref => readField('id', ref) !== updated.id);
+                    },
+                },
+            });
+
+            cache.modify<{ items: Reference[] }>({
+                id: cache.identify({ __typename: 'List', id: newListId }),
+                fields: {
+                    items(existingRefs: readonly Reference[] = [], { toReference }) {
+                        const taskRef = toReference({
+                            __typename: 'Task',
+                            id: updated.id,
+                        });
+
+                        return taskRef ? [...existingRefs, taskRef] : existingRefs;
+                    },
+                },
+            });
+        },
+    });
 
     const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
         variables: { boardId },
@@ -54,10 +88,15 @@ export default function EditTask({ list, task }: IEditTaskProps) {
         body: task?.body ?? '',
         subtasks: task?.subtasks ?? [],
         labels: task?.labels?.map(l => l.id) ?? [],
-        list: {
-            id: list.id,
-            label: list.name,
-        },
+        list: task?.listId
+            ? (lists.find(s => s.id === task.listId) ?? {
+                  id: list.id,
+                  label: list.name,
+              })
+            : {
+                  id: list.id,
+                  label: list.name,
+              },
     };
 
     const {
@@ -99,7 +138,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                 variables: { task: newTask },
             });
         } else {
-            await updateTask({
+            const { data } = await updateTask({
                 variables: {
                     task: {
                         id: task.id,
@@ -107,9 +146,24 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     },
                 },
             });
-        }
 
-        reset();
+            const updatedTask = data?.updateTask;
+            if (!updatedTask) return;
+
+            const newValues = {
+                title: updatedTask.title,
+                dueDate: updatedTask?.dueDate ? new Date(updatedTask.dueDate) : null,
+                body: updatedTask?.body ?? '',
+                subtasks: updatedTask?.subtasks ?? [],
+                labels: updatedTask?.labels?.map(l => l.id) ?? [],
+                list: lists.find(s => s.id === updatedTask.listId) ?? {
+                    id: list.id,
+                    label: list.name,
+                },
+            };
+
+            reset({ ...newValues }, { keepDirty: false });
+        }
     };
 
     return (
@@ -170,6 +224,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                                 setValue(
                                     'labels',
                                     getValues('labels')?.filter(id => id !== l.id),
+                                    { shouldDirty: true },
                                 )
                             }
                         />

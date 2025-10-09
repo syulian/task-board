@@ -8,7 +8,6 @@ import { NextAuthProvider } from '@app/providers/NextAuthProvider';
 import { StoreProvider } from '@app/providers/StoreProvider';
 import { ThemeProvider } from '@app/providers/ThemeProvider';
 import { LeftSidebar } from '@widgets/LeftSidebar';
-import { RightSidebar } from '@features/RightSidebar';
 import '../styles';
 
 interface IRootLayoutProps {
@@ -48,7 +47,6 @@ export async function RootLayout({ children }: IRootLayoutProps) {
                                     <div className="flex">
                                         <LeftSidebar />
                                         {children}
-                                        <RightSidebar />
                                     </div>
                                 </NextIntlClientProvider>
                             </NextAuthProvider>
