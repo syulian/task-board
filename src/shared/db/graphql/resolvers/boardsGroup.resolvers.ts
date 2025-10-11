@@ -1,3 +1,4 @@
+import { Session } from 'next-auth';
 import dbConnect from '@shared/db/db';
 import { Board, BoardsGroup, Label, List, Task } from '@shared/db/model';
 
@@ -9,8 +10,15 @@ export const boardsGroupResolvers = {
         },
     },
     Mutation: {
-        createBoardsGroup: async (_: any, { name, order }: { name: string; order: number }) => {
+        createBoardsGroup: async (
+            _: any,
+            { name, order }: { name: string; order: number },
+            context: {
+                user?: Session['user'];
+            },
+        ) => {
             await dbConnect();
+
             return BoardsGroup.create({ name, order });
         },
         deleteBoardsGroup: async (_: any, { id }: { id: string }) => {
@@ -22,12 +30,12 @@ export const boardsGroupResolvers = {
                 return id;
             }
 
-            const listsIds = await List.find({ boardId: { $in: boardsIds } }).distinct('_id');
+            const listsIds = await List.find({ board: { $in: boardsIds } }).distinct('_id');
 
             await Promise.all([
-                Task.deleteMany({ listId: { $in: listsIds } }),
-                Label.deleteMany({ boardId: { $in: boardsIds } }),
-                List.deleteMany({ boardId: { $in: boardsIds } }),
+                Task.deleteMany({ list: { $in: listsIds } }),
+                Label.deleteMany({ board: { $in: boardsIds } }),
+                List.deleteMany({ board: { $in: boardsIds } }),
                 Board.deleteMany({ groupId: id }),
                 BoardsGroup.deleteOne({ _id: id }),
             ]);

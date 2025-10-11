@@ -1,6 +1,6 @@
 'use client';
 import { MouseEvent, useState } from 'react';
-import { createStateController } from '@shared/lib';
+import { createStateController } from '@shared/lib/setObjectState/setObjectState';
 
 const useContextMenu = () => {
     const [menu, setMenu] = useState({

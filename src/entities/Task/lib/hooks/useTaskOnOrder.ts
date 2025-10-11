@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
-import { IList } from '@entities/Task';
 import { UPDATE_TASKS_ORDERS } from '@entities/Task/api/updateTasksOrders';
+import { IList } from '@entities/Task/model/types/IList';
 import { clearTypename } from '@shared/lib';
 
 const useTaskOnOrder = () => {
@@ -11,7 +11,7 @@ const useTaskOnOrder = () => {
 
     return async (lists: IList[]) => {
         if (ordersLoading) return;
-        const tasks = clearTypename(lists.flatMap(g => g.items.map(b => ({ ...b, listId: g.id }))));
+        const tasks = clearTypename(lists.flatMap(g => g.items.map(b => ({ ...b, list: g.id }))));
 
         const cleanedTasks = tasks.map(t => ({
             ...t,

@@ -1,14 +1,14 @@
 import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
-import { DELETE_BOARD } from '@entities/Board/api/deleteBoard';
 import { UPDATE_BOARD } from '@entities/Board/api/updateBoard';
 import IBoard from '@entities/Board/model/types/IBoard';
+import { useDeleteBoardMutation } from '@shared/types/generated/graphql';
 
 const useLinkContextMenu = (board: IBoard) => {
     const [disabled, setDisabled] = useState(true);
     const [isOpen, setIsOpen] = useState(false);
 
-    const [deleteBoard, { loading: deleteBoardLoading }] = useMutation(DELETE_BOARD, {
+    const [deleteBoard, { loading: deleteBoardLoading }] = useDeleteBoardMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
     const [updateBoard, { loading: updateBoardLoading }] = useMutation(UPDATE_BOARD);

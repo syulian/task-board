@@ -1,7 +1,8 @@
 import { useMutation } from '@apollo/client/react';
-import { ITask, UPDATE_TASK } from '@entities/Task';
 import { DELETE_TASK } from '@entities/Task/api/deleteTask';
 import { UPDATE_SUBTASK } from '@entities/Task/api/updateSubtask';
+import { UPDATE_TASK } from '@entities/Task/api/updateTask';
+import { ITask } from '@entities/Task/model/types/ITask';
 import { useContextMenu } from '@shared/lib';
 
 const useTaskCard = (task: ITask) => {

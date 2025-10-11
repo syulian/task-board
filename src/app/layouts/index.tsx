@@ -27,7 +27,7 @@ export const metadata: Metadata = {
         ],
         apple: '/icons/apple-touch-icon.png',
     },
-    manifest: '/icons/site.webmanifest',
+    manifest: '/site.webmanifest',
 };
 
 export async function RootLayout({ children }: IRootLayoutProps) {

@@ -26,7 +26,7 @@ export default function LabelPopup() {
     const { newLabel, createLabelLoading } = useNewLabel(params?.id);
 
     const { data, loading: getLabelsLoading } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { boardId: params?.id },
+        variables: { board: params?.id },
     });
 
     useEffect(() => {
@@ -43,7 +43,7 @@ export default function LabelPopup() {
     const onSubmit = async (data: LabelValues) => {
         if (createLabelLoading || !params) return;
         await newLabel({
-            variables: { name: data.name, color: data.color, order: 1, boardId: params.id },
+            variables: { name: data.name, color: data.color, order: 1, board: params.id },
         });
     };
 

@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { CREATE_BOARD } from '@entities/Board/api/createBoard';
+import { useCreateBoardMutation } from '@shared/types/generated/graphql';
 import { ConfirmButton, FormField } from '@shared/ui';
 
 interface IAddBoardDropDownProps {
@@ -20,7 +20,7 @@ const BoardSchema = z.object({
 type BoardValues = z.infer<typeof BoardSchema>;
 
 export default function AddBoardDropDown({ groupId }: IAddBoardDropDownProps) {
-    const [newBoard, { loading, error }] = useMutation(CREATE_BOARD, {
+    const [newBoard, { loading, error }] = useCreateBoardMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
 

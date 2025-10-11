@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
-import { StopPropagation } from '@shared/ui';
+import StopPropagation from '@shared/ui/StopPropagation/StopPropagation';
 import './drop-down.animation.css';
 
 interface IDropDownContainerProps {

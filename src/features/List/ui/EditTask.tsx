@@ -6,7 +6,7 @@ import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { HiMiniCheck, HiMiniTag } from 'react-icons/hi2';
 import { z } from 'zod';
-import { GET_LISTS } from '@features/List';
+import { GET_LISTS } from '@features/List/api/getLists';
 import EditSubtasks from '@features/List/ui/EditSubtasks';
 import { GET_LABELS, ILabel, LabelDropDown } from '@entities/Label';
 import { Calendar, CREATE_TASK, IList, ITask, TaskSchema, UPDATE_TASK } from '@entities/Task';
@@ -18,8 +18,8 @@ import {
     SecondButton,
     Select,
     DefaultButton,
+    Textarea,
 } from '@shared/ui';
-import Textarea from '@shared/ui/Textarea/Textarea';
 
 type TaskValues = z.infer<typeof TaskSchema>;
 
@@ -39,7 +39,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
             if (!updated) return;
 
             const oldListId = list.id;
-            const newListId = updated.listId;
+            const newListId = updated.list;
 
             if (oldListId === newListId) return;
 
@@ -69,10 +69,10 @@ export default function EditTask({ list, task }: IEditTaskProps) {
     });
 
     const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { boardId },
+        variables: { board: boardId },
     });
     const { data: dataLists } = useQuery<{ getLists: IList[] }>(GET_LISTS, {
-        variables: { boardId },
+        variables: { board: boardId },
     });
 
     const labels = dataLabels?.getLabels ?? [];
@@ -88,8 +88,8 @@ export default function EditTask({ list, task }: IEditTaskProps) {
         body: task?.body ?? '',
         subtasks: task?.subtasks ?? [],
         labels: task?.labels?.map(l => l.id) ?? [],
-        list: task?.listId
-            ? (lists.find(s => s.id === task.listId) ?? {
+        list: task?.list
+            ? (lists.find(s => s.id === task.list) ?? {
                   id: list.id,
                   label: list.name,
               })
@@ -125,7 +125,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
 
     const onSubmit = async (data: TaskValues) => {
         const newTask = {
-            listId: data.list.id,
+            list: data.list.id,
             title: data.title,
             dueDate: data.dueDate,
             body: data.body,
@@ -156,7 +156,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                 body: updatedTask?.body ?? '',
                 subtasks: updatedTask?.subtasks ?? [],
                 labels: updatedTask?.labels?.map(l => l.id) ?? [],
-                list: lists.find(s => s.id === updatedTask.listId) ?? {
+                list: lists.find(s => s.id === updatedTask.list) ?? {
                     id: list.id,
                     label: list.name,
                 },

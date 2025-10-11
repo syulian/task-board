@@ -22,7 +22,7 @@ export default function Header() {
         <header className="py-4 flex items-center justify-between gap-4">
             <div className="flex gap-4 w-full">
                 <BoardInfo />
-                <SearchInput onChange={() => {}} />
+                <SearchInput />
             </div>
             <nav>
                 <ul className="flex">

@@ -7,7 +7,7 @@ export const UPDATE_LISTS_ORDERS = gql`
             order
             name
             color
-            boardId
+            board
             items {
                 id
                 order
@@ -15,7 +15,7 @@ export const UPDATE_LISTS_ORDERS = gql`
                 complete
                 dueDate
                 body
-                listId
+                list
             }
         }
     }

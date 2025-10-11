@@ -33,7 +33,7 @@ export default function Board() {
     const { data: dataLists, loading: getListsLoading } = useQuery<{ getLists: IList[] }>(
         GET_LISTS,
         {
-            variables: { boardId },
+            variables: { board: boardId },
         },
     );
 
@@ -45,7 +45,7 @@ export default function Board() {
     const { control, handleSubmit } = useForm({ resolver: zodResolver(ListSchema) });
 
     const onSubmit = async (data: ListValues) => {
-        await createList({ variables: { name: data.name, color: COLORS[0], boardId: boardId } });
+        await createList({ variables: { name: data.name, color: COLORS[0], board: boardId } });
     };
 
     const sortedLists = useSortedItems<IList>(lists);

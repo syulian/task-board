@@ -7,7 +7,7 @@ export const listTypeDefs = gql`
         name: String!
         color: String!
         items: [Task]
-        boardId: ID!
+        board: ID!
     }
 
     input OrderInput {
@@ -16,13 +16,13 @@ export const listTypeDefs = gql`
     }
 
     extend type Query {
-        getLists(boardId: ID!): [List!]!
+        getLists(board: ID!): [List!]!
     }
 
     extend type Mutation {
-        createList(name: String!, color: String!, boardId: ID!): List!
+        createList(name: String!, color: String!, board: ID!): List!
         deleteList(id: ID!): ID!
-        updateList(id: ID!, name: String, color: String, boardId: ID): List!
+        updateList(id: ID!, name: String, color: String, board: ID): List!
         updateListsOrders(lists: [OrderInput!]!): [List!]!
     }
 `;

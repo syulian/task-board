@@ -3,8 +3,10 @@ import { useMutation } from '@apollo/client/react';
 import React from 'react';
 import { HiOutlineClock, HiOutlineInformationCircle } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
-import { IFullTask, IGroupTask, ITask, UPDATE_TASK } from '@entities/Task';
 import { GET_TASKS } from '@entities/Task/api/getTasks';
+import { UPDATE_TASK } from '@entities/Task/api/updateTask';
+import { IGroupTask, IFullTask } from '@entities/Task/model/types/IGroupTask';
+import { ITask } from '@entities/Task/model/types/ITask';
 import { getDate, getHour, useContextMenu } from '@shared/lib';
 import { DropDownDynamic, LabelComplete, ListDropDown } from '@shared/ui';
 

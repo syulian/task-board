@@ -1,15 +1,14 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useState } from 'react';
 import EditBoard from '@features/EditBoard/ui/EditBoard';
-import { DELETE_BOARD } from '@entities/Board';
 import { LabelPopup } from '@entities/Label';
 import { createStateController } from '@shared/lib';
+import { useDeleteBoardMutation } from '@shared/types/generated/graphql';
 import { DropDownContainer, ListDropDown, Popup, SettingsButton } from '@shared/ui';
 
 function BoardInfo() {
-    const [deleteBoard] = useMutation(DELETE_BOARD, {
+    const [deleteBoard] = useDeleteBoardMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
 
@@ -21,8 +20,8 @@ function BoardInfo() {
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const params = useParams<{ id: string }>();
-    const router = useRouter();
     const boardId = params?.id;
+    const router = useRouter();
 
     const dropDownList = [
         {
@@ -38,6 +37,8 @@ function BoardInfo() {
                 {
                     label: 'Delete',
                     onClick: async () => {
+                        if (!boardId) return;
+
                         await deleteBoard({ variables: { id: boardId } });
                         router.replace('/');
                     },

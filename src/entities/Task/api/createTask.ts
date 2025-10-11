@@ -5,7 +5,7 @@ export const CREATE_TASK = gql`
         createTask(task: $task) {
             id
             order
-            listId
+            list
             title
             dueDate
             body

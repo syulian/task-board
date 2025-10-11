@@ -5,7 +5,7 @@ export const UPDATE_SUBTASK = gql`
         updateSubtask(taskId: $taskId, subtaskId: $subtaskId, checked: $checked) {
             id
             order
-            listId
+            list
             title
             dueDate
             body

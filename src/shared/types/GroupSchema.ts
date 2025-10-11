@@ -1,4 +1,4 @@
-import { ItemSchema } from '@shared/types/index';
+import ItemSchema from '@shared/types/ItemSchema';
 
 export default interface GroupSchema<T extends ItemSchema> {
     id: string;

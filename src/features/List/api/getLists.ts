@@ -1,13 +1,13 @@
 import { gql } from 'graphql-tag';
 
 export const GET_LISTS = gql`
-    query GetLists($boardId: ID!) {
-        getLists(boardId: $boardId) {
+    query GetLists($board: ID!) {
+        getLists(board: $board) {
             id
             order
             name
             color
-            boardId
+            board
             items {
                 id
                 order
@@ -15,7 +15,7 @@ export const GET_LISTS = gql`
                 complete
                 dueDate
                 body
-                listId
+                list
                 subtasks {
                     id
                     order

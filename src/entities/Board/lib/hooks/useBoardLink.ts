@@ -1,6 +1,8 @@
 import { useMutation } from '@apollo/client/react';
-import { IBoard, IBoardsGroup, useBoardDragAndDropContext } from '@entities/Board';
 import { UPDATE_BOARDS_ORDERS } from '@entities/Board/api/updateBoardsOrders';
+import { useBoardDragAndDropContext } from '@entities/Board/model/context/boardDragAndDropContext';
+import IBoard from '@entities/Board/model/types/IBoard';
+import IBoardsGroup from '@entities/Board/model/types/IBoardsGroup';
 import { clearTypename, useDragAndDrop } from '@shared/lib';
 
 const useBoardLink = (group: IBoardsGroup, board: IBoard) => {

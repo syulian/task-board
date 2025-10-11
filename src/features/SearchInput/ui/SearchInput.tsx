@@ -1,26 +1,97 @@
 'use client';
+import { useQuery } from '@apollo/client/react';
 import { clsx } from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
+import debounce from 'debounce';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useRef, useState, ChangeEvent } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
+import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
+import FILTERS from '@features/SearchInput/consts/filters';
 import OS from '@features/SearchInput/consts/os';
+import { GET_LABELS, ILabel } from '@entities/Label';
+import { GET_TASKS, IFullTask } from '@entities/Task';
 import './search-input.animation.css';
 
-interface ISearchInputProps {
-    onChange: () => void;
-}
-
 type FilterSchema = {
+    id: string;
     name: string;
     color: string;
 };
 
-export default function SearchInput({ onChange }: ISearchInputProps) {
+export default function SearchInput() {
+    const params = useParams<{ id: string }>();
+    const boardId = params?.id;
+
     const [command, setCommand] = useState('');
     const [isFocused, setIsFocused] = useState(false);
-    const [filter, setFilter] = useState<FilterSchema[]>([]);
 
-    const ulRef = useRef<HTMLUListElement>(null);
+    const [filter, setFilter] = useState<FilterSchema[]>([]);
+    const [search, setSearch] = useState('');
+
+    const divRef = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
+        variables: { board: boardId },
+    });
+
+    const labels = dataLabels?.getLabels ?? [];
+
+    const { data: dataTasks } = useQuery<{ getTasks: IFullTask[] }>(GET_TASKS, {
+        skip: !isFocused || (!filter.length && !search.length),
+        fetchPolicy: 'network-only',
+        variables: {
+            filters: filter.map(f => f.id).filter(id => FILTERS.includes(id)),
+            labels: filter.map(f => f.id).filter(id => !FILTERS.includes(id)),
+            search: search,
+        },
+    });
+
+    const tasks = dataTasks?.getTasks ?? [];
+
+    const filters = [
+        {
+            id: 'NO_LABEL',
+            name: 'No Label',
+            color: '#323232',
+        },
+        {
+            id: 'DUE_DATE',
+            name: 'Due Date',
+            color: '#323232',
+        },
+        {
+            id: 'COMPLETE',
+            name: 'Complete',
+            color: '#323232',
+        },
+        ...labels,
+    ];
+
+    const handleFilter = (newFilter: FilterSchema) => {
+        setFilter(prev => {
+            const exists = prev.some(el => el.id === newFilter.id);
+            return exists ? prev.filter(el => el.id !== newFilter.id) : [...prev, newFilter];
+        });
+    };
+
+    const onChange = debounce((event: ChangeEvent<HTMLInputElement>) => {
+        setSearch(event.target.value);
+    }, 300);
+
+    useEffect(() => {
+        const handleFocus = (event: KeyboardEvent) => {
+            if (event.metaKey && event.key.toLowerCase() === 'f') {
+                event.preventDefault();
+                inputRef.current?.focus();
+                inputRef.current?.select();
+            }
+        };
+
+        window.addEventListener('keydown', handleFocus);
+        return () => window.removeEventListener('keydown', handleFocus);
+    }, []);
 
     useEffect(() => {
         const userAgent = navigator.userAgent.toLowerCase();
@@ -32,40 +103,6 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
             }
         }
     }, []);
-
-    const labels = [
-        {
-            name: 'Important',
-            color: '#bd2424',
-        },
-        {
-            name: 'Nice',
-            color: '#3ea9bc',
-        },
-    ];
-
-    const filters = [
-        {
-            name: 'No Label',
-            color: '#323232',
-        },
-        {
-            name: 'Due Date',
-            color: '#323232',
-        },
-        {
-            name: 'Complete',
-            color: '#323232',
-        },
-        ...labels,
-    ];
-
-    const handleFilter = (newFilter: FilterSchema) => {
-        setFilter(prev => {
-            const exists = prev.some(el => el.name === newFilter.name);
-            return exists ? prev.filter(el => el.name !== newFilter.name) : [...prev, newFilter];
-        });
-    };
 
     return (
         <div
@@ -85,34 +122,57 @@ export default function SearchInput({ onChange }: ISearchInputProps) {
                 onChange={onChange}
                 aria-label="Search"
                 placeholder={`Start typing${command} to search...`}
+                ref={inputRef}
             />
             <CSSTransition
                 in={isFocused}
-                nodeRef={ulRef}
+                nodeRef={divRef}
                 timeout={300}
                 classNames="search-input"
+                onExited={() => {
+                    const input = inputRef.current;
+                    if (input) input.value = '';
+
+                    setFilter([]);
+                    setSearch('');
+                }}
                 unmountOnExit
             >
-                <ul
-                    className="absolute left-0 top-[calc(100%+4px)] z-20 flex flex-wrap gap-2 w-full bg-bg-primary  rounded-b-md p-4"
-                    ref={ulRef}
+                <div
+                    className="absolute left-0 top-[calc(100%+4px)] z-20 flex flex-col gap-2 w-full bg-bg-secondary rounded-b-md p-2 overflow-x-hidden overflow-y-auto max-h-[calc(100vh-80px)]"
+                    ref={divRef}
                 >
-                    {filters.map((f, i) => (
-                        <li key={i}>
-                            <button
-                                style={{ backgroundColor: f.color }}
-                                className={clsx(
-                                    'py-0.5 px-2 rounded-sm cursor-pointer border-2 border-bg-neutral-lighter/0 text-text-secondary',
-                                    filter.some(el => el.name === f.name) &&
-                                        'border-bg-neutral-lighter/100',
-                                )}
-                                onClick={() => handleFilter(f)}
-                            >
-                                {f.name}
-                            </button>
-                        </li>
-                    ))}
-                </ul>
+                    {tasks.length > 0 && (
+                        <ul className="flex flex-wrap gap-2 w-full overflow-y-auto max-h-100 p-2">
+                            {tasks.map(t => (
+                                <li key={t.id} className="w-full">
+                                    <button className="flex flex-col gap-2 text-left w-full bg-bg-neutral hover:bg-bg-primary p-2 rounded-sm border border-bg-neutral-lighter text-sm cursor-pointer text-gray-400">
+                                        <p className="text-text-primary">{t.title}</p>
+                                        <Markdown>{t.body}</Markdown>
+                                        <b className="text-text-neutral">/ {t.list.name}</b>
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                    <ul className=" flex flex-wrap gap-2 w-full bg-bg-secondary rounded-b-md p-2 max-h-32 overflow-x-hidden overflow-y-auto">
+                        {filters.map((f, i) => (
+                            <li key={i}>
+                                <button
+                                    style={{ backgroundColor: f.color }}
+                                    className={clsx(
+                                        'py-0.5 px-2 rounded-sm cursor-pointer border-2 border-text-secondary/0 text-text-primary',
+                                        filter.some(el => el.name === f.name) &&
+                                            'border-text-secondary/100',
+                                    )}
+                                    onClick={() => handleFilter(f)}
+                                >
+                                    {f.name}
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </CSSTransition>
         </div>
     );

@@ -1,8 +1,9 @@
 'use client';
-import { useQuery } from '@apollo/client/react';
+import { useApolloClient, useQuery } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -45,7 +46,12 @@ export default function LeftSidebar() {
     const sidebarRef = useRef<HTMLElement>(null);
     const router = useRouter();
 
-    const { data, loading } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS);
+    const { status } = useSession();
+    const client = useApolloClient();
+
+    const { data, loading } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS, {
+        skip: status !== 'authenticated',
+    });
     const [groups, setGroups] = useState<IBoardsGroup[]>([]);
 
     useEffect(() => {
@@ -53,6 +59,17 @@ export default function LeftSidebar() {
             setGroups(data.getBoardsGroups);
         }
     }, [data, loading]);
+
+    useEffect(() => {
+        const handleStore = async () => {
+            if (status !== 'authenticated') {
+                setGroups([]);
+                await client.clearStore();
+            }
+        };
+
+        handleStore();
+    }, [client, status]);
 
     const t = useTranslations('LeftSidebar');
 
@@ -127,13 +144,18 @@ export default function LeftSidebar() {
                 </div>
                 <div className="flex flex-col gap-2 mt-auto p-4 border-t border-bg-neutral sticky z-30 bottom-0 bg-bg-secondary">
                     <Tooltip text={t('groups.addGroup')} isExpanded={isExpanded}>
-                        <NavButton
-                            onClick={() => setIsOpenField('add', true)}
-                            ariaLabel={t('groups.addGroup')}
-                        >
-                            <HiOutlinePlusCircle aria-hidden="true" className="min-w-6 min-h-6" />
-                            {isExpanded && <p>{t('groups.addGroup')}</p>}
-                        </NavButton>
+                        {status === 'authenticated' && (
+                            <NavButton
+                                onClick={() => setIsOpenField('add', true)}
+                                ariaLabel={t('groups.addGroup')}
+                            >
+                                <HiOutlinePlusCircle
+                                    aria-hidden="true"
+                                    className="min-w-6 min-h-6"
+                                />
+                                {isExpanded && <p>{t('groups.addGroup')}</p>}
+                            </NavButton>
+                        )}
                         <DropDownContainer
                             isOpen={isOpen.add}
                             setIsOpen={() => setIsOpenField('add', false)}

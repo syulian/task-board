@@ -1,6 +1,6 @@
 import { useMutation } from '@apollo/client/react';
-import { useLabelDragAndDropOrderContext } from '@entities/Label';
 import { UPDATE_LABELS_ORDERS } from '@entities/Label/api/updateLabelsOrders';
+import { useLabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
 import ILabel from '@entities/Label/model/types/ILabel';
 import { useOrderDragAndDrop } from '@shared/lib';
 

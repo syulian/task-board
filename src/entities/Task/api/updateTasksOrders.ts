@@ -7,7 +7,7 @@ export const UPDATE_TASKS_ORDERS = gql`
             order
             name
             color
-            boardId
+            board
         }
     }
 `;

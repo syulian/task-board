@@ -1,4 +1,4 @@
-import { ITask } from '@entities/Task';
+import { ITask } from '@entities/Task/model/types/ITask';
 
 export interface IList {
     id: string;
@@ -6,5 +6,5 @@ export interface IList {
     name: string;
     color: string;
     items: ITask[];
-    boardId: string;
+    board: string;
 }

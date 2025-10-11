@@ -50,7 +50,7 @@ export default function List({ list }: IListProps) {
                             variables: {
                                 name: 'New List',
                                 color: COLORS[COLORS.length - 1],
-                                boardId: list.boardId,
+                                board: list.board,
                             },
                         });
                     },

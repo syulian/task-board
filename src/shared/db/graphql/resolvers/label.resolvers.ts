@@ -3,9 +3,9 @@ import { Label } from '@shared/db/model';
 
 export const labelResolvers = {
     Query: {
-        getLabels: async (_: any, { boardId }: { boardId: string }) => {
+        getLabels: async (_: any, { board }: { board: string }) => {
             await dbConnect();
-            return Label.find({ boardId });
+            return Label.find({ board });
         },
     },
     Mutation: {
@@ -15,11 +15,11 @@ export const labelResolvers = {
                 name,
                 color,
                 order,
-                boardId,
-            }: { name: string; color: string; order: number; boardId: string },
+                board,
+            }: { name: string; color: string; order: number; board: string },
         ) => {
             await dbConnect();
-            return Label.create({ name, color, order, boardId });
+            return Label.create({ name, color, order, board });
         },
         deleteLabel: async (_: any, { id }: { id: string }) => {
             await dbConnect();

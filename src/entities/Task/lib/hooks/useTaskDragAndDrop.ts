@@ -1,5 +1,8 @@
-import { IList, ITask, useTaskDragAndDropContext } from '@entities/Task';
 import useTaskOnOrder from '@entities/Task/lib/hooks/useTaskOnOrder';
+import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
+import { IList } from '@entities/Task/model/types/IList';
+import { ITask } from '@entities/Task/model/types/ITask';
+
 import { useDragAndDrop } from '@shared/lib';
 
 const useTaskDragAndDrop = (task: ITask, list: IList) => {

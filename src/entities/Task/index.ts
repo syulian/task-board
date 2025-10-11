@@ -19,3 +19,5 @@ export {
 } from './model/context/taskDragAndDropOrderContext';
 export { UPDATE_TASK } from './api/updateTask';
 export { CREATE_TASK } from './api/createTask';
+export { GET_TASKS } from './api/getTasks';
+export { GET_GROUPED_TASKS } from './api/getGroupedTasks';

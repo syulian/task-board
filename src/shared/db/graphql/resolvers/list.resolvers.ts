@@ -3,26 +3,26 @@ import { List, Task } from '@shared/db/model';
 
 export const listResolvers = {
     Query: {
-        getLists: async (_: any, { boardId }: { boardId: string }) => {
+        getLists: async (_: any, { board }: { board: string }) => {
             await dbConnect();
 
-            return List.find({ boardId });
+            return List.find({ board });
         },
     },
     Mutation: {
         createList: async (
             _: any,
-            { name, color, boardId }: { name: string; color: string; boardId: string },
+            { name, color, board }: { name: string; color: string; board: string },
         ) => {
             await dbConnect();
             const listCount = await List.find();
 
-            return List.create({ name, color, order: listCount.length + 1, boardId });
+            return List.create({ name, color, order: listCount.length + 1, board });
         },
         deleteList: async (_: any, { id }: { id: string }) => {
             await dbConnect();
 
-            await Task.deleteMany({ listId: id });
+            await Task.deleteMany({ list: id });
             await List.deleteOne({ _id: id });
 
             return id;
@@ -33,11 +33,11 @@ export const listResolvers = {
                 id,
                 name,
                 color,
-                boardId,
-            }: { id: string; name?: string; color?: string; boardId?: string },
+                board,
+            }: { id: string; name?: string; color?: string; board?: string },
         ) => {
             await dbConnect();
-            await List.updateOne({ _id: id }, { $set: { name, color, boardId } });
+            await List.updateOne({ _id: id }, { $set: { name, color, board } });
 
             return List.findById(id);
         },
@@ -55,9 +55,9 @@ export const listResolvers = {
         },
     },
     List: {
-        items: async (list: { id: string; name: string; order: number; boardId: string }) => {
+        items: async (list: { id: string; name: string; order: number; board: string }) => {
             await dbConnect();
-            return Task.find({ listId: list.id }) || [];
+            return Task.find({ list: list.id }) || [];
         },
     },
 };

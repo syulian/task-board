@@ -6,7 +6,7 @@ export const UPDATE_LABEL = gql`
             id
             name
             color
-            boardId
+            board
         }
     }
 `;

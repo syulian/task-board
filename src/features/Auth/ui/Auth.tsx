@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
@@ -20,6 +21,8 @@ export default function Auth({ isExpanded }: IAuthProps) {
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const { data: session } = useSession();
+    const router = useRouter();
+
     const t = useTranslations('LeftSidebar');
 
     const openSignUp = () => {
@@ -36,7 +39,12 @@ export default function Auth({ isExpanded }: IAuthProps) {
         <>
             {session?.user ? (
                 <Tooltip text={t('profile.signOut')} isExpanded={isExpanded}>
-                    <NavButton onClick={() => signOut({ redirect: false })}>
+                    <NavButton
+                        onClick={async () => {
+                            await signOut({ redirect: false });
+                            router.push('/');
+                        }}
+                    >
                         {session.user.image ? (
                             <Image
                                 alt={session.user.email!}
@@ -47,7 +55,7 @@ export default function Auth({ isExpanded }: IAuthProps) {
                                 priority
                             />
                         ) : (
-                            <span className="min-h-6 min-w-6 rounded-full bg-bg-secondary outline outline-bg-neutral-lighter">
+                            <span className="flex justify-center items-center min-h-6 min-w-6 rounded-full bg-bg-secondary outline outline-bg-neutral-lighter text-sm">
                                 {session.user.name![0]}
                             </span>
                         )}

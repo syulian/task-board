@@ -4,7 +4,7 @@ import { dateScalar } from '@shared/db/graphql/scalars';
 import { Label, List, Task } from '@shared/db/model';
 
 interface ITask {
-    listId: string;
+    list: string;
     title: boolean;
     dueDate?: Date;
     body?: string;
@@ -25,7 +25,55 @@ interface IUpdateTask extends ITask {
 
 export const taskResolvers = {
     Query: {
-        getTasks: async () => {
+        getTasks: async (
+            _: any,
+            {
+                filters,
+                labels,
+                search,
+            }: {
+                filters?: string[];
+                labels?: string[];
+                search?: string;
+            },
+        ) => {
+            await dbConnect();
+
+            const query: {
+                labels?: object;
+                dueDate?: object;
+                complete?: boolean;
+                $or?: object[];
+            } = {};
+
+            filters?.forEach(f => {
+                switch (f) {
+                    case 'NO_LABEL':
+                        query.labels = { $exists: true, $size: 0 };
+                        break;
+                    case 'DUE_DATE':
+                        query.dueDate = { $exists: true, $ne: null };
+                        break;
+                    case 'COMPLETE':
+                        query.complete = true;
+                        break;
+                }
+            });
+
+            if (search) {
+                query.$or = [
+                    { title: { $regex: search, $options: 'i' } },
+                    { body: { $regex: search, $options: 'i' } },
+                ];
+            }
+
+            if (labels && labels?.length > 0) {
+                query.labels = { $in: labels };
+            }
+
+            return Task.find(query).populate('list');
+        },
+        getGroupedTasks: async () => {
             await dbConnect();
 
             const grouped = await Task.aggregate([
@@ -39,7 +87,7 @@ export const taskResolvers = {
                 {
                     $lookup: {
                         from: 'lists',
-                        localField: 'listId',
+                        localField: 'list',
                         foreignField: '_id',
                         as: 'list',
                     },
@@ -48,7 +96,7 @@ export const taskResolvers = {
                 {
                     $lookup: {
                         from: 'boards',
-                        localField: 'list.boardId',
+                        localField: 'list.board',
                         foreignField: '_id',
                         as: 'board',
                     },
@@ -75,11 +123,11 @@ export const taskResolvers = {
                     complete: t.complete,
                     board: {
                         id: t.board._id,
-                        name: t.board.name,
+                        ...t.board,
                     },
                     list: {
                         id: t.list._id,
-                        name: t.list.name,
+                        ...t.list,
                     },
                 })),
             }));
@@ -90,8 +138,8 @@ export const taskResolvers = {
             await dbConnect();
 
             const id = new Types.ObjectId();
-            const { listId, title, dueDate, body, subtasks, labels } = task;
-            const taskCount = await Task.countDocuments({ listId });
+            const { list, title, dueDate, body, subtasks, labels } = task;
+            const taskCount = await Task.countDocuments({ list });
 
             const newSubtasks = subtasks?.map(s => ({
                 _id: new Types.ObjectId(),
@@ -102,7 +150,7 @@ export const taskResolvers = {
                 id: id,
                 order: taskCount + 1,
                 complete: false,
-                listId,
+                list,
                 title,
                 dueDate,
                 body,
@@ -113,7 +161,7 @@ export const taskResolvers = {
         updateTask: async (_: any, { task }: { task: IUpdateTask }) => {
             await dbConnect();
 
-            const { id, complete, listId, title, dueDate, body, subtasks, labels } = task;
+            const { id, complete, list, title, dueDate, body, subtasks, labels } = task;
             const newSubtasks = subtasks?.map(s => ({
                 _id: s.id ?? new Types.ObjectId(),
                 ...s,
@@ -124,7 +172,7 @@ export const taskResolvers = {
                 {
                     $set: {
                         complete,
-                        listId,
+                        list,
                         title,
                         dueDate,
                         body,
@@ -157,7 +205,7 @@ export const taskResolvers = {
         },
         updateTasksOrders: async (_: any, { tasks }: { tasks: IUpdateTask[] }) => {
             await dbConnect();
-            console.log(tasks);
+
             await Promise.all(
                 tasks.map(t =>
                     Task.updateOne(
@@ -165,7 +213,7 @@ export const taskResolvers = {
                         {
                             $set: {
                                 order: t.order,
-                                listId: t.listId,
+                                list: t.list,
                             },
                         },
                     ),

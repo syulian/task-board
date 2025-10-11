@@ -8,9 +8,6 @@ export {
     BoardDragAndDropContext,
 } from './model/context/boardDragAndDropContext';
 export { GET_BOARDS_GROUPS } from './api/getBoardsGroups';
-export { CREATE_BOARDS_GROUP } from './api/createBoardsGroup';
-export { CREATE_BOARD } from './api/createBoard';
-export { DELETE_BOARD } from './api/deleteBoard';
 export { UPDATE_BOARD } from './api/updateBoard';
 export { UPDATE_BOARDS_ORDERS } from './api/updateBoardsOrders';
 export { GET_BOARD } from './api/getBoard';

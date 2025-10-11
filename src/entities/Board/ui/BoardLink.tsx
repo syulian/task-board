@@ -2,9 +2,10 @@
 import { clsx } from 'clsx';
 import Link from 'next/link';
 import React from 'react';
-import { IBoard, IBoardsGroup } from '@entities/Board';
 import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
 import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
+import IBoard from '@entities/Board/model/types/IBoard';
+import IBoardsGroup from '@entities/Board/model/types/IBoardsGroup';
 import { Router } from '@shared/config';
 import { DropDownContainer, InlineInput, ListDropDown } from '@shared/ui';
 

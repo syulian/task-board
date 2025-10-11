@@ -6,15 +6,15 @@ export const labelTypeDefs = gql`
         order: Int
         name: String!
         color: String!
-        boardId: ID!
+        board: ID!
     }
 
     extend type Query {
-        getLabels(boardId: ID!): [Label!]!
+        getLabels(board: ID!): [Label!]!
     }
 
     extend type Mutation {
-        createLabel(name: String!, color: String!, order: Int, boardId: ID!): Label!
+        createLabel(name: String!, color: String!, order: Int, board: ID!): Label!
         deleteLabel(id: ID!): ID!
         updateLabel(id: ID!, name: String!, color: String!): Label!
         updateLabelsOrders(labels: [OrderInput!]!): [Label!]!

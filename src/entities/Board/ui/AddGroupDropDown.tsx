@@ -1,9 +1,8 @@
-import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { CREATE_BOARDS_GROUP } from '@entities/Board/api/createBoardsGroup';
+import { useCreateBoardsGroupMutation } from '@shared/types/generated/graphql';
 import { ConfirmButton, FormField } from '@shared/ui';
 
 const GroupSchema = z.object({
@@ -16,7 +15,7 @@ const GroupSchema = z.object({
 type GroupValues = z.infer<typeof GroupSchema>;
 
 export default function AddGroupDropDown() {
-    const [newBoard, { loading, error }] = useMutation(CREATE_BOARDS_GROUP, {
+    const [newBoard, { loading, error }] = useCreateBoardsGroupMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
 

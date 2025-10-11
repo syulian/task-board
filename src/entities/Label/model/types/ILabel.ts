@@ -3,5 +3,5 @@ export default interface ILabel {
     order: number;
     color: string;
     name: string;
-    boardId: string;
+    board: string;
 }

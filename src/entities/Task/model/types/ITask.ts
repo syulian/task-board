@@ -14,5 +14,5 @@ export interface ITask {
         name: string;
         color: string;
     }[];
-    listId: string;
+    list: string;
 }

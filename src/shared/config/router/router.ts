@@ -1,3 +1,3 @@
 export const Router = {
-    BOARD: (boardId: string) => `/board/${boardId}`,
+    BOARD: (board: string) => `/board/${board}`,
 };

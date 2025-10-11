@@ -67,5 +67,5 @@ module.exports = {
             },
         },
     ],
-    ignorePatterns: ['dist/', 'build/', 'node_modules/'],
+    ignorePatterns: ['dist/', 'build/', 'node_modules/', 'src/shared/types/generated'],
 };

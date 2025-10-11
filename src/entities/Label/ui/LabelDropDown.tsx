@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { ILabel } from '@entities/Label';
+import ILabel from '@entities/Label/model/types/ILabel';
 import { CircleCheckbox, Label } from '@shared/ui';
 
 interface ILabelsDropDownProps {

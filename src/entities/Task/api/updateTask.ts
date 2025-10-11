@@ -5,7 +5,7 @@ export const UPDATE_TASK = gql`
         updateTask(task: $task) {
             id
             order
-            listId
+            list
             title
             dueDate
             body

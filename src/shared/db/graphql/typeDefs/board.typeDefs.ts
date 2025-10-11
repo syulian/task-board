@@ -16,7 +16,7 @@ export const boardTypeDefs = gql`
     }
 
     extend type Query {
-        getBoard(boardId: ID!): Board!
+        getBoard(board: ID!): Board
     }
 
     extend type Mutation {

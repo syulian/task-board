@@ -1,0 +1,7 @@
+mutation CreateBoardsGroup($name: String!, $order: Int) {
+    createBoardsGroup(name: $name, order: $order) {
+        id
+        order
+        name
+    }
+}

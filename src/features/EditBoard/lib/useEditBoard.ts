@@ -15,11 +15,11 @@ const useEditBoard = () => {
     const boardId = params?.id;
 
     const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { boardId },
+        variables: { board: boardId },
     });
     const { data: dataGroups } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS);
     const { data: dataBoard } = useQuery<{ getBoard: IBoard }>(GET_BOARD, {
-        variables: { boardId },
+        variables: { board: boardId },
     });
     const [updateBoard] = useMutation(UPDATE_BOARD, { refetchQueries: ['GetBoardsGroups'] });
     const { deleteLabel } = useDeleteLabel();
@@ -70,7 +70,7 @@ const useEditBoard = () => {
     };
 
     const onSubmit = async (data: BoardValues) => {
-        await updateBoard({ variables: { id: boardId, name: data.name, groupId: data.group.id } });
+        await updateBoard({ variables: { id: board, name: data.name, groupId: data.group.id } });
     };
 
     return {

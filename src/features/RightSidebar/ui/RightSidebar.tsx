@@ -4,8 +4,7 @@ import React, { useRef, useState } from 'react';
 import { HiMiniEllipsisHorizontal } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { setIsExpanded } from '@features/RightSidebar/model/slice/rightSidebarSlice';
-import { IGroupTask, TaskPlanned } from '@entities/Task';
-import { GET_TASKS } from '@entities/Task/api/getTasks';
+import { IGroupTask, TaskPlanned, GET_GROUPED_TASKS } from '@entities/Task';
 import { getShortDate, useAppSelector, useAppDispatch } from '@shared/lib';
 import { DefaultButton, DropDownContainer, ListDropDown } from '@shared/ui';
 import './right-sidebar.animation.css';
@@ -17,11 +16,11 @@ export default function RightSidebar() {
     const isExpanded = useAppSelector(state => state.rightSidebar.isExpanded);
     const dispatch = useAppDispatch();
 
-    const { data: dataTasks } = useQuery<{ getTasks: IGroupTask[] }>(GET_TASKS, {
+    const { data: dataTasks } = useQuery<{ getGroupedTasks: IGroupTask[] }>(GET_GROUPED_TASKS, {
         skip: !isExpanded,
         fetchPolicy: 'network-only',
     });
-    const planned = dataTasks?.getTasks ?? [];
+    const planned = dataTasks?.getGroupedTasks ?? [];
 
     const dropDownList = [
         {

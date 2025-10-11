@@ -1,13 +1,13 @@
 import { gql } from 'graphql-tag';
 
 export const GET_LABELS = gql`
-    query GetLabels($boardId: ID!) {
-        getLabels(boardId: $boardId) {
+    query GetLabels($board: ID!) {
+        getLabels(board: $board) {
             id
             order
             name
             color
-            boardId
+            board
         }
     }
 `;
