@@ -1,0 +1,13 @@
+query GetBoardsGroups {
+    getBoardsGroups {
+        id
+        order
+        name
+        items {
+            id
+            order
+            name
+            groupId
+        }
+    }
+}

@@ -1,8 +1,8 @@
-import { IList } from '@entities/Task/model/types/IList';
-import { ITask } from '@entities/Task/model/types/ITask';
+import Task from '@entities/Task/model/types/Task';
+import TasksList from '@entities/Task/model/types/TasksList';
 import { createDragAndDropContext } from '@shared/lib';
 
 export const [TaskDragAndDropContext, useTaskDragAndDropContext] = createDragAndDropContext<
-    ITask,
-    IList
+    Task,
+    TasksList
 >();

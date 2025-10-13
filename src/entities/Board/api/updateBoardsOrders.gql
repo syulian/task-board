@@ -1,0 +1,7 @@
+mutation UpdateBoardsOrders($boards: [BoardInput!]!) {
+    updateBoardsOrders(boards: $boards) {
+        id
+        name
+        order
+    }
+}

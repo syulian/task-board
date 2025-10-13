@@ -5,9 +5,9 @@ export const taskTypeDefs = gql`
 
     type Subtask {
         id: ID!
-        order: Int
+        order: Int!
         value: String!
-        checked: Boolean
+        checked: Boolean!
     }
 
     input SubtaskInput {
@@ -19,14 +19,15 @@ export const taskTypeDefs = gql`
 
     type Task {
         id: ID!
-        order: Int
+        order: Int!
         title: String!
-        complete: Boolean
+        complete: Boolean!
         dueDate: Date
         body: String
-        subtasks: [Subtask]
-        labels: [Label]
+        subtasks: [Subtask!]
+        labels: [Label!]
         list: ID!
+        userId: ID!
     }
 
     type TaskGroupByDate {
@@ -49,7 +50,7 @@ export const taskTypeDefs = gql`
         title: String!
         dueDate: Date
         body: String
-        subtasks: [SubtaskInput]
+        subtasks: [SubtaskInput!]
         labels: [ID]
     }
 
@@ -61,20 +62,20 @@ export const taskTypeDefs = gql`
         complete: Boolean
         dueDate: Date
         body: String
-        subtasks: [SubtaskInput]
+        subtasks: [SubtaskInput!]
         labels: [ID]
     }
 
     extend type Query {
-        getTasks(filters: [String], labels: [String], search: String): [TaskGroup]
-        getGroupedTasks: [TaskGroupByDate]
+        getTasks(filters: [String], labels: [String], search: String, boardId: ID!): [TaskGroup!]!
+        getGroupedTasks: [TaskGroupByDate!]!
     }
 
     extend type Mutation {
-        createTask(task: TaskInput): Task!
-        updateTask(task: TaskUpdateInput): Task!
+        createTask(task: TaskInput!): Task!
+        updateTask(task: TaskUpdateInput!): Task
         deleteTask(taskId: ID!): ID!
-        updateSubtask(taskId: String, subtaskId: String, checked: Boolean): Task!
-        updateTasksOrders(tasks: [TaskUpdateInput]): [List!]!
+        updateSubtask(taskId: String, subtaskId: String, checked: Boolean): Task
+        updateTasksOrders(tasks: [TaskUpdateInput!]!, boardId: ID!): [List!]!
     }
 `;

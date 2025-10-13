@@ -1,18 +1,6 @@
-export interface IFullTask {
-    id: string;
-    title: string;
-    body?: string;
-    dueDate: Date;
-    complete?: boolean;
-    board: {
-        id: string;
-        name: string;
-    };
-    list: {
-        id: string;
-        name: string;
-    };
-}
+import { GetGroupedTasksQuery } from '@shared/types/generated/graphql';
+
+export type IFullTask = GetGroupedTasksQuery['getGroupedTasks'][number]['tasks'][number];
 
 export interface IGroupTask {
     date: Date;

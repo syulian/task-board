@@ -1,11 +1,11 @@
 import useTaskOnOrder from '@entities/Task/lib/hooks/useTaskOnOrder';
 import { useTaskDragAndDropContext } from '@entities/Task/model/context/taskDragAndDropContext';
-import { IList } from '@entities/Task/model/types/IList';
-import { ITask } from '@entities/Task/model/types/ITask';
+import Task from '@entities/Task/model/types/Task';
+import TasksList from '@entities/Task/model/types/TasksList';
 
 import { useDragAndDrop } from '@shared/lib';
 
-const useTaskDragAndDrop = (task: ITask, list: IList) => {
+const useTaskDragAndDrop = (task: Task, list: TasksList) => {
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
         useTaskDragAndDropContext();
     const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop } = useDragAndDrop(
@@ -18,7 +18,7 @@ const useTaskDragAndDrop = (task: ITask, list: IList) => {
             setCurrentGroup,
             currentGroup,
         },
-        useTaskOnOrder(),
+        useTaskOnOrder(list.board),
     );
 
     return {

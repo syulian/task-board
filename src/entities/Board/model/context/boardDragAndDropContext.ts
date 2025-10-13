@@ -1,8 +1,8 @@
-import IBoard from '@entities/Board/model/types/IBoard';
-import IBoardsGroup from '@entities/Board/model/types/IBoardsGroup';
+import Board from '@entities/Board/model/types/Board';
+import BoardsGroup from '@entities/Board/model/types/BoardsGroup';
 import { createDragAndDropContext } from '@shared/lib';
 
 export const [BoardDragAndDropContext, useBoardDragAndDropContext] = createDragAndDropContext<
-    IBoard,
-    IBoardsGroup
+    Board,
+    BoardsGroup
 >();

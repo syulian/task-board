@@ -1,13 +1,12 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniArrowRight } from 'react-icons/hi2';
 import { z } from 'zod';
-import { CREATE_USER } from '@entities/User/api/createUser';
 import UserSignUpSchema from '@entities/User/model/types/UserSignUpSchema';
+import { useCreateUserMutation } from '@shared/types/generated/graphql';
 import { ConfirmButton, FormField, GoogleButton } from '@shared/ui';
 
 interface ISignUpPopupProps {
@@ -18,7 +17,7 @@ interface ISignUpPopupProps {
 type UserSignUpValues = z.infer<typeof UserSignUpSchema>;
 
 export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps) {
-    const [createUser, { loading: createUserLoading }] = useMutation(CREATE_USER);
+    const [createUser, { loading: createUserLoading }] = useCreateUserMutation();
     const [error, setError] = useState('');
 
     const {

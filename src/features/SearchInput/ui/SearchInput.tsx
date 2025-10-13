@@ -1,5 +1,4 @@
 'use client';
-import { useQuery } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import debounce from 'debounce';
 import { useParams } from 'next/navigation';
@@ -9,9 +8,8 @@ import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
 import FILTERS from '@features/SearchInput/consts/filters';
 import OS from '@features/SearchInput/consts/os';
-import { GET_LABELS, ILabel } from '@entities/Label';
-import { GET_TASKS, IFullTask } from '@entities/Task';
 import './search-input.animation.css';
+import { useGetLabelsQuery, useGetTasksQuery } from '@shared/types/generated/graphql';
 
 type FilterSchema = {
     id: string;
@@ -32,19 +30,21 @@ export default function SearchInput() {
     const divRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
-    const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { board: boardId },
+    const { data: dataLabels } = useGetLabelsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: !isFocused || !boardId,
     });
 
     const labels = dataLabels?.getLabels ?? [];
 
-    const { data: dataTasks } = useQuery<{ getTasks: IFullTask[] }>(GET_TASKS, {
-        skip: !isFocused || (!filter.length && !search.length),
+    const { data: dataTasks } = useGetTasksQuery({
+        skip: !isFocused || !boardId || (!filter.length && !search.length),
         fetchPolicy: 'network-only',
         variables: {
             filters: filter.map(f => f.id).filter(id => FILTERS.includes(id)),
             labels: filter.map(f => f.id).filter(id => !FILTERS.includes(id)),
             search: search,
+            boardId: boardId ?? '',
         },
     });
 

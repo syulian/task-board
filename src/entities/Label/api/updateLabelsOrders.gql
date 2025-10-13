@@ -1,0 +1,8 @@
+mutation UpdateLabelsOrders($labels: [OrderInput!]!, $boardId: String!) {
+    updateLabelsOrders(labels: $labels, boardId: $boardId) {
+        id
+        name
+        color
+        board
+    }
+}

@@ -1,14 +1,20 @@
 'use client';
-import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { List, CREATE_LIST, GET_LISTS } from '@features/List';
+import { List } from '@features/List';
 import { COLORS } from '@entities/Label';
-import { ITask, IList, TaskDragAndDropContext, TaskDragAndDropOrderContext } from '@entities/Task';
+import {
+    Task,
+    TasksList,
+    TaskDragAndDropContext,
+    TaskDragAndDropOrderContext,
+} from '@entities/Task';
 import { useSortedItems } from '@shared/lib';
+import { useCreateListMutation, useGetListsQuery } from '@shared/types/generated/graphql';
 import { AddInput } from '@shared/ui';
 
 const ListSchema = z.object({
@@ -24,73 +30,79 @@ export default function Board() {
     const params = useParams<{ id: string }>();
     const boardId = params?.id;
 
-    const [currentItem, setCurrentItem] = useState<ITask | null>(null);
-    const [currentGroup, setCurrentGroup] = useState<IList | null>(null);
-    const [currentOrder, setCurrentOrder] = useState<IList | null>(null);
-    const [lists, setLists] = useState<IList[]>([]);
+    const [currentItem, setCurrentItem] = useState<Task | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<TasksList | null>(null);
+    const [currentOrder, setCurrentOrder] = useState<TasksList | null>(null);
+    const [lists, setLists] = useState<TasksList[]>([]);
 
-    const [createList] = useMutation(CREATE_LIST, { refetchQueries: ['GetLists'] });
-    const { data: dataLists, loading: getListsLoading } = useQuery<{ getLists: IList[] }>(
-        GET_LISTS,
-        {
-            variables: { board: boardId },
-        },
-    );
+    const { status } = useSession();
+
+    const [createList] = useCreateListMutation({ refetchQueries: ['GetLists'] });
+    const { data: dataLists, loading: getListsLoading } = useGetListsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: status !== 'authenticated' || !boardId,
+    });
 
     useEffect(() => {
-        if (!dataLists?.getLists || getListsLoading) return;
-        setLists(dataLists.getLists || []);
+        if (!getListsLoading && dataLists?.getLists) {
+            setLists(dataLists.getLists);
+        }
     }, [dataLists, getListsLoading]);
 
     const { control, handleSubmit } = useForm({ resolver: zodResolver(ListSchema) });
 
     const onSubmit = async (data: ListValues) => {
-        await createList({ variables: { name: data.name, color: COLORS[0], board: boardId } });
+        if (!boardId) return;
+        await createList({ variables: { name: data.name, color: COLORS[0], boardId: boardId } });
     };
 
-    const sortedLists = useSortedItems<IList>(lists);
+    const sortedLists = useSortedItems(lists);
 
     return (
-        <section className="w-full flex gap-8 overflow-x-scroll pb-4">
-            <TaskDragAndDropContext
-                value={{
-                    currentItem: currentItem,
-                    setCurrentItem: setCurrentItem,
-                    currentGroup: currentGroup,
-                    setCurrentGroup: setCurrentGroup,
-                    setGroups: setLists,
-                }}
-            >
-                <TaskDragAndDropOrderContext
-                    value={{
-                        currentOrder: currentOrder,
-                        setCurrentOrder: setCurrentOrder,
-                        setOrders: setLists,
-                    }}
-                >
-                    {sortedLists.length > 0 && (
-                        <nav>
-                            <ul className="flex gap-8">
-                                {sortedLists.map(l => (
-                                    <List list={l} key={l.id} />
-                                ))}
-                            </ul>
-                        </nav>
-                    )}
-                </TaskDragAndDropOrderContext>
-            </TaskDragAndDropContext>
-            <form className="min-w-80" onSubmit={handleSubmit(onSubmit)}>
-                <Controller
-                    name="name"
-                    control={control}
-                    render={({ field }) => (
-                        <AddInput
-                            placeholder="Add list..."
-                            onChange={event => field.onChange(event.target.value)}
+        <>
+            {status === 'authenticated' && (
+                <section className="w-full flex gap-8 overflow-x-scroll pb-4">
+                    <TaskDragAndDropContext
+                        value={{
+                            currentItem: currentItem,
+                            setCurrentItem: setCurrentItem,
+                            currentGroup: currentGroup,
+                            setCurrentGroup: setCurrentGroup,
+                            setGroups: setLists,
+                        }}
+                    >
+                        <TaskDragAndDropOrderContext
+                            value={{
+                                currentOrder: currentOrder,
+                                setCurrentOrder: setCurrentOrder,
+                                setOrders: setLists,
+                            }}
+                        >
+                            {sortedLists.length > 0 && (
+                                <nav>
+                                    <ul className="flex gap-8">
+                                        {sortedLists.map(l => (
+                                            <List list={l} key={l.id} />
+                                        ))}
+                                    </ul>
+                                </nav>
+                            )}
+                        </TaskDragAndDropOrderContext>
+                    </TaskDragAndDropContext>
+                    <form className="min-w-80" onSubmit={handleSubmit(onSubmit)}>
+                        <Controller
+                            name="name"
+                            control={control}
+                            render={({ field }) => (
+                                <AddInput
+                                    placeholder="Add list..."
+                                    onChange={event => field.onChange(event.target.value)}
+                                />
+                            )}
                         />
-                    )}
-                />
-            </form>
-        </section>
+                    </form>
+                </section>
+            )}
+        </>
     );
 }

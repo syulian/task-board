@@ -6,8 +6,8 @@ import Markdown from 'react-markdown';
 import remarkBreaks from 'remark-breaks';
 import useTaskCard from '@entities/Task/lib/hooks/useTaskCard';
 import useTaskDragAndDrop from '@entities/Task/lib/hooks/useTaskDragAndDrop';
-import { IList } from '@entities/Task/model/types/IList';
-import { ITask } from '@entities/Task/model/types/ITask';
+import Task from '@entities/Task/model/types/Task';
+import TasksList from '@entities/Task/model/types/TasksList';
 import {
     Label,
     Checkbox,
@@ -18,8 +18,8 @@ import {
 } from '@shared/ui';
 
 interface ITaskCardProps {
-    task: ITask;
-    list: IList;
+    task: Task;
+    list: TasksList;
     setIsOpen: () => void;
 }
 

@@ -6,10 +6,9 @@ import { CSSTransition } from 'react-transition-group';
 import useGroupContextMenu from '@features/NavigationMenu/lib/hooks/useGroupContextMenu';
 import {
     BoardLink,
-    IBoardsGroup,
+    BoardsGroup,
     AddBoardDropDown,
     useBoardDragAndDropContext,
-    IBoard,
 } from '@entities/Board';
 import useBoardOnOrder from '@entities/Board/lib/hooks/useBoardOnOrder';
 import { useParentDragAndDrop, useSortedItems } from '@shared/lib';
@@ -17,7 +16,7 @@ import { DropDownContainer, InlineInput, ListDropDown, Tooltip } from '@shared/u
 import './list.animation.css';
 
 interface INavigationMenuProps {
-    group: IBoardsGroup;
+    group: BoardsGroup;
     isExpanded: boolean;
 }
 
@@ -37,7 +36,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
 
     const { disabled, handleBoardsGroupRename, contextMenu, isOpen, setIsOpenField } =
         useGroupContextMenu(group);
-    const sortedItems = useSortedItems<IBoard>(group.items);
+    const sortedItems = useSortedItems(group?.items ?? []);
 
     return (
         <section className="relative">

@@ -3,7 +3,7 @@ import { AuthOptions } from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import dbConnect from '@shared/db/db';
-import { User } from '@shared/db/model';
+import User from '@shared/db/model/User';
 
 export const authOptions: AuthOptions = {
     providers: [
@@ -37,6 +37,42 @@ export const authOptions: AuthOptions = {
             },
         }),
     ],
+    callbacks: {
+        async signIn({ user, account }) {
+            if (account?.provider === 'google') {
+                await dbConnect();
+                const existing = await User.findOne({ email: user.email });
+
+                if (!existing) {
+                    const newUser = await User.create({
+                        name: user.name,
+                        email: user.email,
+                        password: '',
+                    });
+                    user.id = newUser._id;
+                } else {
+                    user.id = existing._id;
+                }
+            }
+            return true;
+        },
+        async session({ session, token }) {
+            return {
+                ...session,
+                user: {
+                    ...session.user,
+                    id: token.sub,
+                },
+            };
+        },
+        async jwt({ token, user }) {
+            if (user) token.id = user.id;
+            return token;
+        },
+    },
+    session: {
+        strategy: 'jwt',
+    },
     pages: {
         signIn: '/',
     },

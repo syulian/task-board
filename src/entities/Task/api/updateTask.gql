@@ -1,0 +1,22 @@
+mutation UpdateTask($task: TaskUpdateInput!) {
+    updateTask(task: $task) {
+        id
+        order
+        list
+        title
+        dueDate
+        body
+        complete
+        subtasks {
+            id
+            order
+            value
+            checked
+        }
+        labels {
+            id
+            name
+            color
+        }
+    }
+}

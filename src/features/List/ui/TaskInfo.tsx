@@ -1,12 +1,12 @@
 'use client';
 import React, { useState } from 'react';
 import EditTask from '@features/List/ui/EditTask';
-import { TaskCard, ITask, IList } from '@entities/Task';
+import { TaskCard, Task, TasksList } from '@entities/Task';
 import { Popup } from '@shared/ui';
 
 interface IListProps {
-    list: IList;
-    task: ITask;
+    list: TasksList;
+    task: Task;
 }
 
 export default function TaskInfo({ list, task }: IListProps) {

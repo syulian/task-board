@@ -30,14 +30,14 @@ const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>
         event.stopPropagation();
         event.preventDefault();
 
-        if (!currentGroup || !currentItem || group.items.length) return;
+        if (!currentGroup || !currentItem || group?.items?.length) return;
 
         setGroups(prev => {
             const updated = prev.map(g => {
-                const updatedItems = g.items.filter(b => b.id !== currentItem.id);
+                const updatedItems = g?.items?.filter(b => b?.id !== currentItem.id);
 
                 if (g.id === group.id) {
-                    updatedItems.push({ ...currentItem, order: 0 });
+                    updatedItems?.push({ ...currentItem, order: 0 });
                 }
 
                 return {

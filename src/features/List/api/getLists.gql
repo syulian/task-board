@@ -1,14 +1,18 @@
-import { gql } from 'graphql-tag';
-
-export const UPDATE_SUBTASK = gql`
-    mutation UpdateSubtask($taskId: String, $subtaskId: String, $checked: Boolean) {
-        updateSubtask(taskId: $taskId, subtaskId: $subtaskId, checked: $checked) {
+query GetLists($boardId: ID!) {
+    getLists(boardId: $boardId) {
+        id
+        order
+        name
+        color
+        board
+        items {
             id
             order
-            list
             title
+            complete
             dueDate
             body
+            list
             subtasks {
                 id
                 order
@@ -20,7 +24,6 @@ export const UPDATE_SUBTASK = gql`
                 name
                 color
             }
-            complete
         }
     }
-`;
+}

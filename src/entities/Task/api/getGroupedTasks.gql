@@ -1,0 +1,20 @@
+query GetGroupedTasks {
+    getGroupedTasks {
+        date
+        tasks {
+            id
+            title
+            body
+            dueDate
+            complete
+            board {
+                id
+                name
+            }
+            list {
+                id
+                name
+            }
+        }
+    }
+}

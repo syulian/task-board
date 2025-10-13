@@ -1,23 +1,22 @@
-import { useMutation } from '@apollo/client/react';
-import { UPDATE_LABELS_ORDERS } from '@entities/Label/api/updateLabelsOrders';
 import { useLabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
-import ILabel from '@entities/Label/model/types/ILabel';
+import TaskLabel from '@entities/Label/model/types/TaskLabel';
 import { useOrderDragAndDrop } from '@shared/lib';
+import { useUpdateLabelsOrdersMutation } from '@shared/types/generated/graphql';
 
-const useLabelDragAndDrop = (label: ILabel) => {
+const useLabelDragAndDrop = (label: TaskLabel) => {
     const { setCurrentOrder, currentOrder, setOrders } = useLabelDragAndDropOrderContext();
-    const [updateOrders, { loading: ordersLoading }] = useMutation(UPDATE_LABELS_ORDERS, {
+    const [updateOrders, { loading: ordersLoading }] = useUpdateLabelsOrdersMutation({
         refetchQueries: ['GetLabels'],
     });
 
-    const onOrder = async (labels: ILabel[]) => {
+    const onOrder = async (labels: TaskLabel[]) => {
         if (ordersLoading) return;
         const newLabels = labels.map(l => ({
             id: l.id,
             order: l.order,
         }));
 
-        await updateOrders({ variables: { labels: newLabels } });
+        await updateOrders({ variables: { labels: newLabels, boardId: label.board } });
     };
 
     const {

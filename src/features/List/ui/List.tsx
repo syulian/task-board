@@ -1,17 +1,18 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import React, { useState } from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
-import { CREATE_LIST } from '@features/List/api/createList';
-import { DELETE_LIST } from '@features/List/api/deleteList';
-import { UPDATE_LIST } from '@features/List/api/updateList';
 import useListDragAndDrop from '@features/List/lib/hooks/useListDragAndDrop';
 import EditTask from '@features/List/ui/EditTask';
 import TaskInfo from '@features/List/ui/TaskInfo';
 import { COLORS, ColorsDropDown } from '@entities/Label';
-import { IList, ITask } from '@entities/Task';
+import { TasksList } from '@entities/Task';
 import { createStateController, useSortedItems } from '@shared/lib';
+import {
+    useCreateListMutation,
+    useDeleteListMutation,
+    useUpdateListMutation,
+} from '@shared/types/generated/graphql';
 import {
     DefaultButton,
     AddButton,
@@ -23,7 +24,7 @@ import {
 } from '@shared/ui';
 
 interface IListProps {
-    list: IList;
+    list: TasksList;
 }
 
 export default function List({ list }: IListProps) {
@@ -35,13 +36,13 @@ export default function List({ list }: IListProps) {
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
-    const [createList] = useMutation(CREATE_LIST, { refetchQueries: ['GetLists'] });
-    const [deleteList] = useMutation(DELETE_LIST, { refetchQueries: ['GetLists'] });
-    const [updateList, { loading: updateListLoading }] = useMutation(UPDATE_LIST);
+    const [createList] = useCreateListMutation({ refetchQueries: ['GetLists'] });
+    const [deleteList] = useDeleteListMutation({ refetchQueries: ['GetLists'] });
+    const [updateList, { loading: updateListLoading }] = useUpdateListMutation();
 
     const editList = [
         {
-            title: `${list.items.length} Tasks`,
+            title: `${list.items?.length ?? 0} Tasks`,
             children: [
                 {
                     label: 'Add List',
@@ -50,7 +51,7 @@ export default function List({ list }: IListProps) {
                             variables: {
                                 name: 'New List',
                                 color: COLORS[COLORS.length - 1],
-                                board: list.board,
+                                boardId: list.board,
                             },
                         });
                     },
@@ -91,7 +92,7 @@ export default function List({ list }: IListProps) {
         if (updateListLoading) return;
 
         setDisabled(true);
-        await updateList({ variables: { id: list.id, name, color } });
+        await updateList({ variables: { id: list.id, name, color, boardId: list.board } });
     };
 
     const {
@@ -106,7 +107,7 @@ export default function List({ list }: IListProps) {
         onDrop,
     } = useListDragAndDrop(list);
 
-    const sortedItems = useSortedItems<ITask>(list.items);
+    const sortedItems = useSortedItems(list.items);
 
     return (
         <li

@@ -1,12 +1,16 @@
-import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { IBoardsGroup, GET_BOARDS_GROUPS, GET_BOARD, IBoard, UPDATE_BOARD } from '@entities/Board';
 import BoardSchema from '@entities/Board/model/types/BoardSchema';
-import { GET_LABELS, ILabel, useDeleteLabel } from '@entities/Label';
+import { useDeleteLabel } from '@entities/Label';
+import {
+    useGetBoardQuery,
+    useGetBoardsGroupsQuery,
+    useGetLabelsQuery,
+    useUpdateBoardMutation,
+} from '@shared/types/generated/graphql';
 
 type BoardValues = z.infer<typeof BoardSchema>;
 
@@ -14,14 +18,16 @@ const useEditBoard = () => {
     const params = useParams<{ id: string }>();
     const boardId = params?.id;
 
-    const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { board: boardId },
+    const { data: dataLabels } = useGetLabelsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: !boardId,
     });
-    const { data: dataGroups } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS);
-    const { data: dataBoard } = useQuery<{ getBoard: IBoard }>(GET_BOARD, {
-        variables: { board: boardId },
+    const { data: dataGroups } = useGetBoardsGroupsQuery();
+    const { data: dataBoard } = useGetBoardQuery({
+        variables: { id: boardId ?? '' },
+        skip: !boardId,
     });
-    const [updateBoard] = useMutation(UPDATE_BOARD, { refetchQueries: ['GetBoardsGroups'] });
+    const [updateBoard] = useUpdateBoardMutation({ refetchQueries: ['GetBoardsGroups'] });
     const { deleteLabel } = useDeleteLabel();
 
     const labels = dataLabels?.getLabels ?? [];
@@ -70,7 +76,7 @@ const useEditBoard = () => {
     };
 
     const onSubmit = async (data: BoardValues) => {
-        await updateBoard({ variables: { id: board, name: data.name, groupId: data.group.id } });
+        await updateBoard({ variables: { id: board.id, name: data.name, groupId: data.group.id } });
     };
 
     return {
@@ -85,5 +91,4 @@ const useEditBoard = () => {
         isDirty,
     };
 };
-
 export default useEditBoard;

@@ -3,11 +3,12 @@ import { gql } from 'graphql-tag';
 export const listTypeDefs = gql`
     type List {
         id: ID!
-        order: Int
+        order: Int!
         name: String!
         color: String!
-        items: [Task]
+        items: [Task!]!
         board: ID!
+        userId: ID!
     }
 
     input OrderInput {
@@ -16,13 +17,13 @@ export const listTypeDefs = gql`
     }
 
     extend type Query {
-        getLists(board: ID!): [List!]!
+        getLists(boardId: ID!): [List!]!
     }
 
     extend type Mutation {
-        createList(name: String!, color: String!, board: ID!): List!
+        createList(name: String!, color: String!, boardId: ID!): List!
         deleteList(id: ID!): ID!
-        updateList(id: ID!, name: String, color: String, board: ID): List!
-        updateListsOrders(lists: [OrderInput!]!): [List!]!
+        updateList(id: ID!, name: String, color: String, boardId: ID!): List
+        updateListsOrders(lists: [OrderInput!]!, boardId: String!): [List!]!
     }
 `;

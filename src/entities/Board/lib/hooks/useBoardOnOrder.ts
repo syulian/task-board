@@ -1,18 +1,24 @@
-import { useMutation } from '@apollo/client/react';
-import { IBoardsGroup, UPDATE_BOARDS_ORDERS } from '@entities/Board';
+import { BoardsGroup } from '@entities/Board';
 import { clearTypename } from '@shared/lib';
+import { useUpdateBoardsOrdersMutation } from '@shared/types/generated/graphql';
 
-const useTaskOnOrder = () => {
-    const [updateOrders, { loading: ordersLoading }] = useMutation(UPDATE_BOARDS_ORDERS, {
+const useBoardOnOrder = () => {
+    const [updateOrders, { loading: ordersLoading }] = useUpdateBoardsOrdersMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
 
-    return async (boardsGroups: IBoardsGroup[]) => {
+    return async (boardsGroups: BoardsGroup[]) => {
         if (ordersLoading) return;
-        const boards = boardsGroups.flatMap(g => g.items.map(b => ({ ...b, groupId: g.id })));
+
+        const boards = boardsGroups.flatMap(g =>
+            g.items.map(b => ({
+                ...b,
+                groupId: g.id,
+            })),
+        );
 
         await updateOrders({ variables: { boards: clearTypename(boards) } });
     };
 };
 
-export default useTaskOnOrder;
+export default useBoardOnOrder;

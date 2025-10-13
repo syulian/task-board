@@ -1,0 +1,7 @@
+mutation UpdateBoardsGroup($id: ID!, $name: String!) {
+    updateBoardsGroup(id: $id, name: $name) {
+        id
+        name
+        order
+    }
+}

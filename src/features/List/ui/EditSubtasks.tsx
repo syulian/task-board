@@ -6,7 +6,7 @@ import {
     ISubtask,
     SubtaskControl,
     SubtaskDragAndDropOrderContext,
-    ITask,
+    Task,
     SubtaskSchema,
     TaskSchema,
 } from '@entities/Task';
@@ -16,7 +16,7 @@ type SubtaskValues = z.infer<typeof SubtaskSchema>;
 type TaskValues = z.infer<typeof TaskSchema>;
 
 interface IEditTaskProps {
-    task?: ITask;
+    task?: Task;
     setValue: UseFormSetValue<TaskValues>;
 }
 

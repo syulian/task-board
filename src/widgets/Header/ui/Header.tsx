@@ -1,4 +1,5 @@
 'use client';
+import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineTag } from 'react-icons/hi2';
 import { BoardInfo } from '@features/EditBoard';
@@ -17,33 +18,38 @@ export default function Header() {
     const dispatch = useAppDispatch();
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
+    const { status } = useSession();
 
     return (
-        <header className="py-4 flex items-center justify-between gap-4">
-            <div className="flex gap-4 w-full">
-                <BoardInfo />
-                <SearchInput />
-            </div>
-            <nav>
-                <ul className="flex">
-                    <li>
-                        <DefaultButton onClick={() => setIsOpenField('popup', true)}>
-                            <HiOutlineTag size={24} />
-                        </DefaultButton>
-                        <Popup
-                            isOpen={isOpen.popup}
-                            setIsOpen={() => setIsOpenField('popup', false)}
-                        >
-                            <LabelPopup />
-                        </Popup>
-                    </li>
-                    <li>
-                        <DefaultButton onClick={() => dispatch(setIsExpanded(!isExpanded))}>
-                            <HiOutlineBookOpen size={24} />
-                        </DefaultButton>
-                    </li>
-                </ul>
-            </nav>
-        </header>
+        <>
+            {status === 'authenticated' && (
+                <header className="py-4 flex items-center justify-between gap-4">
+                    <div className="flex gap-4 w-full">
+                        <BoardInfo />
+                        <SearchInput />
+                    </div>
+                    <nav>
+                        <ul className="flex">
+                            <li>
+                                <DefaultButton onClick={() => setIsOpenField('popup', true)}>
+                                    <HiOutlineTag size={24} />
+                                </DefaultButton>
+                                <Popup
+                                    isOpen={isOpen.popup}
+                                    setIsOpen={() => setIsOpenField('popup', false)}
+                                >
+                                    <LabelPopup />
+                                </Popup>
+                            </li>
+                            <li>
+                                <DefaultButton onClick={() => dispatch(setIsExpanded(!isExpanded))}>
+                                    <HiOutlineBookOpen size={24} />
+                                </DefaultButton>
+                            </li>
+                        </ul>
+                    </nav>
+                </header>
+            )}
+        </>
     );
 }

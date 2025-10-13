@@ -1,9 +1,8 @@
 import { Reference } from '@apollo/client';
-import { useMutation } from '@apollo/client/react';
-import { DELETE_LABEL } from '@entities/Label/api/deleteLabel';
+import { useDeleteLabelMutation } from '@shared/types/generated/graphql';
 
 const useDeleteLabel = () => {
-    const [deleteLabel] = useMutation<{ deleteLabel: string }>(DELETE_LABEL, {
+    const [deleteLabel] = useDeleteLabelMutation({
         update(cache, { data }) {
             if (!data) return;
 

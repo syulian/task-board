@@ -1,5 +1,5 @@
-import ILabel from '@entities/Label/model/types/ILabel';
+import TaskLabel from '@entities/Label/model/types/TaskLabel';
 import { createDragAndDropOrderContext } from '@shared/lib';
 
 export const [LabelDragAndDropOrderContext, useLabelDragAndDropOrderContext] =
-    createDragAndDropOrderContext<ILabel>();
+    createDragAndDropOrderContext<TaskLabel>();

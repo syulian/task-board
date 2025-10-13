@@ -1,0 +1,9 @@
+mutation UpdateTasksOrders($tasks: [TaskUpdateInput!]!, $boardId: ID!) {
+    updateTasksOrders(tasks: $tasks, boardId: $boardId) {
+        id
+        order
+        name
+        color
+        board
+    }
+}

@@ -1,11 +1,12 @@
-import { useMutation } from '@apollo/client/react';
 import { useState } from 'react';
-import { DELETE_BOARDS_GROUP } from '@features/NavigationMenu/api/deleteBoardsGroup';
-import { UPDATE_BOARDS_GROUP } from '@features/NavigationMenu/api/updateBoardsGroup';
-import { IBoardsGroup } from '@entities/Board';
+import { BoardsGroup } from '@entities/Board';
 import { createStateController } from '@shared/lib';
+import {
+    useDeleteBoardsGroupMutation,
+    useUpdateBoardsGroupMutation,
+} from '@shared/types/generated/graphql';
 
-const useGroupContextMenu = (group: IBoardsGroup) => {
+const useGroupContextMenu = (group: BoardsGroup) => {
     const [isOpen, setIsOpen] = useState({
         menu: false,
         group: true,
@@ -15,14 +16,13 @@ const useGroupContextMenu = (group: IBoardsGroup) => {
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
-    const [deleteBoardsGroup, { loading: deleteBoardsGroupLoading }] = useMutation(
-        DELETE_BOARDS_GROUP,
+    const [deleteBoardsGroup, { loading: deleteBoardsGroupLoading }] = useDeleteBoardsGroupMutation(
         {
             refetchQueries: ['GetBoardsGroups'],
         },
     );
     const [updateBoardsGroup, { loading: updateBoardsGroupLoading }] =
-        useMutation(UPDATE_BOARDS_GROUP);
+        useUpdateBoardsGroupMutation();
 
     const handleBoardsGroupRename = async (name: string) => {
         if (updateBoardsGroupLoading) return;

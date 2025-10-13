@@ -1,28 +1,27 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { clsx } from 'clsx';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniCheck, HiMiniXMark } from 'react-icons/hi2';
 import { z } from 'zod';
-import { UPDATE_LABEL } from '@entities/Label/api/updateLabel';
 import useDeleteLabel from '@entities/Label/lib/hooks/useDeleteLabel';
 import useLabelDragAndDrop from '@entities/Label/lib/hooks/useLabelDragAndDrop';
-import ILabel from '@entities/Label/model/types/ILabel';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
+import TaskLabel from '@entities/Label/model/types/TaskLabel';
 import LabelController from '@entities/Label/ui/LabelController';
+import { useUpdateLabelMutation } from '@shared/types/generated/graphql';
 import { DefaultButton, Drag } from '@shared/ui';
 
 interface ILabelsListProps {
-    label: ILabel;
+    label: TaskLabel;
 }
 
 type LabelValues = z.infer<typeof LabelSchema>;
 
 export default function LabelDrag({ label }: ILabelsListProps) {
     const { deleteLabel } = useDeleteLabel();
-    const [updateLabel, { loading: updateLabelLoading }] = useMutation(UPDATE_LABEL);
+    const [updateLabel, { loading: updateLabelLoading }] = useUpdateLabelMutation();
 
     const { control, handleSubmit, formState, reset } = useForm({
         resolver: zodResolver(LabelSchema),

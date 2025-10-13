@@ -1,30 +1,42 @@
 'use client';
-import { useMutation } from '@apollo/client/react';
+import { gql } from 'graphql-tag';
 import React from 'react';
 import { HiOutlineClock, HiOutlineInformationCircle } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
-import { GET_TASKS } from '@entities/Task/api/getTasks';
-import { UPDATE_TASK } from '@entities/Task/api/updateTask';
 import { IGroupTask, IFullTask } from '@entities/Task/model/types/IGroupTask';
-import { ITask } from '@entities/Task/model/types/ITask';
 import { getDate, getHour, useContextMenu } from '@shared/lib';
+import { useUpdateTaskMutation } from '@shared/types/generated/graphql';
 import { DropDownDynamic, LabelComplete, ListDropDown } from '@shared/ui';
 
 interface ITaskPlannedProps {
     task: IFullTask;
 }
 
+const GET_TASKS = gql`
+    query GetTasks($filters: [String], $labels: [String], $search: String, $boardId: ID!) {
+        getTasks(filters: $filters, labels: $labels, search: $search, boardId: $boardId) {
+            id
+            title
+            complete
+            dueDate
+            body
+            list {
+                id
+                name
+            }
+        }
+    }
+`;
+
 export default function TaskPlanned({ task }: ITaskPlannedProps) {
     const { onContextMenu, menu, setField } = useContextMenu();
 
-    const [updateTask] = useMutation<{ updateTask: ITask }>(UPDATE_TASK, {
+    const [updateTask] = useUpdateTaskMutation({
         update(cache, { data }) {
             const updated = data?.updateTask;
-
             if (!updated) return;
 
             const existing = cache.readQuery<{ getTasks: IGroupTask[] }>({ query: GET_TASKS });
-
             if (!existing) return;
 
             const newGroups = existing.getTasks.map(group => ({
@@ -69,7 +81,7 @@ export default function TaskPlanned({ task }: ITaskPlannedProps) {
                     </span>
                     <span className="flex gap-2 items-center">
                         <HiOutlineInformationCircle />
-                        {task.board.name} / {task.list.name}
+                        {task.board?.name} / {task.list.name}
                     </span>
                 </div>
             </div>

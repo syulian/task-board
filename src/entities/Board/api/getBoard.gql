@@ -1,0 +1,8 @@
+query GetBoard($id: ID!) {
+    getBoard(id: $id) {
+        id
+        order
+        name
+        groupId
+    }
+}

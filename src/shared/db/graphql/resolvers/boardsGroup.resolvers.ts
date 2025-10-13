@@ -1,58 +1,90 @@
-import { Session } from 'next-auth';
+import { GraphQLError } from 'graphql/error';
+import mongoose from 'mongoose';
 import dbConnect from '@shared/db/db';
+import requireUser from '@shared/db/graphql/utils/requireUser';
 import { Board, BoardsGroup, Label, List, Task } from '@shared/db/model';
+import {
+    BoardsGroupResolvers,
+    MutationResolvers,
+    QueryResolvers,
+} from '@shared/types/generated/graphql';
 
 export const boardsGroupResolvers = {
     Query: {
-        getBoardsGroups: async () => {
+        getBoardsGroups: (async (_, __, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
-            return BoardsGroup.find();
-        },
+
+            return BoardsGroup.find({ userId });
+        }) satisfies QueryResolvers['getBoardsGroups'],
     },
     Mutation: {
-        createBoardsGroup: async (
-            _: any,
-            { name, order }: { name: string; order: number },
-            context: {
-                user?: Session['user'];
-            },
-        ) => {
+        createBoardsGroup: (async (_, { name, order }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
-            return BoardsGroup.create({ name, order });
-        },
-        deleteBoardsGroup: async (_: any, { id }: { id: string }) => {
+            return BoardsGroup.create({ name, order, userId });
+        }) satisfies MutationResolvers['createBoardsGroup'],
+        deleteBoardsGroup: (async (_, { id }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
-            const boardsIds = await Board.find({ groupId: id }).distinct('_id');
+            const group = await BoardsGroup.findOne({ _id: id, userId });
+            if (!group) {
+                throw new GraphQLError('This group does not exist', {
+                    extensions: { code: 'FORBIDDEN' },
+                });
+            }
+
+            const boardsIds = await Board.find({ groupId: id, userId }).distinct('_id');
             if (!boardsIds.length) {
-                await BoardsGroup.deleteOne({ _id: id });
+                await BoardsGroup.deleteOne({ _id: id, userId });
                 return id;
             }
 
-            const listsIds = await List.find({ board: { $in: boardsIds } }).distinct('_id');
+            const listsIds = await List.find({ board: { $in: boardsIds }, userId }).distinct('_id');
+            const session = await mongoose.startSession();
 
-            await Promise.all([
-                Task.deleteMany({ list: { $in: listsIds } }),
-                Label.deleteMany({ board: { $in: boardsIds } }),
-                List.deleteMany({ board: { $in: boardsIds } }),
-                Board.deleteMany({ groupId: id }),
-                BoardsGroup.deleteOne({ _id: id }),
-            ]);
+            try {
+                await session.withTransaction(async () => {
+                    await Task.deleteMany({ list: { $in: listsIds }, userId }, { session });
+                    await Label.deleteMany({ board: { $in: boardsIds }, userId }, { session });
+                    await List.deleteMany({ board: { $in: boardsIds }, userId }, { session });
+                    await Board.deleteMany({ groupId: id, userId }, { session });
+                    await BoardsGroup.deleteOne({ _id: id, userId }, { session });
+                });
+            } catch (e) {
+                console.log(e);
+                throw new GraphQLError('Failed to delete boards group', {
+                    extensions: { code: 'INTERNAL_SERVER_ERROR' },
+                });
+            } finally {
+                await session.endSession();
+            }
 
             return id;
-        },
-        updateBoardsGroup: async (_: any, { id, name }: { id: string; name: string }) => {
+        }) satisfies MutationResolvers['deleteBoardsGroup'],
+        updateBoardsGroup: (async (_, { id, name }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
-            await BoardsGroup.updateOne({ _id: id }, { $set: { name } });
 
-            return BoardsGroup.findById(id);
-        },
+            const group = await BoardsGroup.findOne({ _id: id, userId });
+            if (!group) {
+                throw new GraphQLError('This group does not exist', {
+                    extensions: { code: 'FORBIDDEN' },
+                });
+            }
+
+            await BoardsGroup.updateOne({ _id: id, userId }, { $set: { name } });
+            return BoardsGroup.findOne({ _id: id, userId });
+        }) satisfies MutationResolvers['updateBoardsGroup'],
     },
     BoardsGroup: {
-        items: async (group: { id: string; name: string; order: number }) => {
+        items: (async (group, _, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
-            return Board.find({ groupId: group.id }) || [];
-        },
+
+            return Board.find({ groupId: group.id, userId }) || [];
+        }) satisfies BoardsGroupResolvers['items'],
     },
 };

@@ -1,10 +1,10 @@
 'use client';
 import React from 'react';
-import ILabel from '@entities/Label/model/types/ILabel';
+import TaskLabel from '@entities/Label/model/types/TaskLabel';
 import { CircleCheckbox, Label } from '@shared/ui';
 
 interface ILabelsDropDownProps {
-    labels: ILabel[];
+    labels: TaskLabel[];
     selected?: string[];
     onChange: (id: string) => void;
 }

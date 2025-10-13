@@ -4,14 +4,14 @@ import Link from 'next/link';
 import React from 'react';
 import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
 import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
-import IBoard from '@entities/Board/model/types/IBoard';
-import IBoardsGroup from '@entities/Board/model/types/IBoardsGroup';
+import Board from '@entities/Board/model/types/Board';
+import BoardsGroup from '@entities/Board/model/types/BoardsGroup';
 import { Router } from '@shared/config';
 import { DropDownContainer, InlineInput, ListDropDown } from '@shared/ui';
 
 interface IMenuItemProps {
-    group: IBoardsGroup;
-    board: IBoard;
+    group: BoardsGroup;
+    board: Board;
     isExpanded: boolean;
 }
 

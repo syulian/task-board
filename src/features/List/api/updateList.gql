@@ -1,0 +1,9 @@
+mutation UpdateList($id: ID!, $name: String, $color: String, $boardId: ID!) {
+    updateList(id: $id, name: $name, color: $color, boardId: $boardId) {
+        id
+        order
+        name
+        color
+        board
+    }
+}

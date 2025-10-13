@@ -1,0 +1,3 @@
+mutation DeleteBoardsGroup($id: ID!) {
+    deleteBoardsGroup(id: $id)
+}

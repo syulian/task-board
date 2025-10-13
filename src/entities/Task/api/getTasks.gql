@@ -1,0 +1,13 @@
+query GetTasks($filters: [String], $labels: [String], $search: String, $boardId: ID!) {
+    getTasks(filters: $filters, labels: $labels, search: $search, boardId: $boardId) {
+        id
+        title
+        complete
+        dueDate
+        body
+        list {
+            id
+            name
+        }
+    }
+}

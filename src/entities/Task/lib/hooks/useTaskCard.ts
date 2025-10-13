@@ -1,27 +1,28 @@
-import { useMutation } from '@apollo/client/react';
-import { DELETE_TASK } from '@entities/Task/api/deleteTask';
-import { UPDATE_SUBTASK } from '@entities/Task/api/updateSubtask';
-import { UPDATE_TASK } from '@entities/Task/api/updateTask';
-import { ITask } from '@entities/Task/model/types/ITask';
+import Task from '@entities/Task/model/types/Task';
 import { useContextMenu } from '@shared/lib';
+import {
+    useDeleteTaskMutation,
+    useUpdateSubtaskMutation,
+    useUpdateTaskMutation,
+} from '@shared/types/generated/graphql';
 
-const useTaskCard = (task: ITask) => {
+const useTaskCard = (task: Task) => {
     const { onContextMenu, menu, setField } = useContextMenu();
 
-    const [updateSubtask, { loading: updateSubtaskLoading }] = useMutation(UPDATE_SUBTASK);
+    const [updateSubtask, { loading: updateSubtaskLoading }] = useUpdateSubtaskMutation();
     const handleUpdate = async (checked: boolean, subtaskId: string) => {
         if (updateSubtaskLoading) return;
 
         await updateSubtask({ variables: { taskId: task.id, subtaskId, checked } });
     };
 
-    const [deleteTask] = useMutation(DELETE_TASK, { refetchQueries: ['GetLists'] });
+    const [deleteTask] = useDeleteTaskMutation({ refetchQueries: ['GetLists'] });
     const handleDelete = async () => {
         await deleteTask({ variables: { taskId: task.id } });
         setField('state', false);
     };
 
-    const [updateTask] = useMutation(UPDATE_TASK);
+    const [updateTask] = useUpdateTaskMutation();
     const handleUpdateTask = async () => {
         await updateTask({ variables: { task: { id: task.id, complete: !task.complete } } });
         setField('state', false);

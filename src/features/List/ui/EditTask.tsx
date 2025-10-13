@@ -1,16 +1,20 @@
 import { Reference } from '@apollo/client';
-import { useMutation, useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { HiMiniCheck, HiMiniTag } from 'react-icons/hi2';
 import { z } from 'zod';
-import { GET_LISTS } from '@features/List/api/getLists';
 import EditSubtasks from '@features/List/ui/EditSubtasks';
-import { GET_LABELS, ILabel, LabelDropDown } from '@entities/Label';
-import { Calendar, CREATE_TASK, IList, ITask, TaskSchema, UPDATE_TASK } from '@entities/Task';
+import { Label, LabelDropDown } from '@entities/Label';
+import { Calendar, TasksList, Task, TaskSchema } from '@entities/Task';
 import { createStateController, getDate, getHour } from '@shared/lib';
+import {
+    useCreateTaskMutation,
+    useGetLabelsQuery,
+    useGetListsQuery,
+    useUpdateTaskMutation,
+} from '@shared/types/generated/graphql';
 import {
     FormField,
     DropDownContainer,
@@ -24,16 +28,16 @@ import {
 type TaskValues = z.infer<typeof TaskSchema>;
 
 interface IEditTaskProps {
-    list: IList;
-    task?: ITask;
+    list: TasksList;
+    task?: Task;
 }
 
 export default function EditTask({ list, task }: IEditTaskProps) {
     const params = useParams<{ id: string }>();
     const boardId = params?.id;
 
-    const [createTask] = useMutation(CREATE_TASK, { refetchQueries: ['GetLists'] });
-    const [updateTask] = useMutation<{ updateTask: ITask }>(UPDATE_TASK, {
+    const [createTask] = useCreateTaskMutation({ refetchQueries: ['GetLists'] });
+    const [updateTask] = useUpdateTaskMutation({
         update(cache, { data }) {
             const updated = data?.updateTask;
             if (!updated) return;
@@ -68,11 +72,13 @@ export default function EditTask({ list, task }: IEditTaskProps) {
         },
     });
 
-    const { data: dataLabels } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { board: boardId },
+    const { data: dataLabels } = useGetLabelsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: !boardId,
     });
-    const { data: dataLists } = useQuery<{ getLists: IList[] }>(GET_LISTS, {
-        variables: { board: boardId },
+    const { data: dataLists } = useGetListsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: !boardId,
     });
 
     const labels = dataLabels?.getLabels ?? [];
@@ -113,7 +119,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
         defaultValues: initialValues,
     });
 
-    const taskLabels: ILabel[] = labels.filter(l => watch('labels')?.includes(l.id));
+    const taskLabels: Label[] = labels.filter(l => watch('labels')?.includes(l.id));
     const dueDate = watch('dueDate');
 
     const [isOpen, setIsOpen] = useState({
@@ -138,7 +144,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                 variables: { task: newTask },
             });
         } else {
-            const { data } = await updateTask({
+            const { data: dataUpdateTask } = await updateTask({
                 variables: {
                     task: {
                         id: task.id,
@@ -147,15 +153,20 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                 },
             });
 
-            const updatedTask = data?.updateTask;
+            const updatedTask = dataUpdateTask?.updateTask;
             if (!updatedTask) return;
 
             const newValues = {
                 title: updatedTask.title,
                 dueDate: updatedTask?.dueDate ? new Date(updatedTask.dueDate) : null,
                 body: updatedTask?.body ?? '',
-                subtasks: updatedTask?.subtasks ?? [],
-                labels: updatedTask?.labels?.map(l => l.id) ?? [],
+                subtasks:
+                    updatedTask?.subtasks?.map(s => ({
+                        order: s.order,
+                        value: s.value,
+                        checked: s.checked,
+                    })) ?? [],
+                labels: updatedTask?.labels?.map(l => l?.id) ?? [],
                 list: lists.find(s => s.id === updatedTask.list) ?? {
                     id: list.id,
                     label: list.name,

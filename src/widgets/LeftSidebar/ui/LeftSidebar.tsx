@@ -1,5 +1,5 @@
 'use client';
-import { useApolloClient, useQuery } from '@apollo/client/react';
+import { useApolloClient } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
@@ -17,21 +17,16 @@ import { Auth } from '@features/Auth';
 import { LanguageDropDown } from '@features/LanguageDropDown';
 import { NavigationMenu } from '@features/NavigationMenu';
 import { ThemeDropDown } from '@features/ThemeDropDown';
-import {
-    AddGroupDropDown,
-    BoardDragAndDropContext,
-    IBoard,
-    IBoardsGroup,
-    GET_BOARDS_GROUPS,
-} from '@entities/Board';
+import { AddGroupDropDown, BoardDragAndDropContext, Board, BoardsGroup } from '@entities/Board';
 import logo from '@shared/assets/images/website-logo.png';
 import { createStateController } from '@shared/lib';
+import { useGetBoardsGroupsQuery } from '@shared/types/generated/graphql';
 import { DropDownContainer, ListDropDown, NavButton, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
-    const [currentItem, setCurrentItem] = useState<IBoard | null>(null);
-    const [currentGroup, setCurrentGroup] = useState<IBoardsGroup | null>(null);
+    const [currentItem, setCurrentItem] = useState<Board | null>(null);
+    const [currentGroup, setCurrentGroup] = useState<BoardsGroup | null>(null);
 
     const [isExpanded, setIsExpanded] = useState(true);
     const [isOpen, setIsOpen] = useState({
@@ -49,10 +44,8 @@ export default function LeftSidebar() {
     const { status } = useSession();
     const client = useApolloClient();
 
-    const { data, loading } = useQuery<{ getBoardsGroups: IBoardsGroup[] }>(GET_BOARDS_GROUPS, {
-        skip: status !== 'authenticated',
-    });
-    const [groups, setGroups] = useState<IBoardsGroup[]>([]);
+    const { data, loading } = useGetBoardsGroupsQuery({ skip: status !== 'authenticated' });
+    const [groups, setGroups] = useState<BoardsGroup[]>([]);
 
     useEffect(() => {
         if (!loading && data?.getBoardsGroups) {
@@ -64,7 +57,7 @@ export default function LeftSidebar() {
         const handleStore = async () => {
             if (status !== 'authenticated') {
                 setGroups([]);
-                await client.clearStore();
+                await client.resetStore();
             }
         };
 

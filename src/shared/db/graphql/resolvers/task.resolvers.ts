@@ -1,42 +1,15 @@
+import { GraphQLError } from 'graphql/error';
 import { Types } from 'mongoose';
 import dbConnect from '@shared/db/db';
 import { dateScalar } from '@shared/db/graphql/scalars';
+import requireUser from '@shared/db/graphql/utils/requireUser';
 import { Label, List, Task } from '@shared/db/model';
-
-interface ITask {
-    list: string;
-    title: boolean;
-    dueDate?: Date;
-    body?: string;
-    subtasks?: {
-        id?: string;
-        order: number;
-        value: string;
-        checked?: boolean;
-    }[];
-    labels?: string[];
-}
-
-interface IUpdateTask extends ITask {
-    id: string;
-    complete?: boolean;
-    order?: number;
-}
+import { MutationResolvers, QueryResolvers, TaskResolvers } from '@shared/types/generated/graphql';
 
 export const taskResolvers = {
     Query: {
-        getTasks: async (
-            _: any,
-            {
-                filters,
-                labels,
-                search,
-            }: {
-                filters?: string[];
-                labels?: string[];
-                search?: string;
-            },
-        ) => {
+        getTasks: (async (_, { filters, labels, search, boardId }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
             const query: {
@@ -71,17 +44,17 @@ export const taskResolvers = {
                 query.labels = { $in: labels };
             }
 
-            return Task.find(query).populate('list');
-        },
-        getGroupedTasks: async () => {
+            return Task.find({ ...query, boardId, userId }).populate('list');
+        }) satisfies QueryResolvers['getTasks'],
+        getGroupedTasks: (async (_, __, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
-            const grouped = await Task.aggregate([
+            return Task.aggregate([
                 {
                     $match: {
-                        dueDate: {
-                            $gt: new Date(),
-                        },
+                        dueDate: { $gt: new Date() },
+                        userId,
                     },
                 },
                 {
@@ -107,39 +80,53 @@ export const taskResolvers = {
                         _id: {
                             $dateToString: { format: '%Y-%m-%d', date: '$dueDate' },
                         },
-                        tasks: { $push: '$$ROOT' },
+                        tasks: {
+                            $push: {
+                                id: '$_id',
+                                title: '$title',
+                                body: '$body',
+                                dueDate: '$dueDate',
+                                complete: '$complete',
+                                board: {
+                                    id: '$board._id',
+                                    name: '$board.name',
+                                },
+                                list: {
+                                    id: '$list._id',
+                                    name: '$list.name',
+                                    board: '$list.board',
+                                },
+                            },
+                        },
                     },
                 },
-                { $sort: { _id: 1 } },
+                {
+                    $project: {
+                        _id: 0,
+                        date: '$_id',
+                        tasks: 1,
+                    },
+                },
+                { $sort: { date: 1 } },
             ]);
-
-            return grouped.map(g => ({
-                date: g._id,
-                tasks: g.tasks.map((t: any) => ({
-                    id: t._id,
-                    title: t.title,
-                    body: t.body,
-                    dueDate: t.dueDate,
-                    complete: t.complete,
-                    board: {
-                        id: t.board._id,
-                        ...t.board,
-                    },
-                    list: {
-                        id: t.list._id,
-                        ...t.list,
-                    },
-                })),
-            }));
-        },
+        }) satisfies QueryResolvers['getGroupedTasks'],
     },
     Mutation: {
-        createTask: async (_: any, { task }: { task: ITask }) => {
+        createTask: (async (_, { task }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
             const id = new Types.ObjectId();
             const { list, title, dueDate, body, subtasks, labels } = task;
-            const taskCount = await Task.countDocuments({ list });
+
+            const listExists = await List.findOne({ _id: list, userId });
+            if (!listExists) {
+                throw new GraphQLError('This list does not exist', {
+                    extensions: { code: 'FORBIDDEN' },
+                });
+            }
+
+            const taskCount = await Task.countDocuments({ list, userId });
 
             const newSubtasks = subtasks?.map(s => ({
                 _id: new Types.ObjectId(),
@@ -156,19 +143,29 @@ export const taskResolvers = {
                 body,
                 subtasks: newSubtasks ?? [],
                 labels,
+                userId,
             });
-        },
-        updateTask: async (_: any, { task }: { task: IUpdateTask }) => {
+        }) satisfies MutationResolvers['createTask'],
+        updateTask: (async (_, { task }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
             const { id, complete, list, title, dueDate, body, subtasks, labels } = task;
+
+            const listExists = await List.findOne({ _id: list, userId });
+            if (!listExists) {
+                throw new GraphQLError('This list does not exist', {
+                    extensions: { code: 'FORBIDDEN' },
+                });
+            }
+
             const newSubtasks = subtasks?.map(s => ({
                 _id: s.id ?? new Types.ObjectId(),
                 ...s,
             }));
 
             await Task.updateOne(
-                { _id: id },
+                { _id: id, userId },
                 {
                     $set: {
                         complete,
@@ -182,34 +179,34 @@ export const taskResolvers = {
                 },
             );
 
-            return Task.findById(id);
-        },
-        updateSubtask: async (
-            _: any,
-            { taskId, subtaskId, checked }: { taskId: string; subtaskId: string; checked: boolean },
-        ) => {
+            return Task.findOne({ _id: id, userId });
+        }) satisfies MutationResolvers['updateTask'],
+        updateSubtask: (async (_, { taskId, subtaskId, checked }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
             await Task.updateOne(
-                { _id: taskId, 'subtasks._id': subtaskId },
+                { _id: taskId, userId, 'subtasks._id': subtaskId },
                 { $set: { 'subtasks.$.checked': checked } },
             );
 
-            return Task.findById(taskId);
-        },
-        deleteTask: async (_: any, { taskId }: { taskId: string }) => {
+            return Task.findOne({ _id: taskId, userId });
+        }) satisfies MutationResolvers['updateSubtask'],
+        deleteTask: (async (_, { taskId }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
-            await Task.deleteOne({ _id: taskId });
 
+            await Task.deleteOne({ _id: taskId, userId });
             return taskId;
-        },
-        updateTasksOrders: async (_: any, { tasks }: { tasks: IUpdateTask[] }) => {
+        }) satisfies MutationResolvers['deleteTask'],
+        updateTasksOrders: (async (_, { tasks, boardId }, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
 
             await Promise.all(
                 tasks.map(t =>
                     Task.updateOne(
-                        { _id: t.id },
+                        { _id: t.id, userId },
                         {
                             $set: {
                                 order: t.order,
@@ -220,14 +217,16 @@ export const taskResolvers = {
                 ),
             );
 
-            return List.find();
-        },
+            return List.find({ boardId, userId });
+        }) satisfies MutationResolvers['updateTasksOrders'],
     },
     Task: {
-        labels: async (task: ITask) => {
+        labels: (async (task, _, ctx) => {
+            const userId = requireUser(ctx?.user);
             await dbConnect();
-            return task.labels?.length ? Label.find({ _id: { $in: task.labels } }) : [];
-        },
+
+            return Label.find({ _id: { $in: task.labels }, userId }) ?? [];
+        }) satisfies TaskResolvers['labels'],
     },
     Date: dateScalar,
 };

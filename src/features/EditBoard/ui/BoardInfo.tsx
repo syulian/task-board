@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import EditBoard from '@features/EditBoard/ui/EditBoard';
 import { LabelPopup } from '@entities/Label';
 import { createStateController } from '@shared/lib';
-import { useDeleteBoardMutation } from '@shared/types/generated/graphql';
+import { useDeleteBoardMutation, useGetBoardQuery } from '@shared/types/generated/graphql';
 import { DropDownContainer, ListDropDown, Popup, SettingsButton } from '@shared/ui';
 
 function BoardInfo() {
@@ -52,10 +52,13 @@ function BoardInfo() {
         setIsOpenField('label', true);
     };
 
+    const { data } = useGetBoardQuery({ variables: { id: boardId ?? '' }, skip: !boardId });
+    const board = data?.getBoard;
+
     return (
         <div className="flex relative">
             <SettingsButton onClick={() => setIsOpenField('dropDown', true)}>
-                Board name
+                {board?.name ?? 'Board'}
             </SettingsButton>
             <DropDownContainer
                 isOpen={isOpen.dropDown}

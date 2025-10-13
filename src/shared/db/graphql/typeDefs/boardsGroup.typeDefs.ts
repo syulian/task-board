@@ -3,9 +3,10 @@ import { gql } from 'graphql-tag';
 export const boardsGroupTypeDefs = gql`
     type BoardsGroup {
         id: ID!
-        order: Int
+        order: Int!
         name: String!
-        items: [Board]
+        items: [Board!]!
+        userId: ID!
     }
 
     extend type Query {
@@ -15,6 +16,6 @@ export const boardsGroupTypeDefs = gql`
     extend type Mutation {
         createBoardsGroup(name: String!, order: Int): BoardsGroup!
         deleteBoardsGroup(id: ID!): ID!
-        updateBoardsGroup(id: ID!, name: String!): BoardsGroup!
+        updateBoardsGroup(id: ID!, name: String!): BoardsGroup
     }
 `;

@@ -1,32 +1,34 @@
 'use client';
-import { useQuery } from '@apollo/client/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiOutlinePlusSmall } from 'react-icons/hi2';
 import { z } from 'zod';
-import { GET_LABELS } from '@entities/Label/api/getLabels';
 import useNewLabel from '@entities/Label/lib/hooks/useNewLabel';
 import { LabelDragAndDropOrderContext } from '@entities/Label/model/context/labelDragAndDropOrderContext';
-import ILabel from '@entities/Label/model/types/ILabel';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
+import TaskLabel from '@entities/Label/model/types/TaskLabel';
 import LabelController from '@entities/Label/ui/LabelController';
 import LabelDrag from '@entities/Label/ui/LabelDrag';
 import { useSortedItems } from '@shared/lib';
+import { useGetLabelsQuery } from '@shared/types/generated/graphql';
 import { DefaultButton } from '@shared/ui';
 
 type LabelValues = z.infer<typeof LabelSchema>;
 
 export default function LabelPopup() {
-    const [currentOrder, setCurrentOrder] = useState<ILabel | null>(null);
-    const [labels, setLabels] = useState<ILabel[]>([]);
-
     const params = useParams<{ id: string }>();
-    const { newLabel, createLabelLoading } = useNewLabel(params?.id);
+    const boardId = params?.id;
 
-    const { data, loading: getLabelsLoading } = useQuery<{ getLabels: ILabel[] }>(GET_LABELS, {
-        variables: { board: params?.id },
+    const [currentOrder, setCurrentOrder] = useState<TaskLabel | null>(null);
+    const [labels, setLabels] = useState<TaskLabel[]>([]);
+
+    const { newLabel, createLabelLoading } = useNewLabel(boardId);
+
+    const { data, loading: getLabelsLoading } = useGetLabelsQuery({
+        variables: { boardId: boardId ?? '' },
+        skip: !boardId,
     });
 
     useEffect(() => {
@@ -41,13 +43,13 @@ export default function LabelPopup() {
     });
 
     const onSubmit = async (data: LabelValues) => {
-        if (createLabelLoading || !params) return;
+        if (createLabelLoading || !boardId) return;
         await newLabel({
-            variables: { name: data.name, color: data.color, order: 1, board: params.id },
+            variables: { name: data.name, color: data.color, order: 1, boardId },
         });
     };
 
-    const sortedLabels = useSortedItems<ILabel>(labels);
+    const sortedLabels = useSortedItems(labels);
 
     return (
         <div className="flex justify-center flex-col gap-4 px-8 pb-9">

@@ -1,21 +1,28 @@
-import { useMutation } from '@apollo/client/react';
-import { UPDATE_BOARDS_ORDERS } from '@entities/Board/api/updateBoardsOrders';
 import { useBoardDragAndDropContext } from '@entities/Board/model/context/boardDragAndDropContext';
-import IBoard from '@entities/Board/model/types/IBoard';
-import IBoardsGroup from '@entities/Board/model/types/IBoardsGroup';
+import Board from '@entities/Board/model/types/Board';
+import BoardsGroup from '@entities/Board/model/types/BoardsGroup';
 import { clearTypename, useDragAndDrop } from '@shared/lib';
+import { useUpdateBoardsOrdersMutation } from '@shared/types/generated/graphql';
 
-const useBoardLink = (group: IBoardsGroup, board: IBoard) => {
-    const [updateOrders, { loading: ordersLoading }] = useMutation(UPDATE_BOARDS_ORDERS, {
+const useBoardLink = (group: BoardsGroup, board: Board) => {
+    const [updateOrders, { loading: ordersLoading }] = useUpdateBoardsOrdersMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
 
     const { currentItem, setGroups, setCurrentItem, setCurrentGroup, currentGroup } =
         useBoardDragAndDropContext();
 
-    const onOrder = async (boardsGroups: IBoardsGroup[]) => {
+    const onOrder = async (boardsGroups: BoardsGroup[]) => {
         if (ordersLoading) return;
-        const boards = boardsGroups.flatMap(g => g.items.map(b => ({ ...b, groupId: g.id })));
+
+        console.log(boardsGroups);
+
+        const boards = boardsGroups.flatMap(g =>
+            g.items.map(b => ({
+                ...b,
+                groupId: g.id,
+            })),
+        );
 
         await updateOrders({ variables: { boards: clearTypename(boards) } });
     };

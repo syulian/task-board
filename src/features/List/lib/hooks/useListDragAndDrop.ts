@@ -1,24 +1,27 @@
-import { useMutation } from '@apollo/client/react';
-import { UPDATE_LISTS_ORDERS } from '@features/List/api/updateListsOrders';
-import { IList, useTaskDragAndDropContext, useTaskDragAndDropOrderContext } from '@entities/Task';
+import {
+    TasksList,
+    useTaskDragAndDropContext,
+    useTaskDragAndDropOrderContext,
+} from '@entities/Task';
 import useTaskOnOrder from '@entities/Task/lib/hooks/useTaskOnOrder';
 import { useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
+import { useUpdateListsOrdersMutation } from '@shared/types/generated/graphql';
 
-const useListDragAndDrop = (list: IList) => {
+const useListDragAndDrop = (list: TasksList) => {
     const [updateListsOrders, { loading: updateListsOrdersLoading }] =
-        useMutation(UPDATE_LISTS_ORDERS);
+        useUpdateListsOrdersMutation();
 
     const { currentItem, currentGroup, setGroups } = useTaskDragAndDropContext();
     const { setCurrentOrder, currentOrder, setOrders } = useTaskDragAndDropOrderContext();
 
-    const onListOrder = async (lists: IList[]) => {
+    const onListOrder = async (lists: TasksList[]) => {
         if (updateListsOrdersLoading) return;
         const newLists = lists.map(l => ({
             id: l.id,
             order: l.order,
         }));
 
-        await updateListsOrders({ variables: { lists: newLists } });
+        await updateListsOrders({ variables: { lists: newLists, boardId: list.board } });
     };
 
     const { onDragOver, onDrop } = useParentDragAndDrop(
@@ -28,7 +31,7 @@ const useListDragAndDrop = (list: IList) => {
             setGroups,
             currentGroup,
         },
-        useTaskOnOrder(),
+        useTaskOnOrder(list.board),
     );
 
     const {

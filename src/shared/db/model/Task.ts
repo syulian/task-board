@@ -15,6 +15,7 @@ const taskSchema = new Schema({
     ],
     labels: [{ type: Schema.Types.ObjectId, ref: 'Label' }],
     list: { type: Schema.Types.ObjectId, ref: 'List' }!,
+    userId: { type: Schema.Types.ObjectId, ref: 'User' }!,
 });
 
 const Task = models.Task || model('Task', taskSchema);

@@ -1,0 +1,18 @@
+mutation UpdateListsOrders($lists: [OrderInput!]!, $boardId: String!) {
+    updateListsOrders(lists: $lists, boardId: $boardId) {
+        id
+        order
+        name
+        color
+        board
+        items {
+            id
+            order
+            title
+            complete
+            dueDate
+            body
+            list
+        }
+    }
+}
