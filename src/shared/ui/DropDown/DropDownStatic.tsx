@@ -2,6 +2,8 @@
 import { clsx } from 'clsx';
 import React, { ReactNode, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
+import useEscape from '@shared/lib/hooks/useEscape/useEscape';
+import FocusTrap from '@shared/ui/FocusTrap/FocusTrap';
 import './drop-down.animation.css';
 
 interface IDropDownContainerProps {
@@ -18,6 +20,7 @@ export default function DropDownStatic({
     className,
 }: IDropDownContainerProps) {
     const dropDownRef = useRef<HTMLDivElement>(null);
+    useEscape(isOpen, setIsOpen);
 
     return (
         <CSSTransition
@@ -36,7 +39,9 @@ export default function DropDownStatic({
                     )}
                     ref={dropDownRef}
                 >
-                    {children}
+                    <FocusTrap ref={dropDownRef} isOpen={isOpen}>
+                        {children}
+                    </FocusTrap>
                 </div>
             </>
         </CSSTransition>

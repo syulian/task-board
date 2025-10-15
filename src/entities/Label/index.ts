@@ -1,7 +1,7 @@
-export { default as LabelPopup } from './ui/LabelPopup';
-export { default as ColorsDropDown } from './ui/ColorsDropDown';
-export { default as LabelDropDown } from './ui/LabelDropDown';
-export type { default as Label } from './model/types/TaskLabel';
+export { default as LabelPopup } from './ui/Popup/LabelPopup';
+export { default as ColorsDropDown } from './ui/DropDown/ColorsDropDown';
+export { default as LabelDropDown } from './ui/DropDown/LabelDropDown';
+export type { default as TaskLabel } from './model/types/TaskLabel';
 export {
     LabelDragAndDropOrderContext,
     useLabelDragAndDropOrderContext,

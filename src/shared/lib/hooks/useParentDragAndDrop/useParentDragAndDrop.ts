@@ -1,6 +1,7 @@
 'use client';
 import { Dispatch, DragEvent, SetStateAction, useEffect, useRef } from 'react';
-import { GroupSchema, ItemSchema } from '@shared/types';
+import GroupSchema from '@shared/types/GroupSchema';
+import ItemSchema from '@shared/types/ItemSchema';
 
 const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>(
     group: TG,

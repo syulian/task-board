@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { ItemSchema } from '@shared/types';
+import ItemSchema from '@shared/types/ItemSchema';
 
 const useSortedItems = <T extends ItemSchema>(items: (T | null | undefined)[]): T[] => {
     return useMemo(() => {

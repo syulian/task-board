@@ -1,7 +1,7 @@
 'use client';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-import { Locales } from '@shared/config';
+import { Locales } from '@shared/config/i18n/locales';
 import { isEnumItem } from '@shared/lib/isFunctions/isEnumItem/isEnumItem';
 
 const useLocale = () => {

@@ -1,10 +1,11 @@
 import { GraphQLError } from 'graphql/error';
+import { ObjectId } from 'mongodb';
 import { Types } from 'mongoose';
 import dbConnect from '@shared/db/db';
 import { dateScalar } from '@shared/db/graphql/scalars';
 import requireUser from '@shared/db/graphql/utils/requireUser';
 import { Label, List, Task } from '@shared/db/model';
-import { MutationResolvers, QueryResolvers, TaskResolvers } from '@shared/types/generated/graphql';
+import { MutationResolvers, QueryResolvers, TaskResolvers } from '@shared/types';
 
 export const taskResolvers = {
     Query: {
@@ -53,8 +54,8 @@ export const taskResolvers = {
             return Task.aggregate([
                 {
                     $match: {
+                        userId: new ObjectId(userId),
                         dueDate: { $gt: new Date() },
-                        userId,
                     },
                 },
                 {

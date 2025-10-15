@@ -1,31 +1,14 @@
-import { Reference } from '@apollo/client';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { HiMiniCheck, HiMiniTag } from 'react-icons/hi2';
-import { z } from 'zod';
+import { Controller } from 'react-hook-form';
+import { HiMiniCheck } from 'react-icons/hi2';
+import useEditTask from '@features/List/lib/hooks/useEditTask';
+import DateController from '@features/List/ui/Controller/DateController';
+import LabelController from '@features/List/ui/Controller/LabelController';
 import EditSubtasks from '@features/List/ui/EditSubtasks';
-import { Label, LabelDropDown } from '@entities/Label';
-import { Calendar, TasksList, Task, TaskSchema } from '@entities/Task';
-import { createStateController, getDate, getHour } from '@shared/lib';
-import {
-    useCreateTaskMutation,
-    useGetLabelsQuery,
-    useGetListsQuery,
-    useUpdateTaskMutation,
-} from '@shared/types/generated/graphql';
-import {
-    FormField,
-    DropDownContainer,
-    LabelEdit,
-    SecondButton,
-    Select,
-    DefaultButton,
-    Textarea,
-} from '@shared/ui';
-
-type TaskValues = z.infer<typeof TaskSchema>;
+import { TaskLabel } from '@entities/Label';
+import { TasksList, Task } from '@entities/Task';
+import { createStateController } from '@shared/lib';
+import { FormField, LabelEdit, Select, DefaultButton, Textarea, StopPropagation } from '@shared/ui';
 
 interface IEditTaskProps {
     list: TasksList;
@@ -33,95 +16,6 @@ interface IEditTaskProps {
 }
 
 export default function EditTask({ list, task }: IEditTaskProps) {
-    const params = useParams<{ id: string }>();
-    const boardId = params?.id;
-
-    const [createTask] = useCreateTaskMutation({ refetchQueries: ['GetLists'] });
-    const [updateTask] = useUpdateTaskMutation({
-        update(cache, { data }) {
-            const updated = data?.updateTask;
-            if (!updated) return;
-
-            const oldListId = list.id;
-            const newListId = updated.list;
-
-            if (oldListId === newListId) return;
-
-            cache.modify({
-                id: cache.identify({ __typename: 'List', id: oldListId }),
-                fields: {
-                    items(existingRefs: readonly Reference[] = [], { readField }) {
-                        return existingRefs.filter(ref => readField('id', ref) !== updated.id);
-                    },
-                },
-            });
-
-            cache.modify<{ items: Reference[] }>({
-                id: cache.identify({ __typename: 'List', id: newListId }),
-                fields: {
-                    items(existingRefs: readonly Reference[] = [], { toReference }) {
-                        const taskRef = toReference({
-                            __typename: 'Task',
-                            id: updated.id,
-                        });
-
-                        return taskRef ? [...existingRefs, taskRef] : existingRefs;
-                    },
-                },
-            });
-        },
-    });
-
-    const { data: dataLabels } = useGetLabelsQuery({
-        variables: { boardId: boardId ?? '' },
-        skip: !boardId,
-    });
-    const { data: dataLists } = useGetListsQuery({
-        variables: { boardId: boardId ?? '' },
-        skip: !boardId,
-    });
-
-    const labels = dataLabels?.getLabels ?? [];
-    const lists =
-        dataLists?.getLists.map(l => ({
-            id: l.id,
-            label: l.name,
-        })) ?? [];
-
-    const initialValues = {
-        title: task?.title ?? '',
-        dueDate: task?.dueDate ? new Date(task.dueDate) : null,
-        body: task?.body ?? '',
-        subtasks: task?.subtasks ?? [],
-        labels: task?.labels?.map(l => l.id) ?? [],
-        list: task?.list
-            ? (lists.find(s => s.id === task.list) ?? {
-                  id: list.id,
-                  label: list.name,
-              })
-            : {
-                  id: list.id,
-                  label: list.name,
-              },
-    };
-
-    const {
-        reset,
-        watch,
-        control,
-        register,
-        setValue,
-        getValues,
-        handleSubmit,
-        formState: { errors, isDirty },
-    } = useForm({
-        resolver: zodResolver(TaskSchema),
-        defaultValues: initialValues,
-    });
-
-    const taskLabels: Label[] = labels.filter(l => watch('labels')?.includes(l.id));
-    const dueDate = watch('dueDate');
-
     const [isOpen, setIsOpen] = useState({
         labels: false,
         calendar: false,
@@ -129,53 +23,19 @@ export default function EditTask({ list, task }: IEditTaskProps) {
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
-    const onSubmit = async (data: TaskValues) => {
-        const newTask = {
-            list: data.list.id,
-            title: data.title,
-            dueDate: data.dueDate,
-            body: data.body,
-            subtasks: data.subtasks,
-            labels: data.labels,
-        };
+    const { form, labels, lists, onSubmit } = useEditTask(list, task);
+    const {
+        watch,
+        control,
+        register,
+        setValue,
+        getValues,
+        handleSubmit,
+        formState: { errors, isDirty },
+    } = form;
 
-        if (!task) {
-            await createTask({
-                variables: { task: newTask },
-            });
-        } else {
-            const { data: dataUpdateTask } = await updateTask({
-                variables: {
-                    task: {
-                        id: task.id,
-                        ...newTask,
-                    },
-                },
-            });
-
-            const updatedTask = dataUpdateTask?.updateTask;
-            if (!updatedTask) return;
-
-            const newValues = {
-                title: updatedTask.title,
-                dueDate: updatedTask?.dueDate ? new Date(updatedTask.dueDate) : null,
-                body: updatedTask?.body ?? '',
-                subtasks:
-                    updatedTask?.subtasks?.map(s => ({
-                        order: s.order,
-                        value: s.value,
-                        checked: s.checked,
-                    })) ?? [],
-                labels: updatedTask?.labels?.map(l => l?.id) ?? [],
-                list: lists.find(s => s.id === updatedTask.list) ?? {
-                    id: list.id,
-                    label: list.name,
-                },
-            };
-
-            reset({ ...newValues }, { keepDirty: false });
-        }
-    };
+    const taskLabels: TaskLabel[] = labels.filter(l => watch('labels')?.includes(l.id));
+    const dueDate = watch('dueDate');
 
     return (
         <div className="relative flex justify-center gap-6 px-8 pb-9 w-screen max-w-4xl cursor-auto">
@@ -190,58 +50,30 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     placeholder="Enter task name..."
                     label="Task Name"
                 />
-                <div className="flex flex-wrap gap-2">
-                    <div className="relative">
-                        <SecondButton onClick={() => setIsOpenField('labels', true)}>
-                            <HiMiniTag size={18} />
-                            Select Labels
-                        </SecondButton>
-                        <Controller
-                            name="labels"
-                            control={control}
-                            render={({ field }) => {
-                                const toggleLabel = (id: string) => {
-                                    const value = field.value;
-                                    if (!value) return;
-
-                                    const newLabels = value.includes(id)
-                                        ? value.filter(l => l !== id)
-                                        : [...value, id];
-                                    field.onChange(newLabels);
-                                };
-
-                                return (
-                                    <DropDownContainer
-                                        isOpen={isOpen.labels}
-                                        setIsOpen={() => setIsOpenField('labels', false)}
-                                        className="left-0 bottom-0"
-                                    >
-                                        <LabelDropDown
-                                            labels={labels}
-                                            selected={field.value}
-                                            onChange={toggleLabel}
-                                        />
-                                    </DropDownContainer>
-                                );
-                            }}
-                        />
-                    </div>
-                    {taskLabels.map(l => (
-                        <LabelEdit
-                            key={l.id}
-                            name={l.name}
-                            color={l.color}
-                            onClick={() =>
-                                setValue(
-                                    'labels',
-                                    getValues('labels')?.filter(id => id !== l.id),
-                                    { shouldDirty: true },
-                                )
-                            }
-                        />
-                    ))}
-                </div>
-                <span className="flex justify-between items-center w-full">
+                <StopPropagation>
+                    <LabelController
+                        labels={labels}
+                        control={control}
+                        isOpen={isOpen.labels}
+                        setIsOpen={state => setIsOpenField('labels', state)}
+                    >
+                        {taskLabels.map(l => (
+                            <LabelEdit
+                                key={l.id}
+                                name={l.name}
+                                color={l.color}
+                                onClick={() =>
+                                    setValue(
+                                        'labels',
+                                        getValues('labels')?.filter(id => id !== l.id),
+                                        { shouldDirty: true },
+                                    )
+                                }
+                            />
+                        ))}
+                    </LabelController>
+                </StopPropagation>
+                <div className="flex justify-between items-center w-full">
                     <b>Task List</b>
                     <Controller
                         name="list"
@@ -254,32 +86,13 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                             />
                         )}
                     />
-                </span>
-                <span className="flex justify-between items-center w-full">
-                    <b>Due Date</b>
-                    <div className="relative">
-                        <SecondButton onClick={() => setIsOpenField('calendar', true)}>
-                            {dueDate ? `${getDate(dueDate)}, ${getHour(dueDate)}` : 'None'}
-                        </SecondButton>
-                        <DropDownContainer
-                            isOpen={isOpen.calendar}
-                            setIsOpen={() => setIsOpenField('calendar', false)}
-                            className="left-full -bottom-48"
-                        >
-                            <Controller
-                                name="dueDate"
-                                control={control}
-                                render={({ field }) => (
-                                    <Calendar
-                                        setSelectedDate={newDate => field.onChange(newDate)}
-                                        selectedDate={field.value}
-                                        setIsOpen={() => setIsOpenField('calendar', false)}
-                                    />
-                                )}
-                            />
-                        </DropDownContainer>
-                    </div>
-                </span>
+                </div>
+                <DateController
+                    dueDate={dueDate}
+                    control={control}
+                    isOpen={isOpen.calendar}
+                    setIsOpen={state => setIsOpenField('calendar', state)}
+                />
                 <Textarea
                     error={errors.body}
                     name="body"
@@ -287,7 +100,11 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     placeholder="Add description..."
                 />
                 {isDirty && (
-                    <DefaultButton type="submit" className="absolute bottom-0 right-0">
+                    <DefaultButton
+                        type="submit"
+                        className="absolute bottom-0 right-0"
+                        ariaLabel="Submit task"
+                    >
                         <HiMiniCheck size={24} />
                     </DefaultButton>
                 )}

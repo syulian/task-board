@@ -1,6 +1,6 @@
-import { BoardsGroup } from '@entities/Board';
+import BoardsGroup from '@entities/Board/model/types/BoardsGroup';
 import { clearTypename } from '@shared/lib';
-import { useUpdateBoardsOrdersMutation } from '@shared/types/generated/graphql';
+import { useUpdateBoardsOrdersMutation } from '@shared/types';
 
 const useBoardOnOrder = () => {
     const [updateOrders, { loading: ordersLoading }] = useUpdateBoardsOrdersMutation({
@@ -10,14 +10,18 @@ const useBoardOnOrder = () => {
     return async (boardsGroups: BoardsGroup[]) => {
         if (ordersLoading) return;
 
-        const boards = boardsGroups.flatMap(g =>
-            g.items.map(b => ({
-                ...b,
-                groupId: g.id,
-            })),
-        );
+        try {
+            const boards = boardsGroups.flatMap(g =>
+                g.items.map(b => ({
+                    ...b,
+                    groupId: g.id,
+                })),
+            );
 
-        await updateOrders({ variables: { boards: clearTypename(boards) } });
+            await updateOrders({ variables: { boards: clearTypename(boards) } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 };
 

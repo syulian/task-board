@@ -1,1 +1,1 @@
-export { default as BoardInfo } from './ui/BoardInfo';
+export { default as BoardInfo } from './ui/Info/BoardInfo';

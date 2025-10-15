@@ -38,6 +38,14 @@ body * {
     scrollbar-color: var(--color-bg-neutral-lighter) rgba(255, 255, 255, 0);
 }
 
+button, input, a, textarea {
+    outline: none;
+}
+
+button:focus-visible, input[type=checkbox]:focus-visible, a:focus-visible, textarea:focus-visible {
+    outline: 1px solid var(--color-text-primary);
+}
+
 h1 {
     @apply text-4xl font-bold;
 }

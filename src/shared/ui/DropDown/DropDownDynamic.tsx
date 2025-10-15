@@ -3,6 +3,8 @@ import { clsx } from 'clsx';
 import React, { ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { CSSTransition } from 'react-transition-group';
+import useEscape from '@shared/lib/hooks/useEscape/useEscape';
+import FocusTrap from '@shared/ui/FocusTrap/FocusTrap';
 import StopPropagation from '@shared/ui/StopPropagation/StopPropagation';
 import './drop-down.animation.css';
 
@@ -43,6 +45,12 @@ export default function DropDownDynamic({
         setPosition({ left, top });
     }, [coordinates, isOpen]);
 
+    useEscape(isOpen, setIsOpen);
+    useEffect(() => {
+        if (isOpen && dropDownRef.current) {
+            dropDownRef.current.focus();
+        }
+    }, [isOpen]);
     return (
         <CSSTransition
             in={isOpen}
@@ -66,7 +74,9 @@ export default function DropDownDynamic({
                             ref={dropDownRef}
                             style={{ left: position?.left + 'px', top: position?.top + 'px' }}
                         >
-                            {children}
+                            <FocusTrap ref={dropDownRef} isOpen={isOpen}>
+                                {children}
+                            </FocusTrap>
                         </div>
                     </StopPropagation>,
                     document.body,

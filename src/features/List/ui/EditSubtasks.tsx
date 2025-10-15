@@ -4,7 +4,7 @@ import { Controller, useForm, UseFormSetValue } from 'react-hook-form';
 import { z } from 'zod';
 import {
     ISubtask,
-    SubtaskControl,
+    SubtaskController,
     SubtaskDragAndDropOrderContext,
     Task,
     SubtaskSchema,
@@ -74,7 +74,7 @@ export default function EditSubtasks({ task, setValue }: IEditTaskProps) {
                     }}
                 >
                     {subtasks.map(s => (
-                        <SubtaskControl key={s.id} subtask={s} />
+                        <SubtaskController key={s.id} subtask={s} />
                     ))}
                 </SubtaskDragAndDropOrderContext>
             </div>

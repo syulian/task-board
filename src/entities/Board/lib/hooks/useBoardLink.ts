@@ -2,7 +2,7 @@ import { useBoardDragAndDropContext } from '@entities/Board/model/context/boardD
 import Board from '@entities/Board/model/types/Board';
 import BoardsGroup from '@entities/Board/model/types/BoardsGroup';
 import { clearTypename, useDragAndDrop } from '@shared/lib';
-import { useUpdateBoardsOrdersMutation } from '@shared/types/generated/graphql';
+import { useUpdateBoardsOrdersMutation } from '@shared/types';
 
 const useBoardLink = (group: BoardsGroup, board: Board) => {
     const [updateOrders, { loading: ordersLoading }] = useUpdateBoardsOrdersMutation({
@@ -15,16 +15,18 @@ const useBoardLink = (group: BoardsGroup, board: Board) => {
     const onOrder = async (boardsGroups: BoardsGroup[]) => {
         if (ordersLoading) return;
 
-        console.log(boardsGroups);
+        try {
+            const boards = boardsGroups.flatMap(g =>
+                g.items.map(b => ({
+                    ...b,
+                    groupId: g.id,
+                })),
+            );
 
-        const boards = boardsGroups.flatMap(g =>
-            g.items.map(b => ({
-                ...b,
-                groupId: g.id,
-            })),
-        );
-
-        await updateOrders({ variables: { boards: clearTypename(boards) } });
+            await updateOrders({ variables: { boards: clearTypename(boards) } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop } = useDragAndDrop(

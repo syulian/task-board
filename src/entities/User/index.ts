@@ -1,2 +1,2 @@
-export { default as SignUpPopup } from './ui/SignUpPopup';
-export { default as SignInPopup } from './ui/SignInPopup';
+export { default as SignUpPopup } from './ui/Popup/SignUpPopup';
+export { default as SignInPopup } from './ui/Popup/SignInPopup';

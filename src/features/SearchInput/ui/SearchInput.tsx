@@ -1,108 +1,28 @@
 'use client';
 import { clsx } from 'clsx';
-import debounce from 'debounce';
-import { useParams } from 'next/navigation';
-import React, { useEffect, useRef, useState, ChangeEvent } from 'react';
+import React, { useRef } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
-import FILTERS from '@features/SearchInput/consts/filters';
-import OS from '@features/SearchInput/consts/os';
+import useSearchInput from '@features/SearchInput/lib/hooks/useSearchInput';
 import './search-input.animation.css';
-import { useGetLabelsQuery, useGetTasksQuery } from '@shared/types/generated/graphql';
-
-type FilterSchema = {
-    id: string;
-    name: string;
-    color: string;
-};
 
 export default function SearchInput() {
-    const params = useParams<{ id: string }>();
-    const boardId = params?.id;
-
-    const [command, setCommand] = useState('');
-    const [isFocused, setIsFocused] = useState(false);
-
-    const [filter, setFilter] = useState<FilterSchema[]>([]);
-    const [search, setSearch] = useState('');
-
     const divRef = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
 
-    const { data: dataLabels } = useGetLabelsQuery({
-        variables: { boardId: boardId ?? '' },
-        skip: !isFocused || !boardId,
-    });
-
-    const labels = dataLabels?.getLabels ?? [];
-
-    const { data: dataTasks } = useGetTasksQuery({
-        skip: !isFocused || !boardId || (!filter.length && !search.length),
-        fetchPolicy: 'network-only',
-        variables: {
-            filters: filter.map(f => f.id).filter(id => FILTERS.includes(id)),
-            labels: filter.map(f => f.id).filter(id => !FILTERS.includes(id)),
-            search: search,
-            boardId: boardId ?? '',
-        },
-    });
-
-    const tasks = dataTasks?.getTasks ?? [];
-
-    const filters = [
-        {
-            id: 'NO_LABEL',
-            name: 'No Label',
-            color: '#323232',
-        },
-        {
-            id: 'DUE_DATE',
-            name: 'Due Date',
-            color: '#323232',
-        },
-        {
-            id: 'COMPLETE',
-            name: 'Complete',
-            color: '#323232',
-        },
-        ...labels,
-    ];
-
-    const handleFilter = (newFilter: FilterSchema) => {
-        setFilter(prev => {
-            const exists = prev.some(el => el.id === newFilter.id);
-            return exists ? prev.filter(el => el.id !== newFilter.id) : [...prev, newFilter];
-        });
-    };
-
-    const onChange = debounce((event: ChangeEvent<HTMLInputElement>) => {
-        setSearch(event.target.value);
-    }, 300);
-
-    useEffect(() => {
-        const handleFocus = (event: KeyboardEvent) => {
-            if (event.metaKey && event.key.toLowerCase() === 'f') {
-                event.preventDefault();
-                inputRef.current?.focus();
-                inputRef.current?.select();
-            }
-        };
-
-        window.addEventListener('keydown', handleFocus);
-        return () => window.removeEventListener('keydown', handleFocus);
-    }, []);
-
-    useEffect(() => {
-        const userAgent = navigator.userAgent.toLowerCase();
-
-        for (const n of OS) {
-            if (userAgent.includes(n)) {
-                setCommand(userAgent.includes('mac') ? ' or use ⌘ F' : ' or use ⊞ F');
-                break;
-            }
-        }
-    }, []);
+    const {
+        isFocused,
+        setIsFocused,
+        filter,
+        setFilter,
+        setSearch,
+        command,
+        tasks,
+        filters,
+        inputRef,
+        onChange,
+        handleFilter,
+    } = useSearchInput();
 
     return (
         <div
@@ -117,7 +37,7 @@ export default function SearchInput() {
         >
             <HiMagnifyingGlass size={24} />
             <input
-                className="w-full outline-none text-sm caret-bg-neutral h-6"
+                className="w-full text-sm caret-bg-neutral h-6"
                 type="search"
                 onChange={onChange}
                 aria-label="Search"

@@ -2,7 +2,7 @@ import { GraphQLError } from 'graphql/error';
 import dbConnect from '@shared/db/db';
 import requireUser from '@shared/db/graphql/utils/requireUser';
 import { Board, List, Task } from '@shared/db/model';
-import { ListResolvers, MutationResolvers, QueryResolvers } from '@shared/types/generated/graphql';
+import { ListResolvers, MutationResolvers, QueryResolvers } from '@shared/types';
 
 export const listResolvers = {
     Query: {

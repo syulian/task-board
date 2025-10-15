@@ -2,10 +2,10 @@ import {
     TasksList,
     useTaskDragAndDropContext,
     useTaskDragAndDropOrderContext,
+    useTaskOnOrder,
 } from '@entities/Task';
-import useTaskOnOrder from '@entities/Task/lib/hooks/useTaskOnOrder';
 import { useOrderDragAndDrop, useParentDragAndDrop } from '@shared/lib';
-import { useUpdateListsOrdersMutation } from '@shared/types/generated/graphql';
+import { useUpdateListsOrdersMutation } from '@shared/types';
 
 const useListDragAndDrop = (list: TasksList) => {
     const [updateListsOrders, { loading: updateListsOrdersLoading }] =
@@ -16,12 +16,17 @@ const useListDragAndDrop = (list: TasksList) => {
 
     const onListOrder = async (lists: TasksList[]) => {
         if (updateListsOrdersLoading) return;
-        const newLists = lists.map(l => ({
-            id: l.id,
-            order: l.order,
-        }));
 
-        await updateListsOrders({ variables: { lists: newLists, boardId: list.board } });
+        try {
+            const newLists = lists.map(l => ({
+                id: l.id,
+                order: l.order,
+            }));
+
+            await updateListsOrders({ variables: { lists: newLists, boardId: list.board } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const { onDragOver, onDrop } = useParentDragAndDrop(

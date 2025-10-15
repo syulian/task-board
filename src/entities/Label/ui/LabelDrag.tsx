@@ -1,6 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniCheck, HiMiniXMark } from 'react-icons/hi2';
@@ -9,8 +10,8 @@ import useDeleteLabel from '@entities/Label/lib/hooks/useDeleteLabel';
 import useLabelDragAndDrop from '@entities/Label/lib/hooks/useLabelDragAndDrop';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
 import TaskLabel from '@entities/Label/model/types/TaskLabel';
-import LabelController from '@entities/Label/ui/LabelController';
-import { useUpdateLabelMutation } from '@shared/types/generated/graphql';
+import LabelController from '@entities/Label/ui/Controller/LabelController';
+import { useUpdateLabelMutation } from '@shared/types';
 import { DefaultButton, Drag } from '@shared/ui';
 
 interface ILabelsListProps {
@@ -30,19 +31,28 @@ export default function LabelDrag({ label }: ILabelsListProps) {
 
     const handleUpdate = async (data: LabelValues) => {
         if (updateLabelLoading) return;
-        await updateLabel({
-            variables: { id: label.id, name: data.name, color: data.color },
-        });
 
-        reset({ name: data.name, color: data.color });
+        try {
+            await updateLabel({
+                variables: { id: label.id, name: data.name, color: data.color },
+            });
+
+            reset({ name: data.name, color: data.color });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const handleDelete = async () => {
-        await deleteLabel({
-            variables: {
-                id: label.id,
-            },
-        });
+        try {
+            await deleteLabel({
+                variables: {
+                    id: label.id,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const {
@@ -54,6 +64,8 @@ export default function LabelDrag({ label }: ILabelsListProps) {
         onDropOrder,
         currentOrder,
     } = useLabelDragAndDrop(label);
+
+    const t = useTranslations('Main');
 
     return (
         <form
@@ -71,11 +83,11 @@ export default function LabelDrag({ label }: ILabelsListProps) {
             <Drag onDragStart={onDragStartOrder} onDragEnd={onDragEndOrder} target=".drag-target" />
             <LabelController control={control} />
             {formState.isDirty ? (
-                <DefaultButton type="submit">
+                <DefaultButton type="submit" ariaLabel={t('label.update')}>
                     <HiMiniCheck size={24} />
                 </DefaultButton>
             ) : (
-                <DefaultButton onClick={handleDelete}>
+                <DefaultButton onClick={handleDelete} ariaLabel={t('label.delete')}>
                     <HiMiniXMark size={24} />
                 </DefaultButton>
             )}

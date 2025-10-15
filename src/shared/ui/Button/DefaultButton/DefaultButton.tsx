@@ -6,6 +6,7 @@ interface INavButtonProps {
     type?: 'button' | 'submit';
     onClick?: () => void;
     className?: string;
+    ariaLabel: string;
 }
 
 export default function DefaultButton({
@@ -13,6 +14,7 @@ export default function DefaultButton({
     type = 'button',
     onClick,
     className,
+    ariaLabel,
 }: INavButtonProps) {
     return (
         <button
@@ -22,6 +24,7 @@ export default function DefaultButton({
             )}
             onClick={onClick}
             type={type}
+            aria-label={ariaLabel}
         >
             {children}
         </button>

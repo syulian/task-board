@@ -1,6 +1,6 @@
 'use client';
 import { createContext, useContext, Dispatch, SetStateAction } from 'react';
-import { ItemSchema } from '@shared/types';
+import ItemSchema from '@shared/types/ItemSchema';
 
 export interface IDragAndDropOrderContext<TO extends ItemSchema> {
     currentOrder: TO | null;

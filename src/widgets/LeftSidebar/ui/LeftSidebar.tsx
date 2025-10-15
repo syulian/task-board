@@ -1,111 +1,35 @@
 'use client';
-import { useApolloClient } from '@apollo/client/react';
 import { clsx } from 'clsx';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
 import { useTranslations } from 'next-intl';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import {
     HiMiniChevronDoubleLeft,
     HiMiniChevronDoubleRight,
-    HiOutlineCog8Tooth,
     HiOutlinePlusCircle,
 } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
+import useLeftSidebar from '@widgets/LeftSidebar/lib/hooks/useLeftSidebar';
+import Settings from '@widgets/LeftSidebar/ui/Settings';
 import { Auth } from '@features/Auth';
-import { LanguageDropDown } from '@features/LanguageDropDown';
 import { NavigationMenu } from '@features/NavigationMenu';
-import { ThemeDropDown } from '@features/ThemeDropDown';
 import { AddGroupDropDown, BoardDragAndDropContext, Board, BoardsGroup } from '@entities/Board';
 import logo from '@shared/assets/images/website-logo.png';
-import { createStateController } from '@shared/lib';
-import { useGetBoardsGroupsQuery } from '@shared/types/generated/graphql';
-import { DropDownContainer, ListDropDown, NavButton, Tooltip } from '@shared/ui';
+import { DropDownContainer, NavButton, Tooltip } from '@shared/ui';
 import './left-sidebar.animation.css';
 
 export default function LeftSidebar() {
     const [currentItem, setCurrentItem] = useState<Board | null>(null);
     const [currentGroup, setCurrentGroup] = useState<BoardsGroup | null>(null);
-
     const [isExpanded, setIsExpanded] = useState(true);
-    const [isOpen, setIsOpen] = useState({
-        settings: false,
-        themes: false,
-        languages: false,
-        add: false,
-    });
-
-    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
 
     const sidebarRef = useRef<HTMLElement>(null);
     const router = useRouter();
 
-    const { status } = useSession();
-    const client = useApolloClient();
-
-    const { data, loading } = useGetBoardsGroupsQuery({ skip: status !== 'authenticated' });
-    const [groups, setGroups] = useState<BoardsGroup[]>([]);
-
-    useEffect(() => {
-        if (!loading && data?.getBoardsGroups) {
-            setGroups(data.getBoardsGroups);
-        }
-    }, [data, loading]);
-
-    useEffect(() => {
-        const handleStore = async () => {
-            if (status !== 'authenticated') {
-                setGroups([]);
-                await client.resetStore();
-            }
-        };
-
-        handleStore();
-    }, [client, status]);
+    const { groups, setGroups, status, isOpen, setIsOpenField } = useLeftSidebar();
 
     const t = useTranslations('LeftSidebar');
-
-    const dropDownList = [
-        {
-            children: [
-                {
-                    label: 'About',
-                    onClick: () => {},
-                },
-                {
-                    label: 'Feedback',
-                    onClick: () => {},
-                },
-            ],
-        },
-        {
-            children: [
-                {
-                    label: 'View',
-                    onClick: () => {
-                        setIsOpenField('settings', false);
-                        setIsOpenField('themes', true);
-                    },
-                },
-                {
-                    label: 'Language',
-                    onClick: () => {
-                        setIsOpenField('settings', false);
-                        setIsOpenField('languages', true);
-                    },
-                },
-            ],
-        },
-        {
-            children: [
-                {
-                    label: 'Release Notes',
-                    onClick: () => {},
-                },
-            ],
-        },
-    ];
 
     return (
         <CSSTransition in={isExpanded} nodeRef={sidebarRef} timeout={300} classNames="left-sidebar">
@@ -143,7 +67,6 @@ export default function LeftSidebar() {
                                 ariaLabel={t('groups.addGroup')}
                             >
                                 <HiOutlinePlusCircle
-                                    aria-hidden="true"
                                     className="min-w-6 min-h-6"
                                 />
                                 {isExpanded && <p>{t('groups.addGroup')}</p>}
@@ -157,36 +80,8 @@ export default function LeftSidebar() {
                             <AddGroupDropDown />
                         </DropDownContainer>
                     </Tooltip>
-                    <div className="flex items-center rounded-lg hover:bg-bg-neutral transition duration-300 ease-in-out">
-                        {isExpanded && (
-                            <div className="relative w-full">
-                                <button
-                                    className="flex items-center gap-1.5 py-1.5 px-4 w-full text-left font-bold cursor-pointer"
-                                    onClick={() => setIsOpenField('settings', true)}
-                                >
-                                    <HiOutlineCog8Tooth
-                                        aria-hidden="true"
-                                        className="min-w-6 min-h-6"
-                                    />
-                                    <p>{t('settings')}</p>
-                                </button>
-                                <DropDownContainer
-                                    isOpen={isOpen.settings}
-                                    setIsOpen={() => setIsOpenField('settings', false)}
-                                    className="left-0 bottom-full"
-                                >
-                                    <ListDropDown list={dropDownList} />
-                                </DropDownContainer>
-                                <ThemeDropDown
-                                    isOpen={isOpen.themes}
-                                    setIsOpen={() => setIsOpenField('themes', false)}
-                                />
-                                <LanguageDropDown
-                                    isOpen={isOpen.languages}
-                                    setIsOpen={() => setIsOpenField('languages', false)}
-                                />
-                            </div>
-                        )}
+                    <div className="flex items-center hover:bg-bg-neutral rounded-lg">
+                        {isExpanded && <Settings />}
                         <button
                             aria-label={isExpanded ? t('collapse') : t('expand')}
                             className={clsx(
@@ -196,9 +91,9 @@ export default function LeftSidebar() {
                             onClick={() => setIsExpanded(prev => !prev)}
                         >
                             {isExpanded ? (
-                                <HiMiniChevronDoubleLeft aria-hidden="true" size={24} />
+                                <HiMiniChevronDoubleLeft size={24} />
                             ) : (
-                                <HiMiniChevronDoubleRight aria-hidden="true" size={24} />
+                                <HiMiniChevronDoubleRight size={24} />
                             )}
                         </button>
                     </div>

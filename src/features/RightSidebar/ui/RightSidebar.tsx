@@ -3,9 +3,9 @@ import React, { useRef, useState } from 'react';
 import { HiMiniEllipsisHorizontal } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
 import { setIsExpanded } from '@features/RightSidebar/model/slice/rightSidebarSlice';
-import { TaskPlanned } from '@entities/Task';
+import { Planned } from '@entities/Task';
 import { getShortDate, useAppSelector, useAppDispatch } from '@shared/lib';
-import { useGetGroupedTasksQuery } from '@shared/types/generated/graphql';
+import { useGetGroupedTasksQuery } from '@shared/types';
 import { DefaultButton, DropDownContainer, ListDropDown } from '@shared/ui';
 import './right-sidebar.animation.css';
 
@@ -20,6 +20,7 @@ export default function RightSidebar() {
         skip: !isExpanded,
         fetchPolicy: 'network-only',
     });
+
     const planned = dataTasks?.getGroupedTasks ?? [];
 
     const dropDownList = [
@@ -73,7 +74,7 @@ export default function RightSidebar() {
                                 {getShortDate(p.date)}
                             </time>
                             {p.tasks.map(t => (
-                                <TaskPlanned task={t} key={t.id} />
+                                <Planned task={t} key={t.id} />
                             ))}
                         </div>
                     ))}

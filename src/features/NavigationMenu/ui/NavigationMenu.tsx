@@ -9,8 +9,8 @@ import {
     BoardsGroup,
     AddBoardDropDown,
     useBoardDragAndDropContext,
+    useBoardOnOrder,
 } from '@entities/Board';
-import useBoardOnOrder from '@entities/Board/lib/hooks/useBoardOnOrder';
 import { useParentDragAndDrop, useSortedItems } from '@shared/lib';
 import { DropDownContainer, InlineInput, ListDropDown, Tooltip } from '@shared/ui';
 import './list.animation.css';
@@ -41,9 +41,9 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
     return (
         <section className="relative">
             <Tooltip text={group.name} isExpanded={isExpanded}>
-                <div className="flex items-center w-full rounded-lg hover:bg-bg-neutral font-bold transition duration-300 ease-in-out">
+                <div className="flex items-center w-full hover:bg-bg-neutral font-bold">
                     <button
-                        className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
+                        className="flex items-center rounded-lg gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
                         onClick={() => setIsOpenField('group', !isOpen.group)}
                         onContextMenu={event => {
                             event.preventDefault();
@@ -51,9 +51,9 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                         }}
                     >
                         {isOpen.group ? (
-                            <HiMiniChevronDown aria-hidden="true" className="min-w-6 min-h-6" />
+                            <HiMiniChevronDown className="min-w-6 min-h-6" />
                         ) : (
-                            <HiMiniChevronRight aria-hidden="true" className="min-w-6 min-h-6" />
+                            <HiMiniChevronRight className="min-w-6 min-h-6" />
                         )}
                         {isExpanded &&
                             (disabled ? (
@@ -71,7 +71,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                             className="ml-auto py-1.5 px-4 cursor-pointer text-text-primary hover:bg-bg-neutral-lighter rounded-lg absolute left-[251px]"
                             onClick={() => setIsOpenField('add', true)}
                         >
-                            <HiOutlinePlusSmall aria-hidden="true" size={24} />
+                            <HiOutlinePlusSmall size={24} />
                         </button>
                     )}
                 </div>

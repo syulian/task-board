@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 interface INavButtonProps {
     children: ReactNode;
     onClick: () => void;
-    ariaLabel?: string;
+    ariaLabel: string;
 }
 
 export default function NavButton({ children, onClick, ariaLabel }: INavButtonProps) {

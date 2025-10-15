@@ -1,6 +1,7 @@
 'use client';
 import { createContext, useContext, Dispatch, SetStateAction } from 'react';
-import { ItemSchema, GroupSchema } from '@shared/types';
+import GroupSchema from '@shared/types/GroupSchema';
+import ItemSchema from '@shared/types/ItemSchema';
 
 export interface IDragAndDropContext<TI extends ItemSchema, TG extends GroupSchema<TI>> {
     currentItem: TI | null;

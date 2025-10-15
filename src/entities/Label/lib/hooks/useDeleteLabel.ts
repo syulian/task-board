@@ -1,5 +1,5 @@
 import { Reference } from '@apollo/client';
-import { useDeleteLabelMutation } from '@shared/types/generated/graphql';
+import { useDeleteLabelMutation } from '@shared/types';
 
 const useDeleteLabel = () => {
     const [deleteLabel] = useDeleteLabelMutation({

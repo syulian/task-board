@@ -1,0 +1,101 @@
+'use client';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { signIn } from 'next-auth/react';
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { HiMiniArrowRight } from 'react-icons/hi2';
+import { z } from 'zod';
+import UserSignUpSchema from '@entities/User/model/types/UserSignUpSchema';
+import { useCreateUserMutation } from '@shared/types';
+import { ConfirmButton, FormField, GoogleButton } from '@shared/ui';
+
+interface ISignUpPopupProps {
+    openSignIn: () => void;
+    setIsOpen: () => void;
+}
+
+type UserSignUpValues = z.infer<typeof UserSignUpSchema>;
+
+export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps) {
+    const [createUser, { loading: createUserLoading }] = useCreateUserMutation();
+    const [error, setError] = useState('');
+
+    const {
+        register,
+        handleSubmit,
+        formState: { errors },
+    } = useForm({ resolver: zodResolver(UserSignUpSchema) });
+
+    const onSubmit = async (data: UserSignUpValues) => {
+        setError('');
+
+        try {
+            if (createUserLoading) return;
+
+            await createUser({
+                variables: { name: data.name, email: data.email, password: data.password },
+            });
+
+            const newSignIn = await signIn('credentials', {
+                redirect: false,
+                email: data.email,
+                password: data.password,
+            });
+
+            if (newSignIn?.error) return setError(newSignIn.error);
+
+            setIsOpen();
+        } catch (e) {
+            const newError = e as Error;
+            setError(newError.message);
+        }
+    };
+
+    return (
+        <form
+            className="flex justify-center flex-col gap-10 px-8 pb-9"
+            onSubmit={handleSubmit(onSubmit)}
+        >
+            <b className="text-lg">Sign up</b>
+            <div className="flex justify-center flex-col gap-8">
+                <FormField
+                    error={errors.email}
+                    name="email"
+                    register={register}
+                    placeholder="Enter email"
+                    type="email"
+                    label="Email"
+                />
+                <FormField
+                    error={errors.name}
+                    name="name"
+                    register={register}
+                    placeholder="Enter name"
+                    label="Name"
+                />
+                <FormField
+                    error={errors.password}
+                    name="password"
+                    register={register}
+                    placeholder="Enter password"
+                    type="password"
+                    label="Password"
+                />
+                <ConfirmButton type="submit" ariaLabel="Sign up" error={error}>
+                    Sign up <HiMiniArrowRight size={24} />
+                </ConfirmButton>
+                <GoogleButton>Sign up with Google</GoogleButton>
+            </div>
+            <div className="flex gap-2">
+                <p>Already have an account?</p>
+                <button
+                    type="button"
+                    onClick={openSignIn}
+                    className="font-bold hover:underline cursor-pointer"
+                >
+                    Sign in
+                </button>
+            </div>
+        </form>
+    );
+}

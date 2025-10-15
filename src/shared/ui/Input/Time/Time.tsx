@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import React, { ChangeEvent, Dispatch, SetStateAction } from 'react';
 
 interface ITimeProps {
@@ -26,22 +27,26 @@ export default function Time({ minutes, hours, setMinutes, setHours }: ITimeProp
         setMinutes(value);
     };
 
+    const t = useTranslations('Main');
+
     return (
         <span className="flex justify-between items-center border border-bg-neutral-lighter rounded-md bg-bg-secondary w-20">
             <input
-                className="w-8 text-center appearance-none outline-none caret-bg-neutral-lighter"
+                className="w-8 text-center appearance-none caret-bg-neutral-lighter"
                 type="text"
                 onChange={handleHoursInput}
                 maxLength={2}
                 value={hours}
+                aria-label={t('task.calendar.hours')}
             />
             :
             <input
-                className="w-8 text-center appearance-none outline-none caret-bg-neutral-lighter"
+                className="w-8 text-center appearance-none caret-bg-neutral-lighter"
                 type="text"
                 onChange={handleMinutesInput}
                 maxLength={2}
                 value={minutes}
+                aria-label={t('task.calendar.minutes')}
             />
         </span>
     );

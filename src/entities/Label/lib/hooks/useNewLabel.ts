@@ -1,17 +1,4 @@
-import { gql } from 'graphql-tag';
-import { GetLabelsQuery, useCreateLabelMutation } from '@shared/types/generated/graphql';
-
-const GET_LABELS = gql`
-    query GetLabels($boardId: ID!) {
-        getLabels(boardId: $boardId) {
-            id
-            order
-            name
-            color
-            board
-        }
-    }
-`;
+import { GetLabelsDocument, GetLabelsQuery, useCreateLabelMutation } from '@shared/types';
 
 const useNewLabel = (boardId?: string) => {
     const [newLabel, { loading: createLabelLoading }] = useCreateLabelMutation({
@@ -19,14 +6,14 @@ const useNewLabel = (boardId?: string) => {
             if (!boardId || !data) return;
 
             const existing = cache.readQuery<GetLabelsQuery>({
-                query: GET_LABELS,
+                query: GetLabelsDocument,
                 variables: { boardId },
             });
 
             if (!existing) return;
 
             cache.writeQuery({
-                query: GET_LABELS,
+                query: GetLabelsDocument,
                 variables: { boardId },
                 data: {
                     getLabels: [...existing.getLabels, data.createLabel],

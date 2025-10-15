@@ -1,6 +1,6 @@
 'use client';
 import { Dispatch, DragEvent, SetStateAction, useState } from 'react';
-import { ItemSchema } from '@shared/types';
+import ItemSchema from '@shared/types/ItemSchema';
 
 const useOrderDragAndDrop = <TO extends ItemSchema>(
     group: TO,

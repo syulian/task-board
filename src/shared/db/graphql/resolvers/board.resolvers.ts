@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import dbConnect from '@shared/db/db';
 import requireUser from '@shared/db/graphql/utils/requireUser';
 import { Board, BoardsGroup, Label, List, Task } from '@shared/db/model';
-import { QueryResolvers, MutationResolvers } from '@shared/types/generated/graphql';
+import { QueryResolvers, MutationResolvers } from '@shared/types';
 
 export const boardResolvers = {
     Query: {

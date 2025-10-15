@@ -18,6 +18,7 @@ export default function ListDropDown({ list }: IListDropDownProps) {
                         </p>
                     )}
                     <ul
+                        role="group"
                         className={clsx(
                             i < list.length - 1 && 'border-b border-bg-neutral pb-2 mb-2',
                         )}

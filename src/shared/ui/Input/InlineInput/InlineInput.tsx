@@ -4,9 +4,15 @@ interface IInlineInputProps {
     value?: string;
     disabled?: boolean;
     onBlur: (value: string) => Promise<void>;
+    ariaLabel: string;
 }
 
-export default function InlineInput({ value, onBlur, disabled = true }: IInlineInputProps) {
+export default function InlineInput({
+    value,
+    onBlur,
+    disabled = true,
+    ariaLabel,
+}: IInlineInputProps) {
     const [input, setInput] = useState(value || '');
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -24,6 +30,7 @@ export default function InlineInput({ value, onBlur, disabled = true }: IInlineI
             value={input}
             disabled={disabled}
             ref={inputRef}
+            aria-label={ariaLabel}
             onChange={event => setInput(event.target.value)}
             onBlur={async () => {
                 await onBlur(input);

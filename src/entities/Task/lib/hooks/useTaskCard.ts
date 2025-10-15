@@ -4,7 +4,7 @@ import {
     useDeleteTaskMutation,
     useUpdateSubtaskMutation,
     useUpdateTaskMutation,
-} from '@shared/types/generated/graphql';
+} from '@shared/types';
 
 const useTaskCard = (task: Task) => {
     const { onContextMenu, menu, setField } = useContextMenu();
@@ -13,19 +13,35 @@ const useTaskCard = (task: Task) => {
     const handleUpdate = async (checked: boolean, subtaskId: string) => {
         if (updateSubtaskLoading) return;
 
-        await updateSubtask({ variables: { taskId: task.id, subtaskId, checked } });
+        try {
+            await updateSubtask({ variables: { taskId: task.id, subtaskId, checked } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const [deleteTask] = useDeleteTaskMutation({ refetchQueries: ['GetLists'] });
     const handleDelete = async () => {
-        await deleteTask({ variables: { taskId: task.id } });
-        setField('state', false);
+        try {
+            await deleteTask({ variables: { taskId: task.id } });
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setField('state', false);
+        }
     };
 
-    const [updateTask] = useUpdateTaskMutation();
+    const [updateTask, { loading: updateTaskLoading }] = useUpdateTaskMutation();
     const handleUpdateTask = async () => {
-        await updateTask({ variables: { task: { id: task.id, complete: !task.complete } } });
-        setField('state', false);
+        if (updateTaskLoading) return;
+
+        try {
+            await updateTask({ variables: { task: { id: task.id, complete: !task.complete } } });
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setField('state', false);
+        }
     };
 
     const contextMenu = [

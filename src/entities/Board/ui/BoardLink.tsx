@@ -1,6 +1,7 @@
 'use client';
 import { clsx } from 'clsx';
 import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import useBoardLink from '@entities/Board/lib/hooks/useBoardLink';
 import useLinkContextMenu from '@entities/Board/lib/hooks/useLinkContextMenu';
@@ -18,9 +19,10 @@ interface IMenuItemProps {
 export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) {
     const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop, currentItem } =
         useBoardLink(group, board);
-
     const { disabled, isOpen, setIsOpen, handleBoardRename, contextMenu } =
         useLinkContextMenu(board);
+
+    const t = useTranslations('Main');
 
     return (
         <>
@@ -31,6 +33,7 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
                     isExpanded ? 'pl-12' : 'pl-4',
                     isDragOver && currentItem && 'bg-bg-neutral',
                 )}
+                aria-label={t('board.link')}
                 draggable
                 onDragOver={onDragOver}
                 onDragLeave={onDragLeave}
@@ -48,6 +51,7 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
                             value={board.name}
                             disabled={disabled}
                             onBlur={handleBoardRename}
+                            ariaLabel={t('board.change.name')}
                         />
                     ) : (
                         board.name

@@ -10,7 +10,7 @@ import Task from '@entities/Task/model/types/Task';
 import TasksList from '@entities/Task/model/types/TasksList';
 import {
     Label,
-    Checkbox,
+    CheckboxDefault,
     StopPropagation,
     ListDropDown,
     DropDownDynamic,
@@ -48,6 +48,7 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
             onDrop={onDrop}
             onClick={() => setIsOpen()}
             onKeyDown={e => {
+                if (e.target !== e.currentTarget) return;
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
                     setIsOpen();
@@ -68,13 +69,13 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
                         <StopPropagation>
                             <div className="flex flex-col gap-1">
                                 {subtasks.map(s => (
-                                    <Checkbox
+                                    <CheckboxDefault
                                         key={s.id}
                                         onChange={() => handleUpdate(!s.checked, s.id)}
                                         state={s.checked}
                                     >
                                         {s.value}
-                                    </Checkbox>
+                                    </CheckboxDefault>
                                 ))}
                             </div>
                         </StopPropagation>

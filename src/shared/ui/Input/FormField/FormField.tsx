@@ -22,14 +22,20 @@ export default function FormField<T extends FieldValues>({
         <div className="flex flex-col gap-1.5 relative">
             <label htmlFor={label}>{label}</label>
             <input
-                className="w-full border border-bg-neutral-lighter bg-bg-secondary outline-none caret-bg-neutral-lighter py-1 px-2 rounded-md h-10.5"
+                className="w-full border border-bg-neutral-lighter bg-bg-secondary caret-bg-neutral-lighter py-1 px-2 rounded-md h-10.5"
                 type={type}
                 placeholder={placeholder}
                 id={label}
+                aria-invalid={!!error}
+                onKeyDown={e => {
+                    if (e.key === 'Enter') e.preventDefault();
+                }}
                 {...register(name)}
             />
             {error && (
-                <span className="absolute -bottom-6 text-sm text-red-700">{error.message}</span>
+                <span className="absolute -bottom-6 text-sm text-red-700" aria-live="polite">
+                    {error.message}
+                </span>
             )}
         </div>
     );

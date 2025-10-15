@@ -15,9 +15,6 @@
         "@apollo/server": "^5.0.0",
         "@as-integrations/next": "^4.0.0",
         "@babel/runtime": "^7.28.2",
-        "@graphql-codegen/typescript": "^5.0.2",
-        "@graphql-codegen/typescript-operations": "^5.0.2",
-        "@graphql-codegen/typescript-react-apollo": "^4.3.3",
         "@hookform/resolvers": "^5.2.2",
         "@reduxjs/toolkit": "^2.9.0",
         "bcrypt": "^6.0.0",
@@ -43,6 +40,9 @@
         "@eslint/eslintrc": "^3",
         "@feature-sliced/eslint-config": "^0.1.1",
         "@graphql-codegen/cli": "^6.0.0",
+        "@graphql-codegen/typescript": "^5.0.2",
+        "@graphql-codegen/typescript-operations": "^5.0.2",
+        "@graphql-codegen/typescript-react-apollo": "^4.3.3",
         "@graphql-codegen/typescript-resolvers": "^5.1.0",
         "@tailwindcss/postcss": "^4",
         "@types/bcrypt": "^6.0.0",
@@ -63,4 +63,5 @@
         "tailwindcss": "^4",
         "typescript": "^5.9.3"
     }
+
 }

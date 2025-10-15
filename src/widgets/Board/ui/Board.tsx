@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
+import ListSchema from '@widgets/Board/model/types/ListSchema';
 import { List } from '@features/List';
 import { COLORS } from '@entities/Label';
 import {
@@ -14,15 +15,8 @@ import {
     TaskDragAndDropOrderContext,
 } from '@entities/Task';
 import { useSortedItems } from '@shared/lib';
-import { useCreateListMutation, useGetListsQuery } from '@shared/types/generated/graphql';
+import { useCreateListMutation, useGetListsQuery } from '@shared/types';
 import { AddInput } from '@shared/ui';
-
-const ListSchema = z.object({
-    name: z
-        .string()
-        .min(4, { message: 'Task name is too short' })
-        .max(30, { message: 'Task name is too long' }),
-});
 
 type ListValues = z.infer<typeof ListSchema>;
 
@@ -53,7 +47,13 @@ export default function Board() {
 
     const onSubmit = async (data: ListValues) => {
         if (!boardId) return;
-        await createList({ variables: { name: data.name, color: COLORS[0], boardId: boardId } });
+        try {
+            await createList({
+                variables: { name: data.name, color: COLORS[0], boardId: boardId },
+            });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const sortedLists = useSortedItems(lists);

@@ -1,5 +1,6 @@
+import { useTranslations } from 'next-intl';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { MONTHS } from '@entities/Task/consts/months';
+import generateCalendarData from '@entities/Task/lib/generateCalendarData';
 
 export default function useCalendar(
     selectedDate: Date | null,
@@ -12,6 +13,9 @@ export default function useCalendar(
     const [minutes, setMinutes] = useState(0);
 
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
+
+    const t = useTranslations('Main');
+    const { MONTHS } = generateCalendarData(t);
 
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const month = new Date().getMonth();

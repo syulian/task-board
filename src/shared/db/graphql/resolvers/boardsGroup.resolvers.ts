@@ -7,7 +7,7 @@ import {
     BoardsGroupResolvers,
     MutationResolvers,
     QueryResolvers,
-} from '@shared/types/generated/graphql';
+} from '@shared/types';
 
 export const boardsGroupResolvers = {
     Query: {

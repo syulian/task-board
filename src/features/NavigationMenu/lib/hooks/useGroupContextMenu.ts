@@ -1,10 +1,7 @@
 import { useState } from 'react';
 import { BoardsGroup } from '@entities/Board';
 import { createStateController } from '@shared/lib';
-import {
-    useDeleteBoardsGroupMutation,
-    useUpdateBoardsGroupMutation,
-} from '@shared/types/generated/graphql';
+import { useDeleteBoardsGroupMutation, useUpdateBoardsGroupMutation } from '@shared/types';
 
 const useGroupContextMenu = (group: BoardsGroup) => {
     const [isOpen, setIsOpen] = useState({
@@ -27,13 +24,23 @@ const useGroupContextMenu = (group: BoardsGroup) => {
     const handleBoardsGroupRename = async (name: string) => {
         if (updateBoardsGroupLoading) return;
 
-        setDisabled(true);
-        await updateBoardsGroup({ variables: { id: group.id, name: name } });
+        try {
+            await updateBoardsGroup({ variables: { id: group.id, name: name } });
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setDisabled(true);
+        }
     };
 
     const handleBoardsGroupDelete = async () => {
         if (deleteBoardsGroupLoading) return;
-        await deleteBoardsGroup({ variables: { id: group.id } });
+
+        try {
+            await deleteBoardsGroup({ variables: { id: group.id } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const contextMenu = [

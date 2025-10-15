@@ -11,6 +11,7 @@ export { default as useDragAndDrop } from './hooks/useDragAndDrop/useDragAndDrop
 export { default as useParentDragAndDrop } from './hooks/useParentDragAndDrop/useParentDragAndDrop';
 export { default as useOrderDragAndDrop } from './hooks/useOrderDragAndDrop/useOrderDragAndDrop';
 export { default as useTheme } from './hooks/useTheme/useTheme';
+export { default as useEscape } from './hooks/useEscape/useEscape';
 export { default as useSortedItems } from './hooks/useSortedItems/useSortedItems';
 export { default as useLocale } from './hooks/useLocale/useLocale';
 export { default as useContextMenu } from './hooks/useContextMenu/useContextMenu';

@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { signOut, useSession } from 'next-auth/react';
@@ -65,7 +66,7 @@ export default function Auth({ isExpanded }: IAuthProps) {
             ) : (
                 <Tooltip text={t('profile.signIn')} isExpanded={isExpanded}>
                     <NavButton onClick={() => setIsOpenField('signIn', true)}>
-                        <HiOutlineUserCircle aria-hidden="true" className="min-w-6 min-h-6" />
+                        <HiOutlineUserCircle className="min-w-6 min-h-6" />
                         {isExpanded && <p>{t('profile.signIn')}</p>}
                     </NavButton>
                 </Tooltip>

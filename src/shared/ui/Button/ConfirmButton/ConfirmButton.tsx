@@ -4,7 +4,7 @@ import React, { MouseEvent, ReactNode } from 'react';
 interface INavButtonProps {
     children: ReactNode;
     onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
-    ariaLabel?: string;
+    ariaLabel: string;
     type?: 'button' | 'submit';
     error?: string;
 }
@@ -28,7 +28,9 @@ export default function ConfirmButton({
             >
                 {children}
             </button>
-            <span className="absolute -bottom-6 text-sm text-red-700">{error}</span>
+            <span className="absolute -bottom-6 text-sm text-red-700" aria-live="polite">
+                {error}
+            </span>
         </div>
     );
 }

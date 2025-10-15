@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Board from '@entities/Board/model/types/Board';
-import { useDeleteBoardMutation, useUpdateBoardMutation } from '@shared/types/generated/graphql';
+import { useDeleteBoardMutation, useUpdateBoardMutation } from '@shared/types';
 
 const useLinkContextMenu = (board: Board) => {
     const [disabled, setDisabled] = useState(true);
@@ -14,13 +14,23 @@ const useLinkContextMenu = (board: Board) => {
     const handleBoardRename = async (name: string) => {
         if (updateBoardLoading) return;
 
-        setDisabled(true);
-        await updateBoard({ variables: { id: board.id, name: name } });
+        try {
+            await updateBoard({ variables: { id: board.id, name: name } });
+        } catch (e) {
+            console.log(e);
+        } finally {
+            setDisabled(true);
+        }
     };
 
     const handleBoardDelete = async () => {
         if (deleteBoardLoading) return;
-        await deleteBoard({ variables: { id: board.id } });
+
+        try {
+            await deleteBoard({ variables: { id: board.id } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const contextMenu = [

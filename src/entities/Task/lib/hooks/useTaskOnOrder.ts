@@ -1,6 +1,6 @@
 import TasksList from '@entities/Task/model/types/TasksList';
 import { clearTypename } from '@shared/lib';
-import { useUpdateTasksOrdersMutation } from '@shared/types/generated/graphql';
+import { useUpdateTasksOrdersMutation } from '@shared/types';
 
 const useTaskOnOrder = (boardId: string) => {
     const [updateOrders, { loading: ordersLoading }] = useUpdateTasksOrdersMutation({
@@ -9,14 +9,21 @@ const useTaskOnOrder = (boardId: string) => {
 
     return async (lists: TasksList[]) => {
         if (ordersLoading) return;
-        const tasks = clearTypename(lists.flatMap(g => g.items.map(b => ({ ...b, list: g.id }))));
 
-        const cleanedTasks = tasks.map(t => ({
-            ...t,
-            labels: t.labels?.map(l => l.id),
-        }));
+        try {
+            const tasks = clearTypename(
+                lists.flatMap(g => g.items.map(b => ({ ...b, list: g.id }))),
+            );
 
-        await updateOrders({ variables: { tasks: cleanedTasks, boardId } });
+            const cleanedTasks = tasks.map(t => ({
+                ...t,
+                labels: t.labels?.map(l => l.id),
+            }));
+
+            await updateOrders({ variables: { tasks: cleanedTasks, boardId } });
+        } catch (e) {
+            console.log(e);
+        }
     };
 };
 

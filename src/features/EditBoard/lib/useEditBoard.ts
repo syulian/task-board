@@ -3,16 +3,16 @@ import { useParams } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import BoardSchema from '@entities/Board/model/types/BoardSchema';
+import { EditBoardSchema } from '@entities/Board';
 import { useDeleteLabel } from '@entities/Label';
 import {
     useGetBoardQuery,
     useGetBoardsGroupsQuery,
     useGetLabelsQuery,
     useUpdateBoardMutation,
-} from '@shared/types/generated/graphql';
+} from '@shared/types';
 
-type BoardValues = z.infer<typeof BoardSchema>;
+type BoardValues = z.infer<typeof EditBoardSchema>;
 
 const useEditBoard = () => {
     const params = useParams<{ id: string }>();
@@ -56,7 +56,7 @@ const useEditBoard = () => {
         handleSubmit,
         formState: { errors, isDirty },
     } = useForm({
-        resolver: zodResolver(BoardSchema),
+        resolver: zodResolver(EditBoardSchema),
         defaultValues: { name: '', group: { id: 'select', label: 'Select group' } },
     });
 
@@ -68,15 +68,25 @@ const useEditBoard = () => {
     }, [board, groups, reset]);
 
     const handleDelete = async (labelId: string) => {
-        await deleteLabel({
-            variables: {
-                id: labelId,
-            },
-        });
+        try {
+            await deleteLabel({
+                variables: {
+                    id: labelId,
+                },
+            });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     const onSubmit = async (data: BoardValues) => {
-        await updateBoard({ variables: { id: board.id, name: data.name, groupId: data.group.id } });
+        try {
+            await updateBoard({
+                variables: { id: board.id, name: data.name, groupId: data.group.id },
+            });
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return {

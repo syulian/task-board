@@ -1,18 +1,14 @@
 'use client';
 import { clsx } from 'clsx';
-import React, { useState } from 'react';
+import React from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
+import useList from '@features/List/lib/hooks/useList';
 import useListDragAndDrop from '@features/List/lib/hooks/useListDragAndDrop';
 import EditTask from '@features/List/ui/EditTask';
-import TaskInfo from '@features/List/ui/TaskInfo';
-import { COLORS, ColorsDropDown } from '@entities/Label';
+import TaskInfo from '@features/List/ui/Info/TaskInfo';
+import { ColorsDropDown } from '@entities/Label';
 import { TasksList } from '@entities/Task';
-import { createStateController, useSortedItems } from '@shared/lib';
-import {
-    useCreateListMutation,
-    useDeleteListMutation,
-    useUpdateListMutation,
-} from '@shared/types/generated/graphql';
+import { useSortedItems } from '@shared/lib';
 import {
     DefaultButton,
     AddButton,
@@ -28,72 +24,7 @@ interface IListProps {
 }
 
 export default function List({ list }: IListProps) {
-    const [isOpen, setIsOpen] = useState({
-        settings: false,
-        colors: false,
-        popup: false,
-    });
-
-    const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
-
-    const [createList] = useCreateListMutation({ refetchQueries: ['GetLists'] });
-    const [deleteList] = useDeleteListMutation({ refetchQueries: ['GetLists'] });
-    const [updateList, { loading: updateListLoading }] = useUpdateListMutation();
-
-    const editList = [
-        {
-            title: `${list.items?.length ?? 0} Tasks`,
-            children: [
-                {
-                    label: 'Add List',
-                    onClick: async () => {
-                        await createList({
-                            variables: {
-                                name: 'New List',
-                                color: COLORS[COLORS.length - 1],
-                                boardId: list.board,
-                            },
-                        });
-                    },
-                },
-            ],
-        },
-        {
-            children: [
-                {
-                    label: 'Rename',
-                    onClick: () => {
-                        setDisabled(false);
-                        setIsOpenField('settings', false);
-                    },
-                },
-                {
-                    label: 'Change Color',
-                    onClick: () => {
-                        setIsOpenField('settings', false);
-                        setIsOpenField('colors', true);
-                    },
-                },
-            ],
-        },
-        {
-            children: [
-                {
-                    label: 'Delete',
-                    onClick: () => deleteList({ variables: { id: list.id } }),
-                },
-            ],
-        },
-    ];
-
-    const [disabled, setDisabled] = useState(true);
-
-    const handleListUpdate = async (name?: string, color?: string) => {
-        if (updateListLoading) return;
-
-        setDisabled(true);
-        await updateList({ variables: { id: list.id, name, color, boardId: list.board } });
-    };
+    const { isOpen, disabled, setIsOpenField, editList, handleListUpdate } = useList(list);
 
     const {
         isDragOverOrder,

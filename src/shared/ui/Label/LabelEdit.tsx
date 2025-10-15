@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
 
@@ -8,6 +9,8 @@ interface ILabelEditProps {
 }
 
 export default function LabelEdit({ name, color, onClick }: ILabelEditProps) {
+    const t = useTranslations('Main');
+
     return (
         <div
             style={{ backgroundColor: color }}
@@ -15,9 +18,10 @@ export default function LabelEdit({ name, color, onClick }: ILabelEditProps) {
         >
             {name}
             <button
-                className="text-white/70 hover:text-white cursor-pointer"
+                className="text-white/70 hover:text-white cursor-pointer rounded-full"
                 onClick={onClick}
                 type="button"
+                aria-label={t('label.delete')}
             >
                 <HiMiniXMark size={18} />
             </button>
