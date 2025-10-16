@@ -1,4 +1,6 @@
+'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -33,17 +35,19 @@ export default function AddBoardDropDown({ groupId }: IAddBoardDropDownProps) {
         }
     };
 
+    const t = useTranslations('LeftSidebar');
+
     return (
         <form className="flex flex-col gap-8 p-4 font-normal" onSubmit={handleSubmit(onSubmit)}>
             <FormField
-                placeholder="Enter name..."
-                label="Board Name"
+                placeholder={t('board.add.name')}
+                label={t('board.name')}
                 register={register}
                 name="name"
                 error={errors.name}
             />
-            <ConfirmButton type="submit" ariaLabel="Add Board" error={error?.message}>
-                Add Board
+            <ConfirmButton type="submit" ariaLabel={t('board.add.title')} error={error?.message}>
+                {t('board.add.title')}
             </ConfirmButton>
         </form>
     );

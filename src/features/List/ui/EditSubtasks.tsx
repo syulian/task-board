@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm, UseFormSetValue } from 'react-hook-form';
 import { z } from 'zod';
@@ -45,6 +46,8 @@ export default function EditSubtasks({ task, setValue }: IEditTaskProps) {
         reset();
     };
 
+    const t = useTranslations('Main');
+
     useEffect(() => {
         setValue('subtasks', subtasks, { shouldDirty: true });
     }, [subtasks, setValue]);
@@ -52,7 +55,7 @@ export default function EditSubtasks({ task, setValue }: IEditTaskProps) {
     return (
         <div className="flex flex-col gap-6 w-2/5">
             <form className="flex flex-col gap-1.5" onSubmit={handleSubmit(onSubmit)}>
-                <b>Subtasks</b>
+                <b>{t('subtask.title')}</b>
                 <Controller
                     control={control}
                     name="name"
@@ -60,7 +63,8 @@ export default function EditSubtasks({ task, setValue }: IEditTaskProps) {
                         <AddInput
                             onChange={event => field.onChange(event.target.value)}
                             value={field.value}
-                            placeholder="Type here and press 'Enter'"
+                            placeholder={t('input.add.title')}
+                            ariaLabel={t('subtask.add')}
                         />
                     )}
                 />

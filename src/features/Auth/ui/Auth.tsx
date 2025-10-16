@@ -45,6 +45,7 @@ export default function Auth({ isExpanded }: IAuthProps) {
                             await signOut({ redirect: false });
                             router.push('/');
                         }}
+                        ariaLabel={t('profile.signOut')}
                     >
                         {session.user.image ? (
                             <Image
@@ -65,7 +66,10 @@ export default function Auth({ isExpanded }: IAuthProps) {
                 </Tooltip>
             ) : (
                 <Tooltip text={t('profile.signIn')} isExpanded={isExpanded}>
-                    <NavButton onClick={() => setIsOpenField('signIn', true)}>
+                    <NavButton
+                        onClick={() => setIsOpenField('signIn', true)}
+                        ariaLabel={t('profile.signIn')}
+                    >
                         <HiOutlineUserCircle className="min-w-6 min-h-6" />
                         {isExpanded && <p>{t('profile.signIn')}</p>}
                     </NavButton>

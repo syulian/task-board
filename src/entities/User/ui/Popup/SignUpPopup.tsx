@@ -1,6 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniArrowRight } from 'react-icons/hi2';
@@ -51,49 +52,52 @@ export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps
         }
     };
 
+    const t = useTranslations('LeftSidebar');
+
     return (
         <form
             className="flex justify-center flex-col gap-10 px-8 pb-9"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <b className="text-lg">Sign up</b>
+            <b className="text-lg">{t('profile.signUp')}</b>
             <div className="flex justify-center flex-col gap-8">
                 <FormField
-                    error={errors.email}
+                    placeholder={t('profile.change.email.name')}
+                    label={t('profile.change.email.title')}
                     name="email"
-                    register={register}
-                    placeholder="Enter email"
                     type="email"
-                    label="Email"
+                    register={register}
+                    error={errors.email}
                 />
                 <FormField
-                    error={errors.name}
+                    placeholder={t('profile.change.name.name')}
+                    label={t('profile.change.name.title')}
                     name="name"
                     register={register}
-                    placeholder="Enter name"
-                    label="Name"
+                    error={errors.name}
                 />
                 <FormField
-                    error={errors.password}
+                    placeholder={t('profile.change.password.name')}
+                    label={t('profile.change.email.title')}
                     name="password"
-                    register={register}
-                    placeholder="Enter password"
                     type="password"
-                    label="Password"
+                    register={register}
+                    error={errors.password}
                 />
-                <ConfirmButton type="submit" ariaLabel="Sign up" error={error}>
-                    Sign up <HiMiniArrowRight size={24} />
+                <ConfirmButton type="submit" ariaLabel={t('profile.signUp')} error={error}>
+                    {t('profile.signUp')} <HiMiniArrowRight size={24} />
                 </ConfirmButton>
-                <GoogleButton>Sign up with Google</GoogleButton>
+                <GoogleButton>{t('profile.signUpWithGoogle')}</GoogleButton>
             </div>
             <div className="flex gap-2">
-                <p>Already have an account?</p>
+                <p>{t('profile.account')}</p>
                 <button
                     type="button"
                     onClick={openSignIn}
+                    aria-label={t('profile.signIn')}
                     className="font-bold hover:underline cursor-pointer"
                 >
-                    Sign in
+                    {t('profile.signIn')}
                 </button>
             </div>
         </form>

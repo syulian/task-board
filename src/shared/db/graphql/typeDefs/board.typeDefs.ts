@@ -9,6 +9,16 @@ export const boardTypeDefs = gql`
         userId: ID!
     }
 
+    type FullBoard {
+        id: ID!
+        order: Int!
+        name: String!
+        groupId: ID!
+        userId: ID!
+        listsCount: Int
+        tasksCount: Int
+    }
+
     input BoardInput {
         id: ID!
         order: Int!
@@ -17,7 +27,7 @@ export const boardTypeDefs = gql`
     }
 
     extend type Query {
-        getBoard(id: ID!): Board
+        getBoard(id: ID!): FullBoard
     }
 
     extend type Mutation {

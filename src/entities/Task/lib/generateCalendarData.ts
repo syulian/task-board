@@ -1,6 +1,4 @@
-import { useTranslations } from 'next-intl';
-
-type TFunction = ReturnType<typeof useTranslations<never>>;
+import { TFunction } from '@shared/types';
 
 const generateCalendarData = (t: TFunction) => {
     const DAYS = Array.from({ length: 7 }).map((_, i) => t(`calendar.days.${i}`));

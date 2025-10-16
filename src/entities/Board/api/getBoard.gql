@@ -4,5 +4,7 @@ query GetBoard($id: ID!) {
         order
         name
         groupId
+        listsCount
+        tasksCount
     }
 }

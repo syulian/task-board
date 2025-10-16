@@ -1,5 +1,6 @@
 'use client';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { HiOutlineBookOpen, HiOutlineTag } from 'react-icons/hi2';
 import { BoardInfo } from '@features/EditBoard';
@@ -20,6 +21,8 @@ export default function Header() {
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
     const { status } = useSession();
 
+    const t = useTranslations('Header');
+
     return (
         <>
             {status === 'authenticated' && (
@@ -31,7 +34,10 @@ export default function Header() {
                     <nav>
                         <ul className="flex">
                             <li>
-                                <DefaultButton onClick={() => setIsOpenField('popup', true)}>
+                                <DefaultButton
+                                    onClick={() => setIsOpenField('popup', true)}
+                                    ariaLabel={t('dropDown.label')}
+                                >
                                     <HiOutlineTag size={24} />
                                 </DefaultButton>
                                 <Popup
@@ -42,7 +48,12 @@ export default function Header() {
                                 </Popup>
                             </li>
                             <li>
-                                <DefaultButton onClick={() => dispatch(setIsExpanded(!isExpanded))}>
+                                <DefaultButton
+                                    onClick={() => dispatch(setIsExpanded(!isExpanded))}
+                                    ariaLabel={
+                                        isOpen ? t('dropDown.panel.hide') : t('dropDown.panel.open')
+                                    }
+                                >
                                     <HiOutlineBookOpen size={24} />
                                 </DefaultButton>
                             </li>

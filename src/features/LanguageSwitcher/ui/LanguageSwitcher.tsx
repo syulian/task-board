@@ -16,12 +16,12 @@ export default function LanguageSwitcher({ isOpen, setIsOpen }: IListProps) {
 
     const languagesList = [
         {
-            title: t('language'),
+            title: t('language.title'),
             children: [
                 {
                     label: (
                         <LabelChecked checked={locale === Locales.ENGLISH}>
-                            {t('languages.english')}
+                            {t('language.english')}
                         </LabelChecked>
                     ),
                     onClick: () => toggleLocale(Locales.ENGLISH),
@@ -29,7 +29,7 @@ export default function LanguageSwitcher({ isOpen, setIsOpen }: IListProps) {
                 {
                     label: (
                         <LabelChecked checked={locale === Locales.UKRAINIAN}>
-                            {t('languages.ukrainian')}
+                            {t('language.ukrainian')}
                         </LabelChecked>
                     ),
                     onClick: () => toggleLocale(Locales.UKRAINIAN),

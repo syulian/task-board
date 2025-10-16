@@ -1,4 +1,6 @@
-export function getDate(date: string | Date) {
+import TFunction from '@shared/types/TFunction';
+
+export function getDate(date: string | Date, t: TFunction) {
     const convertedDate = new Date(date);
     const currentDate = new Date();
 
@@ -7,9 +9,9 @@ export function getDate(date: string | Date) {
 
     const days = Math.floor((convertedDate.getTime() - currentDate.getTime()) / 86400000);
 
-    if (days < 0) return 'Past Due';
-    if (days === 0) return 'Due Today';
-    if (days === 1) return 'Due Tomorrow';
+    if (days < 0) return t('date.pastDue');
+    if (days === 0) return t('date.dueToday');
+    if (days === 1) return t('date.dueTomorrow');
 
-    return `Due in ${days} days`;
+    return t('date.dueIn', { days });
 }

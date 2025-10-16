@@ -1,5 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { HiEllipsisHorizontal, HiMiniPlus } from 'react-icons/hi2';
 import useList from '@features/List/lib/hooks/useList';
@@ -39,6 +40,7 @@ export default function List({ list }: IListProps) {
     } = useListDragAndDrop(list);
 
     const sortedItems = useSortedItems(list.items);
+    const t = useTranslations('Main');
 
     return (
         <li
@@ -62,14 +64,21 @@ export default function List({ list }: IListProps) {
                             value={list.name}
                             disabled={disabled}
                             onBlur={handleListUpdate}
+                            ariaLabel={t('list.update')}
                         />
                     )}
                 </Drag>
                 <span className="flex relative">
-                    <DefaultButton onClick={() => setIsOpenField('popup', true)}>
+                    <DefaultButton
+                        onClick={() => setIsOpenField('popup', true)}
+                        ariaLabel={t('task.add')}
+                    >
                         <HiMiniPlus size={24} />
                     </DefaultButton>
-                    <DefaultButton onClick={() => setIsOpenField('settings', true)}>
+                    <DefaultButton
+                        onClick={() => setIsOpenField('settings', true)}
+                        ariaLabel={t('task.update')}
+                    >
                         <HiEllipsisHorizontal size={24} />
                     </DefaultButton>
                     <DropDownContainer
@@ -104,7 +113,7 @@ export default function List({ list }: IListProps) {
                     <TaskInfo key={t.id} task={t} list={list} />
                 ))}
             </div>
-            <AddButton onClick={() => setIsOpenField('popup', true)} />
+            <AddButton onClick={() => setIsOpenField('popup', true)} ariaLabel={t('task.add')} />
             <Popup isOpen={isOpen.popup} setIsOpen={() => setIsOpenField('popup', false)}>
                 <EditTask list={list} />
             </Popup>

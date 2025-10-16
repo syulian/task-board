@@ -14,7 +14,7 @@ export default function GoogleButton({ children }: IGoogleButtonProps) {
     return (
         <button
             type="button"
-            className="flex justify-center items-center gap-4 cursor-pointer border border-bg-neutral-lighter bg-bg-secondary hover:bg-bg-primary rounded-md py-2"
+            className="flex justify-center items-center gap-4 cursor-pointer border border-bg-neutral-lighter bg-bg-secondary hover:bg-bg-primary rounded-md p-2 truncate"
             onClick={() => signIn('google')}
             aria-label={t('profile.signIn')}
         >

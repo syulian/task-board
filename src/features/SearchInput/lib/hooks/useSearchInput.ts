@@ -1,5 +1,6 @@
 import debounce from 'debounce';
 import { useParams } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import { ChangeEvent, useEffect, useRef, useState } from 'react';
 import FILTERS from '@features/SearchInput/consts/filters';
 import OS from '@features/SearchInput/consts/os';
@@ -22,6 +23,7 @@ const useSearchInput = () => {
     const [search, setSearch] = useState('');
 
     const inputRef = useRef<HTMLInputElement>(null);
+    const t = useTranslations('Header');
 
     const { data: dataLabels } = useGetLabelsQuery({
         variables: { boardId: boardId ?? '' },
@@ -46,17 +48,17 @@ const useSearchInput = () => {
     const filters = [
         {
             id: 'NO_LABEL',
-            name: 'No Label',
+            name: t('task.dropDown.noLabel'),
             color: '#323232',
         },
         {
             id: 'DUE_DATE',
-            name: 'Due Date',
+            name: t('task.dropDown.dueDate'),
             color: '#323232',
         },
         {
             id: 'COMPLETE',
-            name: 'Complete',
+            name: t('task.dropDown.complete'),
             color: '#323232',
         },
         ...labels,
@@ -91,7 +93,7 @@ const useSearchInput = () => {
 
         for (const n of OS) {
             if (userAgent.includes(n)) {
-                setCommand(userAgent.includes('mac') ? ' or use ⌘ F' : ' or use ⊞ F');
+                setCommand(userAgent.includes('mac') ? 'mac' : 'win');
                 break;
             }
         }

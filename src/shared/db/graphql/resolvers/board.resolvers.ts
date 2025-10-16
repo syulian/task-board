@@ -11,7 +11,23 @@ export const boardResolvers = {
             const userId = requireUser(ctx?.user);
             await dbConnect();
 
-            return Board.findOne({ _id: id, userId });
+            const listsCount = await List.countDocuments({ board: id, userId });
+
+            const listsIds = await List.find({ board: id, userId }).distinct('_id');
+            const tasksCount = listsIds.length
+                ? await Task.countDocuments({ list: { $in: listsIds }, userId })
+                : 0;
+
+            const board = await Board.findOne({ _id: id, userId });
+            const boardId = board._id;
+
+            delete board._id;
+            return {
+                ...board.toObject(),
+                id: boardId,
+                listsCount,
+                tasksCount,
+            };
         }) satisfies QueryResolvers['getBoard'],
     },
     Mutation: {

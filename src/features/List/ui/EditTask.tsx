@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { Controller } from 'react-hook-form';
 import { HiMiniCheck } from 'react-icons/hi2';
@@ -37,6 +38,8 @@ export default function EditTask({ list, task }: IEditTaskProps) {
     const taskLabels: TaskLabel[] = labels.filter(l => watch('labels')?.includes(l.id));
     const dueDate = watch('dueDate');
 
+    const t = useTranslations('Main');
+
     return (
         <div className="relative flex justify-center gap-6 px-8 pb-9 w-screen max-w-4xl cursor-auto">
             <form
@@ -47,8 +50,8 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     error={errors.title}
                     name="title"
                     register={register}
-                    placeholder="Enter task name..."
-                    label="Task Name"
+                    placeholder={t('task.change.name.name')}
+                    label={t('task.change.name.title')}
                 />
                 <StopPropagation>
                     <LabelController
@@ -74,7 +77,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     </LabelController>
                 </StopPropagation>
                 <div className="flex justify-between items-center w-full">
-                    <b>Task List</b>
+                    <b>{t('task.change.list.title')}</b>
                     <Controller
                         name="list"
                         control={control}
@@ -83,6 +86,7 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                                 list={lists}
                                 selected={field.value}
                                 setSelected={field.onChange}
+                                ariaLabel={t('task.change.list.name')}
                             />
                         )}
                     />
@@ -97,13 +101,14 @@ export default function EditTask({ list, task }: IEditTaskProps) {
                     error={errors.body}
                     name="body"
                     register={register}
-                    placeholder="Add description..."
+                    placeholder={t('task.change.description.name')}
+                    ariaLabel={t('task.change.description.title')}
                 />
                 {isDirty && (
                     <DefaultButton
                         type="submit"
                         className="absolute bottom-0 right-0"
-                        ariaLabel="Submit task"
+                        ariaLabel={t('task.update')}
                     >
                         <HiMiniCheck size={24} />
                     </DefaultButton>

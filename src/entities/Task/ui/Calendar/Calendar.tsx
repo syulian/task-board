@@ -42,7 +42,7 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
             <div className="flex justify-between items-center gap-2 w-80.5">
                 <DefaultButton
                     onClick={() => changeMonth(-1)}
-                    ariaLabel={t('calendar.change.previous-month')}
+                    ariaLabel={t('calendar.change.previousMonth')}
                 >
                     <HiMiniChevronLeft size={24} />
                 </DefaultButton>
@@ -64,7 +64,7 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
                 </div>
                 <DefaultButton
                     onClick={() => changeMonth(1)}
-                    ariaLabel={t('calendar.change.next-month')}
+                    ariaLabel={t('calendar.change.nextMonth')}
                 >
                     <HiMiniChevronRight size={24} />
                 </DefaultButton>

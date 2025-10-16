@@ -45,7 +45,7 @@ export default function LabelController({ control }: ILabelControllerProps) {
                 render={({ field }) => (
                     <AddInput
                         onChange={event => field.onChange(event.target.value)}
-                        placeholder="Type here and press 'Enter'"
+                        placeholder={t('input.add.title')}
                         value={field.value}
                         ariaLabel={t('label.add')}
                     />

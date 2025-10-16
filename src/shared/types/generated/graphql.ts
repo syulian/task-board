@@ -46,6 +46,17 @@ export type BoardsGroup = {
   userId: Scalars['ID']['output'];
 };
 
+export type FullBoard = {
+  __typename?: 'FullBoard';
+  groupId: Scalars['ID']['output'];
+  id: Scalars['ID']['output'];
+  listsCount?: Maybe<Scalars['Int']['output']>;
+  name: Scalars['String']['output'];
+  order: Scalars['Int']['output'];
+  tasksCount?: Maybe<Scalars['Int']['output']>;
+  userId: Scalars['ID']['output'];
+};
+
 export type Label = {
   __typename?: 'Label';
   board: Scalars['ID']['output'];
@@ -227,7 +238,7 @@ export type OrderInput = {
 
 export type Query = {
   __typename?: 'Query';
-  getBoard?: Maybe<Board>;
+  getBoard?: Maybe<FullBoard>;
   getBoardsGroups: Array<BoardsGroup>;
   getGroupedTasks: Array<TaskGroupByDate>;
   getLabels: Array<Label>;
@@ -362,7 +373,7 @@ export type GetBoardQueryVariables = Exact<{
 }>;
 
 
-export type GetBoardQuery = { __typename?: 'Query', getBoard?: { __typename?: 'Board', id: string, order: number, name: string, groupId: string } | null };
+export type GetBoardQuery = { __typename?: 'Query', getBoard?: { __typename?: 'FullBoard', id: string, order: number, name: string, groupId: string, listsCount?: number | null, tasksCount?: number | null } | null };
 
 export type GetBoardsGroupsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -657,6 +668,8 @@ export const GetBoardDocument = gql`
     order
     name
     groupId
+    listsCount
+    tasksCount
   }
 }
     `;
@@ -1731,6 +1744,7 @@ export type ResolversTypes = {
   BoardsGroup: ResolverTypeWrapper<BoardsGroup>;
   Boolean: ResolverTypeWrapper<Scalars['Boolean']['output']>;
   Date: ResolverTypeWrapper<Scalars['Date']['output']>;
+  FullBoard: ResolverTypeWrapper<FullBoard>;
   ID: ResolverTypeWrapper<Scalars['ID']['output']>;
   Int: ResolverTypeWrapper<Scalars['Int']['output']>;
   Label: ResolverTypeWrapper<Label>;
@@ -1756,6 +1770,7 @@ export type ResolversParentTypes = {
   BoardsGroup: BoardsGroup;
   Boolean: Scalars['Boolean']['output'];
   Date: Scalars['Date']['output'];
+  FullBoard: FullBoard;
   ID: Scalars['ID']['output'];
   Int: Scalars['Int']['output'];
   Label: Label;
@@ -1793,6 +1808,16 @@ export type BoardsGroupResolvers<ContextType = any, ParentType extends Resolvers
 export interface DateScalarConfig extends GraphQLScalarTypeConfig<ResolversTypes['Date'], any> {
   name: 'Date';
 }
+
+export type FullBoardResolvers<ContextType = any, ParentType extends ResolversParentTypes['FullBoard'] = ResolversParentTypes['FullBoard']> = {
+  groupId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+  listsCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  name?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
+  order?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
+  tasksCount?: Resolver<Maybe<ResolversTypes['Int']>, ParentType, ContextType>;
+  userId?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
+};
 
 export type LabelResolvers<ContextType = any, ParentType extends ResolversParentTypes['Label'] = ResolversParentTypes['Label']> = {
   board?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
@@ -1838,7 +1863,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
 };
 
 export type QueryResolvers<ContextType = any, ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']> = {
-  getBoard?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<QueryGetBoardArgs, 'id'>>;
+  getBoard?: Resolver<Maybe<ResolversTypes['FullBoard']>, ParentType, ContextType, RequireFields<QueryGetBoardArgs, 'id'>>;
   getBoardsGroups?: Resolver<Array<ResolversTypes['BoardsGroup']>, ParentType, ContextType>;
   getGroupedTasks?: Resolver<Array<ResolversTypes['TaskGroupByDate']>, ParentType, ContextType>;
   getLabels?: Resolver<Array<ResolversTypes['Label']>, ParentType, ContextType, RequireFields<QueryGetLabelsArgs, 'boardId'>>;
@@ -1892,6 +1917,7 @@ export type Resolvers<ContextType = any> = {
   Board?: BoardResolvers<ContextType>;
   BoardsGroup?: BoardsGroupResolvers<ContextType>;
   Date?: GraphQLScalarType;
+  FullBoard?: FullBoardResolvers<ContextType>;
   Label?: LabelResolvers<ContextType>;
   List?: ListResolvers<ContextType>;
   Mutation?: MutationResolvers<ContextType>;

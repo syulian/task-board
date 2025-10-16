@@ -1,4 +1,5 @@
 'use client';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { HiOutlineClock, HiOutlineInformationCircle } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
@@ -13,6 +14,7 @@ interface IPlannedProps {
 
 export default function Planned({ task }: IPlannedProps) {
     const { menu, onContextMenu, contextMenu, setField } = usePlanned(task);
+    const t = useTranslations('Main');
 
     return (
         <div key={task.id} className="flex gap-4" onContextMenu={onContextMenu}>
@@ -23,7 +25,7 @@ export default function Planned({ task }: IPlannedProps) {
                 <div className="flex flex-col gap-1 font-semibold mt-4">
                     <span className="flex gap-2 items-center">
                         <HiOutlineClock />
-                        {getDate(task.dueDate)}
+                        {getDate(task.dueDate, t)}
                     </span>
                     <span className="flex gap-2 items-center">
                         <HiOutlineInformationCircle />

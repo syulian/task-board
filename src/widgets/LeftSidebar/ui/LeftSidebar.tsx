@@ -28,7 +28,6 @@ export default function LeftSidebar() {
     const router = useRouter();
 
     const { groups, setGroups, status, isOpen, setIsOpenField } = useLeftSidebar();
-
     const t = useTranslations('LeftSidebar');
 
     return (
@@ -39,7 +38,7 @@ export default function LeftSidebar() {
             >
                 <div className="flex flex-col gap-2 p-4 overflow-y-scroll overflow-x-hidden h-full">
                     <Tooltip text="TaskBoard" isExpanded={isExpanded}>
-                        <NavButton onClick={() => router.push('/')}>
+                        <NavButton onClick={() => router.push('/')} ariaLabel={t('logo')}>
                             <Image alt={t('logo')} src={logo} width={24} height={24} priority />
                             {isExpanded && <p>{t('logo')}</p>}
                         </NavButton>
@@ -60,16 +59,14 @@ export default function LeftSidebar() {
                     </BoardDragAndDropContext>
                 </div>
                 <div className="flex flex-col gap-2 mt-auto p-4 border-t border-bg-neutral sticky z-30 bottom-0 bg-bg-secondary">
-                    <Tooltip text={t('groups.addGroup')} isExpanded={isExpanded}>
+                    <Tooltip text={t('group.add.title')} isExpanded={isExpanded}>
                         {status === 'authenticated' && (
                             <NavButton
                                 onClick={() => setIsOpenField('add', true)}
-                                ariaLabel={t('groups.addGroup')}
+                                ariaLabel={t('group.add.title')}
                             >
-                                <HiOutlinePlusCircle
-                                    className="min-w-6 min-h-6"
-                                />
-                                {isExpanded && <p>{t('groups.addGroup')}</p>}
+                                <HiOutlinePlusCircle className="min-w-6 min-h-6" />
+                                {isExpanded && <p>{t('group.add.title')}</p>}
                             </NavButton>
                         )}
                         <DropDownContainer

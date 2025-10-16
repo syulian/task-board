@@ -1,5 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { HiMiniXMark } from 'react-icons/hi2';
 import { useSubtaskDragAndDropOrderContext } from '@entities/Task/model/context/subtaskDragAndDropOrderContext';
@@ -11,7 +12,7 @@ interface ISubtaskControllerProps {
     subtask: ISubtask;
 }
 
-export default function SubtaskControllerler({ subtask }: ISubtaskControllerProps) {
+export default function SubtaskController({ subtask }: ISubtaskControllerProps) {
     const { setCurrentOrder, currentOrder, setOrders } = useSubtaskDragAndDropOrderContext();
 
     const {
@@ -26,6 +27,8 @@ export default function SubtaskControllerler({ subtask }: ISubtaskControllerProp
         setCurrentOrder,
         setOrders,
     });
+
+    const t = useTranslations('Main');
 
     const handleUpdate = () => {
         setOrders(prev => {
@@ -69,7 +72,7 @@ export default function SubtaskControllerler({ subtask }: ISubtaskControllerProp
                     {subtask.value}
                 </CheckboxDefault>
             </span>
-            <DefaultButton onClick={handleDelete}>
+            <DefaultButton onClick={handleDelete} ariaLabel={t('subtask.delete')}>
                 <HiMiniXMark size={18} />
             </DefaultButton>
         </div>

@@ -1,5 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
@@ -9,6 +10,7 @@ import './search-input.animation.css';
 
 export default function SearchInput() {
     const divRef = useRef<HTMLDivElement>(null);
+    const t = useTranslations('Header');
 
     const {
         isFocused,
@@ -40,8 +42,8 @@ export default function SearchInput() {
                 className="w-full text-sm caret-bg-neutral h-6"
                 type="search"
                 onChange={onChange}
-                aria-label="Search"
-                placeholder={`Start typing${command} to search...`}
+                aria-label={t('task.search.title')}
+                placeholder={t('task.search.name', { command })}
                 ref={inputRef}
             />
             <CSSTransition

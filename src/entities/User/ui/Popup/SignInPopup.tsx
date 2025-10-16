@@ -1,6 +1,7 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signIn } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { HiMiniArrowRight } from 'react-icons/hi2';
@@ -42,41 +43,45 @@ export default function SignInPopup({ openSignUp, setIsOpen }: ISignInPopupProps
         }
     };
 
+    const t = useTranslations('LeftSidebar');
+
     return (
         <form
             className="flex justify-center flex-col gap-10 px-8 pb-9"
             onSubmit={handleSubmit(onSubmit)}
         >
-            <b className="text-lg">Sign in</b>
+            <b className="text-lg">{t('profile.signIn')}</b>
             <div className="flex justify-center flex-col gap-8">
                 <FormField
-                    placeholder="Enter email"
-                    label="Email"
+                    placeholder={t('profile.change.email.name')}
+                    label={t('profile.change.email.title')}
                     name="email"
+                    type="email"
                     register={register}
                     error={errors.email}
                 />
                 <FormField
-                    placeholder="Enter password"
-                    type="password"
-                    label="Password"
+                    placeholder={t('profile.change.password.name')}
+                    label={t('profile.change.password.title')}
                     name="password"
+                    type="password"
                     register={register}
                     error={errors.password}
                 />
-                <ConfirmButton type="submit" ariaLabel="Sign in" error={error}>
-                    Sign in <HiMiniArrowRight size={24} />
+                <ConfirmButton type="submit" ariaLabel={t('profile.signIn')} error={error}>
+                    {t('profile.signIn')} <HiMiniArrowRight size={24} />
                 </ConfirmButton>
-                <GoogleButton>Sign in with Google</GoogleButton>
+                <GoogleButton>{t('profile.signInWithGoogle')}</GoogleButton>
             </div>
             <div className="flex gap-2">
-                <p>Don&#39;t have an account?</p>
+                <p>{t('profile.noAccount')}</p>
                 <button
                     type="button"
                     onClick={openSignUp}
+                    aria-label={t('profile.signUp')}
                     className="font-bold hover:underline cursor-pointer"
                 >
-                    Sign up
+                    {t('profile.signUp')}
                 </button>
             </div>
         </form>

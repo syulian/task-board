@@ -1,3 +1,4 @@
+import { useTranslations } from 'next-intl';
 import React, { ReactNode } from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { HiMiniTag } from 'react-icons/hi2';
@@ -17,12 +18,14 @@ interface ILabelController {
 }
 
 function LabelController({ labels, isOpen, setIsOpen, control, children }: ILabelController) {
+    const t = useTranslations('Main');
+
     return (
         <div className="flex flex-wrap gap-2">
             <div className="relative">
-                <SecondButton onClick={() => setIsOpen(true)}>
+                <SecondButton onClick={() => setIsOpen(true)} ariaLabel={t('task.change.label')}>
                     <HiMiniTag size={18} />
-                    Select Labels
+                    {t('task.change.label')}
                 </SecondButton>
                 <Controller
                     name="labels"

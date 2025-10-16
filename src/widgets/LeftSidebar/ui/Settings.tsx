@@ -14,16 +14,17 @@ function Settings() {
     });
 
     const setIsOpenField = createStateController<typeof isOpen>(setIsOpen);
+    const t = useTranslations('LeftSidebar');
 
     const dropDownList = [
         {
             children: [
                 {
-                    label: 'About',
+                    label: t('settings.about'),
                     onClick: () => {},
                 },
                 {
-                    label: 'Feedback',
+                    label: t('settings.feedback'),
                     onClick: () => {},
                 },
             ],
@@ -31,14 +32,14 @@ function Settings() {
         {
             children: [
                 {
-                    label: 'View',
+                    label: t('settings.view'),
                     onClick: () => {
                         setIsOpenField('settings', false);
                         setIsOpenField('themes', true);
                     },
                 },
                 {
-                    label: 'Language',
+                    label: t('settings.language'),
                     onClick: () => {
                         setIsOpenField('settings', false);
                         setIsOpenField('languages', true);
@@ -49,14 +50,12 @@ function Settings() {
         {
             children: [
                 {
-                    label: 'Release Notes',
+                    label: t('settings.releaseNotes'),
                     onClick: () => {},
                 },
             ],
         },
     ];
-
-    const t = useTranslations('LeftSidebar');
 
     return (
         <div className="relative w-full">
@@ -65,7 +64,7 @@ function Settings() {
                 onClick={() => setIsOpenField('settings', true)}
             >
                 <HiOutlineCog8Tooth className="min-w-6 min-h-6" />
-                <p>{t('settings')}</p>
+                <p>{t('settings.title')}</p>
             </button>
             <DropDownContainer
                 isOpen={isOpen.settings}

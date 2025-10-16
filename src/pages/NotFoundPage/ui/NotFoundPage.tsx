@@ -1,15 +1,16 @@
 import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import React from 'react';
 
-export function NotFoundPage() {
+export async function NotFoundPage() {
+    const t = await getTranslations('Main');
+
     return (
         <main className="flex flex-col justify-center items-center gap-4 w-screen h-screen">
             <h1 className="text-8xl font-bold">404</h1>
-            <p className="text-bg-neutral-lighter">
-                This page does&#39;nt exist. Or maybe it moved.
-            </p>
+            <p className="text-bg-neutral-lighter">{t('notFound.name')}</p>
             <Link href={'/'} className="flex items-center gap-2 text-sm hover:underline">
-                Back to home
+                {t('notFound.title')}
             </Link>
         </main>
     );

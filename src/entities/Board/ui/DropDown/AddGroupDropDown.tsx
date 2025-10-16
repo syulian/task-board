@@ -1,4 +1,6 @@
+'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -29,20 +31,22 @@ export default function AddGroupDropDown() {
         }
     };
 
+    const t = useTranslations('LeftSidebar');
+
     return (
         <form
             className="flex flex-col gap-8 p-4 font-normal min-w-72"
             onSubmit={handleSubmit(onSubmit)}
         >
             <FormField
-                placeholder="Enter name..."
-                label="Group Name"
+                placeholder={t('group.add.name')}
+                label={t('group.name')}
                 register={register}
                 name="name"
                 error={errors.name}
             />
-            <ConfirmButton type="submit" ariaLabel="Add Group" error={error?.message}>
-                Add Group
+            <ConfirmButton type="submit" ariaLabel={t('group.add.title')} error={error?.message}>
+                {t('group.add.title')}
             </ConfirmButton>
         </form>
     );

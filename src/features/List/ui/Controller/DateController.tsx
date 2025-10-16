@@ -1,3 +1,5 @@
+'use client';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { z } from 'zod';
@@ -15,12 +17,14 @@ interface IDateController {
 }
 
 function DateController({ dueDate, isOpen, setIsOpen, control }: IDateController) {
+    const t = useTranslations('Main');
+
     return (
         <div className="flex justify-between items-center w-full">
-            <b>Due Date</b>
+            <b>{t('task.change.date')}</b>
             <div className="relative">
-                <SecondButton onClick={() => setIsOpen(true)}>
-                    {dueDate ? `${getDate(dueDate)}, ${getHour(dueDate)}` : 'None'}
+                <SecondButton onClick={() => setIsOpen(true)} ariaLabel={t('task.change.date')}>
+                    {dueDate ? `${getDate(dueDate, t)}, ${getHour(dueDate)}` : 'None'}
                 </SecondButton>
                 <DropDownContainer
                     isOpen={isOpen}

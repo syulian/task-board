@@ -1,5 +1,6 @@
 'use client';
 import { useParams, useRouter } from 'next/navigation';
+import { useTranslations } from 'next-intl';
 import React, { useState } from 'react';
 import EditBoard from '@features/EditBoard/ui/EditBoard';
 import { LabelPopup } from '@entities/Label';
@@ -32,19 +33,24 @@ function BoardInfo() {
     const { data } = useGetBoardQuery({ variables: { id: boardId ?? '' }, skip: !boardId });
     const board = data?.getBoard;
 
+    const t = useTranslations('Header');
+
     const dropDownList = [
         {
-            title: '2 Lists, 3 Tasks',
+            title: t('board.info', {
+                listsCount: board?.listsCount ?? 0,
+                tasksCount: board?.tasksCount ?? 0,
+            }),
             children: [
                 {
-                    label: 'Edit',
+                    label: t('dropDown.edit'),
                     onClick: () => {
                         setIsOpenField('dropDown', false);
                         setIsOpenField('edit', true);
                     },
                 },
                 {
-                    label: 'Delete',
+                    label: t('dropDown.delete'),
                     onClick: async () => {
                         if (!boardId) return;
 
@@ -62,7 +68,7 @@ function BoardInfo() {
 
     return (
         <div className="flex relative">
-            <SettingsButton onClick={() => setIsOpenField('dropDown', true)}>
+            <SettingsButton onClick={() => setIsOpenField('dropDown', true)} ariaLabel={t('open')}>
                 {board?.name ?? 'Board'}
             </SettingsButton>
             <DropDownContainer

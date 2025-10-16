@@ -55,7 +55,7 @@ export default function LabelPopup() {
 
     return (
         <div className="flex justify-center flex-col gap-4 px-8 pb-9">
-            <p className="font-bold text-center">Configure Labels</p>
+            <p className="font-bold text-center">{t('label.title')}</p>
             <form className="flex items-center gap-2 pl-12 pr-4" onSubmit={handleSubmit(onSubmit)}>
                 <LabelController control={control} />
                 <DefaultButton type="submit" ariaLabel={t('label.add')}>

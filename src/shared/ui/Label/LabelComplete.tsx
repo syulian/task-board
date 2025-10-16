@@ -1,5 +1,5 @@
 import { clsx } from 'clsx';
-import React from 'react';
+import { useTranslations } from 'next-intl';
 import { getDate } from '@shared/lib';
 
 interface ILabelProps {
@@ -8,6 +8,8 @@ interface ILabelProps {
 }
 
 export default function LabelComplete({ complete, dueDate }: ILabelProps) {
+    const t = useTranslations('Main');
+
     return (
         <p
             className={clsx(
@@ -18,7 +20,7 @@ export default function LabelComplete({ complete, dueDate }: ILabelProps) {
                           (new Date(dueDate) >= new Date() ? 'text-blue-400' : 'text-red-400'),
             )}
         >
-            {complete ? 'Complete' : dueDate && getDate(dueDate)}
+            {complete ? 'Complete' : dueDate && getDate(dueDate, t)}
         </p>
     );
 }

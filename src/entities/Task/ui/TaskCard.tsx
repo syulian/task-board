@@ -1,5 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React from 'react';
 import { HiMiniCheck } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
@@ -28,14 +29,15 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
 
     const { isDragOver, onDragOver, onDragLeave, onDragStart, onDragEnd, onDrop, currentItem } =
         useTaskDragAndDrop(task, list);
-
     const { onContextMenu, handleUpdate, menu, contextMenu, setField } = useTaskCard(task);
+
+    const t = useTranslations('Main');
 
     return (
         <div
             role="button"
             tabIndex={0}
-            aria-label={`Edit task ${task.title}`}
+            aria-label={t('task.change.title')}
             className={clsx(
                 'flex flex-col gap-2 border border-dashed bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',
                 isDragOver && currentItem ? 'border-bg-neutral-lighter' : 'border-transparent',

@@ -2,6 +2,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
+import { useTranslations } from 'next-intl';
 import React, { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -57,6 +58,7 @@ export default function Board() {
     };
 
     const sortedLists = useSortedItems(lists);
+    const t = useTranslations('Main');
 
     return (
         <>
@@ -95,7 +97,8 @@ export default function Board() {
                             control={control}
                             render={({ field }) => (
                                 <AddInput
-                                    placeholder="Add list..."
+                                    placeholder={t('list.add')}
+                                    ariaLabel={t('list.add')}
                                     onChange={event => field.onChange(event.target.value)}
                                 />
                             )}

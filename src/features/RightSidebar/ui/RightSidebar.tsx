@@ -1,4 +1,5 @@
 'use client';
+import { useLocale, useTranslations } from 'next-intl';
 import React, { useRef, useState } from 'react';
 import { HiMiniEllipsisHorizontal } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
@@ -22,12 +23,14 @@ export default function RightSidebar() {
     });
 
     const planned = dataTasks?.getGroupedTasks ?? [];
+    const t = useTranslations('RightSidebar');
+    const locale = useLocale();
 
     const dropDownList = [
         {
             children: [
                 {
-                    label: 'Hide Panel',
+                    label: t('dropDown.panel'),
                     onClick: () => {
                         setIsOpen(false);
                         dispatch(setIsExpanded(false));
@@ -51,11 +54,12 @@ export default function RightSidebar() {
             >
                 <div className="min-w-85 flex flex-col gap-6 overflow-y-scroll p-4">
                     <div className="flex items-center py-4 border-b border-bg-neutral-lighter h-18.5">
-                        <p className="font-semibold flex-1 text-center">Upcoming Tasks</p>
+                        <p className="font-semibold flex-1 text-center">{t('title')}</p>
                         <div className="relative">
                             <DefaultButton
                                 onClick={() => setIsOpen(prev => !prev)}
                                 aria-expanded={isOpen}
+                                ariaLabel={t('dropDown.panel')}
                             >
                                 <HiMiniEllipsisHorizontal size={24} />
                             </DefaultButton>
@@ -70,8 +74,8 @@ export default function RightSidebar() {
                     </div>
                     {planned.map(p => (
                         <div key={p.date.toString()} className="flex justify-center flex-col gap-6">
-                            <time className="text-center font-semibold">
-                                {getShortDate(p.date)}
+                            <time className="text-center font-semibold capitalize">
+                                {getShortDate(p.date, locale)}
                             </time>
                             {p.tasks.map(t => (
                                 <Planned task={t} key={t.id} />

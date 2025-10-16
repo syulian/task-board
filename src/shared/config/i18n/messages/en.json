@@ -3,33 +3,142 @@
     "logo": "TaskBoard",
     "profile": {
       "signIn": "Sign in",
+      "signInWithGoogle": "Sign in with Google",
       "signUp": "Sign up",
-      "signOut": "Sign out"
+      "signUpWithGoogle": "Sign up with Google",
+      "signOut": "Sign out",
+      "account": "Already have an account?",
+      "noAccount": "Don't have an account?",
+      "change": {
+        "email": {
+          "title": "Email",
+          "name": "Enter email..."
+        },
+        "name": {
+          "title": "Name",
+          "name": "Enter name..."
+        },
+        "password": {
+          "title": "Password",
+          "name": "Enter password..."
+        }
+      }
     },
-    "groups": {
-      "addGroup": "Add Group"
+    "group": {
+      "name": "Group Name",
+      "add": {
+        "title": "Add Group",
+        "name": "Enter name..."
+      }
     },
-    "settings": "Settings",
-    "theme": "Theme",
-    "themes": {
+    "board": {
+      "name": "Board Name",
+      "add": {
+        "title": "Add Board",
+        "name": "Enter name..."
+      }
+    },
+    "settings": {
+      "title": "Settings",
+      "about": "About",
+      "feedback": "Feedback",
+      "view": "View",
+      "language": "Language",
+      "releaseNotes": "Release Notes"
+    },
+    "theme": {
+      "title": "Theme",
       "light": "Light",
       "dark": "Dark",
       "system": "System"
     },
-    "language": "Language",
-    "languages": {
+    "language": {
+      "title": "Language",
       "english": "English",
       "ukrainian": "Ukrainian"
     },
     "collapse": "Collapse sidebar",
     "expand": "Expand sidebar"
   },
+  "RightSidebar": {
+    "title": "Upcoming Tasks",
+    "dropDown": {
+      "open": "Open panel settings",
+      "panel": "Hide Panel"
+    }
+  },
+  "Header": {
+    "open": "Open information about the board",
+    "dropDown": {
+      "delete": "Delete",
+      "edit": "Edit",
+      "label": "Edit Labels",
+      "panel": {
+        "hide": "Hide Panel",
+        "open": "Open Panel"
+      }
+    },
+    "board": {
+      "info": "{listsCount} Lists, {tasksCount} Tasks",
+      "change": {
+        "name": {
+          "title": "Board Name",
+          "name": "Enter board name..."
+        }
+      }
+    },
+    "group": {
+      "title": "Select Group",
+      "change": {
+        "name": {
+          "title": "Group"
+        }
+      },
+      "update": "Update Group"
+    },
+    "task": {
+      "search": {
+        "title": "Search for tasks",
+        "name": "Start typing {command, select, mac {or use ⌘ F} win {or use ⊞ F} other {to search}} to search..."
+      },
+      "dropDown": {
+        "noLabel": "No Label",
+        "dueDate": "Due Date",
+        "complete": "Complete"
+      }
+    },
+    "label": "Labels"
+  },
   "Main": {
     "task": {
       "calendar": {
         "hours": "Hours",
         "minutes": "Minutes"
-      }
+      },
+      "change": {
+        "title": "Edit Task",
+        "date": "Due Date",
+        "label": "Select Labels",
+        "list": {
+          "name": "Select Task List",
+          "title": "Task List"
+        },
+        "name": {
+          "name": "Enter task name...",
+          "title": "Task Name"
+        },
+        "description": {
+          "name": "Add description...",
+          "title": "Task description"
+        }
+      },
+      "update": "Update Task",
+      "add": "Add Task"
+    },
+    "subtask": {
+      "title": "Subtasks",
+      "delete": "Delete subtask",
+      "add": "Add subtask"
     },
     "board": {
       "link": "Open the board",
@@ -37,11 +146,22 @@
         "name": "Change the name of the board"
       }
     },
-    "label": {
+    "list": {
+      "add": "Add list...",
+      "update": "Change List Name"
+    },
+    "color": {
       "change": {
+        "title": "Select Color"
+      },
+      "colorName": "{color, select, d62828 {Red} f77f00 {Orange} fcbf49 {Yellow} 6a994e {Light Green} 386641 {Dark Green} 1d3557 {Dark Blue} 457b9d {Light Blue} 118ab2 {Blue} 7209b7 {Purple} b5179e {Magenta} ff006e {Pink} 6c757d {Gray} other {Unknown}}"
+    },
+    "label": {
+      "title": "Configure Labels",
+      "change": {
+        "title": "Select Labels",
         "color": "Change the color of the label"
       },
-      "color-name": "{color, select, d62828 {Red} f77f00 {Orange} fcbf49 {Yellow} 6a994e {Light Green} 386641 {Dark Green} 1d3557 {Dark Blue} 457b9d {Light Blue} 118ab2 {Blue} 7209b7 {Purple} b5179e {Magenta} ff006e {Pink} 6c757d {Gray} other {Unknown}}",
       "add": "Add a new label",
       "update": "Update label",
       "delete": "Delete label"
@@ -74,8 +194,8 @@
       "change": {
         "month": "Change month",
         "year": "Change year",
-        "previous-month": "Set previous month",
-        "next-month": "Set next month"
+        "previousMonth": "Set previous month",
+        "nextMonth": "Set next month"
       },
       "remove": "Remove",
       "select": "Select"
@@ -89,6 +209,25 @@
     },
     "textarea": {
       "change": "Change the contents of the text area"
+    },
+    "input": {
+      "add": {
+        "title": "Type here and press 'Enter'"
+      }
+    },
+    "date": {
+      "pastDue": "Past Due",
+      "dueToday": "Due Today",
+      "dueTomorrow": "Due Tomorrow",
+      "dueIn": "Due in {days} days"
+    },
+    "session": {
+      "user": "You've successfully logged in as {name}.",
+      "noUser": "To use the app, you need to log in to your account."
+    },
+    "notFound": {
+      "name": "This page does not exist. Or maybe it moved.",
+      "title": "Back to home"
     }
   }
 }

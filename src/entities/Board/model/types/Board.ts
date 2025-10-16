@@ -1,4 +1,4 @@
-import { GetBoardQuery } from '@shared/types';
+import { GetBoardsGroupsQuery } from '@shared/types';
 
-type Board = NonNullable<GetBoardQuery['getBoard']>;
+type Board = NonNullable<GetBoardsGroupsQuery['getBoardsGroups'][number]['items'][number]>;
 export default Board;

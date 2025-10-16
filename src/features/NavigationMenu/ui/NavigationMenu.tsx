@@ -1,5 +1,6 @@
 'use client';
 import { clsx } from 'clsx';
+import { useTranslations } from 'next-intl';
 import React, { useRef } from 'react';
 import { HiOutlinePlusSmall, HiMiniChevronDown, HiMiniChevronRight } from 'react-icons/hi2';
 import { CSSTransition } from 'react-transition-group';
@@ -38,6 +39,8 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
         useGroupContextMenu(group);
     const sortedItems = useSortedItems(group?.items ?? []);
 
+    const t = useTranslations('LeftSidebar');
+
     return (
         <section className="relative">
             <Tooltip text={group.name} isExpanded={isExpanded}>
@@ -63,6 +66,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                                     value={group.name}
                                     disabled={disabled}
                                     onBlur={handleBoardsGroupRename}
+                                    ariaLabel={t('group.name')}
                                 />
                             ))}
                     </button>

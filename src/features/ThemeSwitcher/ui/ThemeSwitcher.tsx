@@ -15,12 +15,12 @@ export default function ThemeSwitcher({ isOpen, setIsOpen }: IListProps) {
 
     const themesList = [
         {
-            title: t('theme'),
+            title: t('theme.title'),
             children: [
                 {
                     label: (
                         <LabelChecked checked={theme === Theme.LIGHT}>
-                            {t('themes.light')}
+                            {t('theme.light')}
                         </LabelChecked>
                     ),
                     onClick: () => toggleTheme(Theme.LIGHT),
@@ -28,7 +28,7 @@ export default function ThemeSwitcher({ isOpen, setIsOpen }: IListProps) {
                 {
                     label: (
                         <LabelChecked checked={theme === Theme.DARK}>
-                            {t('themes.dark')}
+                            {t('theme.dark')}
                         </LabelChecked>
                     ),
                     onClick: () => toggleTheme(Theme.DARK),
@@ -36,7 +36,7 @@ export default function ThemeSwitcher({ isOpen, setIsOpen }: IListProps) {
                 {
                     label: (
                         <LabelChecked checked={theme === Theme.SYSTEM}>
-                            {t('themes.system')}
+                            {t('theme.system')}
                         </LabelChecked>
                     ),
                     onClick: () => toggleTheme(Theme.SYSTEM),
