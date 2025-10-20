@@ -31,7 +31,7 @@ export default function AddBoardDropDown({ groupId }: IAddBoardDropDownProps) {
         try {
             await newBoard({ variables: { name: data.name, order: 1, groupId } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

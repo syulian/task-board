@@ -25,7 +25,7 @@ const useBoardLink = (group: BoardsGroup, board: Board) => {
 
             await updateOrders({ variables: { boards: clearTypename(boards) } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

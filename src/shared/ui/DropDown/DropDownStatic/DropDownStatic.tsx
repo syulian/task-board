@@ -4,7 +4,7 @@ import React, { ReactNode, useRef } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import useEscape from '@shared/lib/hooks/useEscape/useEscape';
 import FocusTrap from '@shared/ui/FocusTrap/FocusTrap';
-import './drop-down.animation.css';
+import '../drop-down.animation.css';
 
 interface IDropDownContainerProps {
     children: ReactNode;
@@ -31,12 +31,18 @@ export default function DropDownStatic({
             unmountOnExit
         >
             <>
-                <div className="fixed z-40 inset-0" role="presentation" onClick={setIsOpen} />
+                <div
+                    className="fixed z-40 inset-0"
+                    role="presentation"
+                    data-testid="backdrop"
+                    onClick={setIsOpen}
+                />
                 <div
                     className={clsx(
                         'absolute z-50 bg-bg-primary border border-bg-neutral rounded-md p-2 min-w-58  overflow-y-scroll',
                         className,
                     )}
+                    data-testid="dropdown-static"
                     ref={dropDownRef}
                 >
                     <FocusTrap ref={dropDownRef} isOpen={isOpen}>

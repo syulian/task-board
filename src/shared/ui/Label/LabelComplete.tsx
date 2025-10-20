@@ -1,5 +1,6 @@
 import { clsx } from 'clsx';
 import { useTranslations } from 'next-intl';
+import React from 'react';
 import { getDate } from '@shared/lib';
 
 interface ILabelProps {

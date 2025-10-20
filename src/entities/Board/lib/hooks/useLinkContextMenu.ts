@@ -17,7 +17,7 @@ const useLinkContextMenu = (board: Board) => {
         try {
             await updateBoard({ variables: { id: board.id, name: name } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setDisabled(true);
         }
@@ -29,7 +29,7 @@ const useLinkContextMenu = (board: Board) => {
         try {
             await deleteBoard({ variables: { id: board.id } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

@@ -16,7 +16,7 @@ const useTaskCard = (task: Task) => {
         try {
             await updateSubtask({ variables: { taskId: task.id, subtaskId, checked } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -25,7 +25,7 @@ const useTaskCard = (task: Task) => {
         try {
             await deleteTask({ variables: { taskId: task.id } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setField('state', false);
         }
@@ -38,7 +38,7 @@ const useTaskCard = (task: Task) => {
         try {
             await updateTask({ variables: { task: { id: task.id, complete: !task.complete } } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setField('state', false);
         }

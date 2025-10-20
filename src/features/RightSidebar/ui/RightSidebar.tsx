@@ -23,6 +23,7 @@ export default function RightSidebar() {
     });
 
     const planned = dataTasks?.getGroupedTasks ?? [];
+
     const t = useTranslations('RightSidebar');
     const locale = useLocale();
 
@@ -59,7 +60,7 @@ export default function RightSidebar() {
                             <DefaultButton
                                 onClick={() => setIsOpen(prev => !prev)}
                                 aria-expanded={isOpen}
-                                ariaLabel={t('dropDown.panel')}
+                                ariaLabel={t('dropDown.open')}
                             >
                                 <HiMiniEllipsisHorizontal size={24} />
                             </DefaultButton>

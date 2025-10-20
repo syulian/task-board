@@ -5,9 +5,10 @@ const rootReducer = combineReducers({
     rightSidebar: rightSidebar,
 });
 
-export const setupStore = () =>
+export const setupStore = (preloadedState?: Partial<RootState>) =>
     configureStore({
         reducer: rootReducer,
+        preloadedState,
     });
 
 export type RootState = ReturnType<typeof rootReducer>;

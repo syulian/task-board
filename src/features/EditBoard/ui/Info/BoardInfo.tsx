@@ -8,7 +8,7 @@ import { createStateController } from '@shared/lib';
 import { useDeleteBoardMutation, useGetBoardQuery } from '@shared/types';
 import { DropDownContainer, ListDropDown, Popup, SettingsButton } from '@shared/ui';
 
-function BoardInfo() {
+export default function BoardInfo() {
     const [deleteBoard] = useDeleteBoardMutation({
         refetchQueries: ['GetBoardsGroups'],
     });
@@ -58,7 +58,7 @@ function BoardInfo() {
                             await deleteBoard({ variables: { id: boardId } });
                             router.replace('/');
                         } catch (e) {
-                            console.log(e);
+                            console.error(e);
                         }
                     },
                 },
@@ -87,5 +87,3 @@ function BoardInfo() {
         </div>
     );
 }
-
-export default BoardInfo;

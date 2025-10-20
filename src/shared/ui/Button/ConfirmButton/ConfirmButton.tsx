@@ -1,7 +1,7 @@
 import { clsx } from 'clsx';
 import React, { MouseEvent, ReactNode } from 'react';
 
-interface INavButtonProps {
+interface IConfirmButtonProps {
     children: ReactNode;
     onClick?: (event: MouseEvent<HTMLButtonElement>) => void;
     ariaLabel: string;
@@ -15,7 +15,7 @@ export default function ConfirmButton({
     ariaLabel,
     type = 'button',
     error,
-}: INavButtonProps) {
+}: IConfirmButtonProps) {
     return (
         <div className="relative">
             <button

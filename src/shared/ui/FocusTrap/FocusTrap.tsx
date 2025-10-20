@@ -1,5 +1,5 @@
 'use client';
-import { ReactNode, RefObject, useEffect } from 'react';
+import React, { ReactNode, RefObject, useEffect } from 'react';
 
 interface IFocusTrapProps {
     children: ReactNode;
@@ -9,18 +9,23 @@ interface IFocusTrapProps {
 
 export default function FocusTrap({ children, ref, isOpen }: IFocusTrapProps) {
     useEffect(() => {
-        if (!isOpen) return;
-
         const el = ref.current;
-        if (!el) return;
+        if (!isOpen || !el) return;
 
-        const focusable = el.querySelectorAll<HTMLElement>(
-            'button, [href], select, textarea, input, [tabindex]:not([tabindex="-1"])',
-        );
+        const getFocusable = () => {
+            return el.querySelectorAll<HTMLElement>(
+                'button, [href], select, textarea, input, [tabindex]:not([tabindex="-1"])',
+            );
+        };
+
+        const focusable = getFocusable();
         if (focusable.length) focusable[0].focus();
 
         const handleKey = (e: KeyboardEvent) => {
             if (e.key !== 'Tab') return;
+
+            const focusable = getFocusable();
+            if (!focusable.length) return;
 
             const first = focusable[0];
             const last = focusable[focusable.length - 1];

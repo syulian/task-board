@@ -22,7 +22,7 @@ const useTaskOnOrder = (boardId: string) => {
 
             await updateOrders({ variables: { tasks: cleanedTasks, boardId } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 };

@@ -53,7 +53,7 @@ export default function Board() {
                 variables: { name: data.name, color: COLORS[0], boardId: boardId },
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

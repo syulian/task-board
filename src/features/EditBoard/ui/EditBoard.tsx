@@ -2,7 +2,7 @@ import { useTranslations } from 'next-intl';
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import { HiMiniCheck } from 'react-icons/hi2';
-import useEditBoard from '@features/EditBoard/lib/useEditBoard';
+import useEditBoard from '@features/EditBoard/lib/hooks/useEditBoard';
 import { DefaultButton, FormField, LabelEdit, SecondButton, Select } from '@shared/ui';
 
 interface IEditBoardProps {

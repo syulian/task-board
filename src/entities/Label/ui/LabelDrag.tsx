@@ -39,7 +39,7 @@ export default function LabelDrag({ label }: ILabelsListProps) {
 
             reset({ name: data.name, color: data.color });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -51,7 +51,7 @@ export default function LabelDrag({ label }: ILabelsListProps) {
                 },
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

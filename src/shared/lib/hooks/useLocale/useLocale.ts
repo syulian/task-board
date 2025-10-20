@@ -2,7 +2,7 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Locales } from '@shared/config/i18n/locales';
-import { isEnumItem } from '@shared/lib/isFunctions/isEnumItem/isEnumItem';
+import { isEnumItem } from '@shared/lib/isUtils/isEnumItem/isEnumItem';
 
 const useLocale = () => {
     const [locale, setLocale] = useState<Locales>(Locales.ENGLISH);

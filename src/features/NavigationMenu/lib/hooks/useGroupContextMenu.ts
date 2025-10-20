@@ -27,7 +27,7 @@ const useGroupContextMenu = (group: BoardsGroup) => {
         try {
             await updateBoardsGroup({ variables: { id: group.id, name: name } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setDisabled(true);
         }
@@ -39,7 +39,7 @@ const useGroupContextMenu = (group: BoardsGroup) => {
         try {
             await deleteBoardsGroup({ variables: { id: group.id } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

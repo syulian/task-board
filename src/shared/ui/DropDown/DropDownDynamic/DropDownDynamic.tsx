@@ -6,7 +6,7 @@ import { CSSTransition } from 'react-transition-group';
 import useEscape from '@shared/lib/hooks/useEscape/useEscape';
 import FocusTrap from '@shared/ui/FocusTrap/FocusTrap';
 import StopPropagation from '@shared/ui/StopPropagation/StopPropagation';
-import './drop-down.animation.css';
+import '../drop-down.animation.css';
 
 interface IDropDownContainerProps {
     coordinates: {
@@ -65,6 +65,7 @@ export default function DropDownDynamic({
                         <div
                             className="fixed z-40 inset-0"
                             role="presentation"
+                            data-testid="backdrop"
                             onClick={setIsOpen}
                         />
                         <div

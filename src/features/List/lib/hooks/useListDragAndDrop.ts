@@ -25,7 +25,7 @@ const useListDragAndDrop = (list: TasksList) => {
 
             await updateListsOrders({ variables: { lists: newLists, boardId: list.board } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

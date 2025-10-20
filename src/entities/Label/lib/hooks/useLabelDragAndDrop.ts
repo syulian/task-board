@@ -19,7 +19,7 @@ const useLabelDragAndDrop = (label: TaskLabel) => {
 
             await updateOrders({ variables: { labels: newLabels, boardId: label.board } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

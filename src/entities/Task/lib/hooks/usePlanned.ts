@@ -1,4 +1,4 @@
-import { IGroupTask } from '@entities/Task/model/types/IGroupTask';
+import GroupTask from '@entities/Task/model/types/GroupTask';
 import { useContextMenu } from '@shared/lib';
 import {
     GetGroupedTasksDocument,
@@ -6,7 +6,7 @@ import {
     useUpdateTaskMutation,
 } from '@shared/types';
 
-const usePlanned = (task: IGroupTask) => {
+const usePlanned = (task: GroupTask) => {
     const { onContextMenu, menu, setField } = useContextMenu();
 
     const [updateGroupedTask, { loading }] = useUpdateTaskMutation({
@@ -39,7 +39,7 @@ const usePlanned = (task: IGroupTask) => {
                 variables: { task: { id: task.id, list: task.list.id, complete: !task.complete } },
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setField('state', false);
         }

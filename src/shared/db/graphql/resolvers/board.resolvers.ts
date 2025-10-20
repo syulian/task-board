@@ -71,7 +71,7 @@ export const boardResolvers = {
                     await Board.deleteOne({ _id: id, userId });
                 });
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 throw new GraphQLError('Failed to delete board', {
                     extensions: { code: 'INTERNAL_SERVER_ERROR' },
                 });

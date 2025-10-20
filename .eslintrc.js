@@ -65,7 +65,7 @@ module.exports = {
             globals: {
                 console: 'readonly',
             },
-        },
+        }
     ],
     ignorePatterns: ['dist/', 'build/', 'node_modules/', 'src/shared/types/generated'],
 };

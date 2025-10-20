@@ -27,7 +27,7 @@ export default function AddGroupDropDown() {
         try {
             await newBoard({ variables: { name: data.name, order: 1 } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 

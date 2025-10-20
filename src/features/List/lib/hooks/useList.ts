@@ -24,7 +24,7 @@ const useList = (list: TasksList) => {
         try {
             await updateList({ variables: { id: list.id, name, color, boardId: list.board } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         } finally {
             setDisabled(true);
         }
@@ -34,7 +34,7 @@ const useList = (list: TasksList) => {
         try {
             await deleteList({ variables: { id: list.id } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -54,7 +54,7 @@ const useList = (list: TasksList) => {
                                 },
                             });
                         } catch (e) {
-                            console.log(e);
+                            console.error(e);
                         }
                     },
                 },

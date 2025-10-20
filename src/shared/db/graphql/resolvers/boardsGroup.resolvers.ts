@@ -50,7 +50,7 @@ export const boardsGroupResolvers = {
                     await BoardsGroup.deleteOne({ _id: id, userId }, { session });
                 });
             } catch (e) {
-                console.log(e);
+                console.error(e);
                 throw new GraphQLError('Failed to delete boards group', {
                     extensions: { code: 'INTERNAL_SERVER_ERROR' },
                 });

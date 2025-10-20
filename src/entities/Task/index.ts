@@ -4,7 +4,7 @@ export { default as SubtaskController } from '@entities/Task/ui/Controller/Subta
 export { default as Planned } from './ui/Planned';
 export { default as useTaskOnOrder } from './lib/hooks/useTaskOnOrder';
 export type { default as Task } from './model/types/Task';
-export type { IGroupTask } from './model/types/IGroupTask';
+export type { default as GroupTask } from './model/types/GroupTask';
 export type { default as TasksList } from './model/types/TasksList';
 export type { ISubtask } from './model/types/ISubtask';
 export { TaskSchema } from './model/types/TaskSchema';

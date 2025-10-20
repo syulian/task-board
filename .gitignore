@@ -34,6 +34,9 @@ pnpm-debug.log*
 .env*
 !.env.example
 
+# swc
+.swc
+
 # misc
 .DS_Store
 *.local

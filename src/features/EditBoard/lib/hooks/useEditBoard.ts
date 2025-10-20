@@ -75,7 +75,7 @@ const useEditBoard = () => {
                 },
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -85,7 +85,7 @@ const useEditBoard = () => {
                 variables: { id: board.id, name: data.name, groupId: data.group.id },
             });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 
@@ -101,4 +101,5 @@ const useEditBoard = () => {
         isDirty,
     };
 };
+
 export default useEditBoard;

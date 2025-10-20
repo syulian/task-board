@@ -20,7 +20,7 @@ const useBoardOnOrder = () => {
 
             await updateOrders({ variables: { boards: clearTypename(boards) } });
         } catch (e) {
-            console.log(e);
+            console.error(e);
         }
     };
 };
