@@ -7,5 +7,5 @@ export default withAuth({
 });
 
 export const config = {
-    matcher: ['/board/:path*', '/api/graphql/:path*'],
+    matcher: ['/board/:path*'],
 };

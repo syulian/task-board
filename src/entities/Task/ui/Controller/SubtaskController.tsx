@@ -53,7 +53,7 @@ export default function SubtaskController({ subtask }: ISubtaskControllerProps) 
     return (
         <div
             className={clsx(
-                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border-dashed border',
+                'flex items-center justify-between px-2 py-1 relative drag-target rounded-md border-dashed border bg-bg-neutral',
                 isDragOverOrder && currentOrder
                     ? 'border-bg-neutral-lighter'
                     : 'border-transparent',

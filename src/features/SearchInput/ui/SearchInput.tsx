@@ -6,6 +6,7 @@ import { HiMagnifyingGlass } from 'react-icons/hi2';
 import Markdown from 'react-markdown';
 import { CSSTransition } from 'react-transition-group';
 import useSearchInput from '@features/SearchInput/lib/hooks/useSearchInput';
+import { scrollToElement } from '@shared/lib';
 import './search-input.animation.css';
 
 export default function SearchInput() {
@@ -28,7 +29,7 @@ export default function SearchInput() {
 
     return (
         <div
-            className="flex items-center border-bg-neutral border w-full max-w-sm p-2 gap-2 rounded-sm relative"
+            className="flex items-center border-bg-neutral border w-full max-w-sm p-2 gap-2 rounded-sm relative bg-bg-primary"
             onFocus={() => setIsFocused(true)}
             onBlur={e => {
                 if (!e.currentTarget.contains(e.relatedTarget)) {
@@ -41,6 +42,7 @@ export default function SearchInput() {
             <input
                 className="w-full text-sm caret-bg-neutral h-6"
                 type="search"
+                role="searchbox"
                 onChange={onChange}
                 aria-label={t('task.search.title')}
                 placeholder={t('task.search.name', { command })}
@@ -63,12 +65,19 @@ export default function SearchInput() {
                 <div
                     className="absolute left-0 top-[calc(100%+4px)] z-20 flex flex-col gap-2 w-full bg-bg-secondary rounded-b-md p-2 overflow-x-hidden overflow-y-auto max-h-[calc(100vh-80px)]"
                     ref={divRef}
+                    data-testid="search-result"
                 >
                     {tasks.length > 0 && (
                         <ul className="flex flex-wrap gap-2 w-full overflow-y-auto max-h-100 p-2">
                             {tasks.map(t => (
                                 <li key={t.id} className="w-full">
-                                    <button className="flex flex-col gap-2 text-left w-full bg-bg-neutral hover:bg-bg-primary p-2 rounded-sm border border-bg-neutral-lighter text-sm cursor-pointer text-gray-400">
+                                    <button
+                                        className="flex flex-col gap-2 text-left w-full bg-bg-neutral hover:bg-bg-primary p-2 rounded-sm border border-bg-neutral-lighter text-sm cursor-pointer text-gray-400"
+                                        onClick={() => {
+                                            setIsFocused(false);
+                                            scrollToElement(t.id);
+                                        }}
+                                    >
                                         <p className="text-text-primary">{t.title}</p>
                                         <Markdown>{t.body}</Markdown>
                                         <b className="text-text-neutral">/ {t.list.name}</b>

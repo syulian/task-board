@@ -20,6 +20,7 @@ module.exports = async () => ({
         rootDir: '../../',
     })()),
     transformIgnorePatterns: ['node_modules/(?!next-intl)/'],
+    testMatch: ['<rootDir>src/**/*(*.)@(spec|test).[tj]s?(x)'],
     testEnvironment: 'jsdom',
     setupFilesAfterEnv: ['./config/jest/setupTests.ts'],
     moduleNameMapper: {

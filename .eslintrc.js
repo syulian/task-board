@@ -16,6 +16,7 @@ module.exports = {
         '@feature-sliced/eslint-config/rules/layers-slices',
         'next/core-web-vitals',
         'next/typescript',
+        'plugin:storybook/recommended',
     ],
     parserOptions: {
         ecmaVersion: 'latest',
@@ -65,7 +66,22 @@ module.exports = {
             globals: {
                 console: 'readonly',
             },
-        }
+        },
+        {
+            files: ['**/*.spec.ts', '**/fixtures/*.ts'],
+            rules: {
+                'react-hooks/rules-of-hooks': 'off',
+            },
+        },
     ],
-    ignorePatterns: ['dist/', 'build/', 'node_modules/', 'src/shared/types/generated'],
+    ignorePatterns: [
+        'dist/',
+        'build/',
+        'node_modules/',
+        'src/shared/types/generated',
+        'test-results/',
+        'playwright-report/',
+        '.husky/',
+        'app/'
+    ],
 };

@@ -37,6 +37,7 @@ export default function TaskCard({ task, list, setIsOpen }: ITaskCardProps) {
         <div
             role="button"
             tabIndex={0}
+            id={task.id}
             aria-label={t('task.change.title')}
             className={clsx(
                 'flex flex-col gap-2 border border-dashed bg-bg-neutral rounded-sm p-2 mt-2 cursor-pointer relative',

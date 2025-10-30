@@ -1,11 +1,12 @@
-export { getDate } from '@shared/lib/dateUtils/getDate/getDate';
-export { getShortDate } from '@shared/lib/dateUtils/getShortDate/getShortDate';
-export { getHour, padZero } from '@shared/lib/dateUtils/getHour/getHour';
+export { getDate } from './dateUtils/getDate/getDate';
+export { getShortDate } from './dateUtils/getShortDate/getShortDate';
+export { getHour, padZero } from './dateUtils/getHour/getHour';
 export { createStateController } from './setObjectState/setObjectState';
-export { getMonthDays } from '@shared/lib/dateUtils/getMonthDays/getMonthDays';
-export { isToday } from '@shared/lib/isUtils/isToday/isToday';
-export { isEnumItem } from '@shared/lib/isUtils/isEnumItem/isEnumItem';
+export { getMonthDays } from './dateUtils/getMonthDays/getMonthDays';
+export { isToday } from './isUtils/isToday/isToday';
+export { isEnumItem } from './isUtils/isEnumItem/isEnumItem';
 export { clearTypename } from './clearTypename/clearTypename';
+export { scrollToElement } from './scrollToElement/scrollToElement';
 export { useAppSelector, useAppDispatch } from './hooks/useRedux/useRedux';
 export { renderWithProviders } from './hooks/useRedux/renderWithProviders';
 export { default as useDragAndDrop } from './hooks/useDragAndDrop/useDragAndDrop';

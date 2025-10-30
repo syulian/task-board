@@ -1,1 +1,2 @@
-export { generateMetadata, BoardPage } from './ui/BoardPage';
+export { BoardPage } from './ui/BoardPage';
+export { generateMetadata } from './api/generateMetadata';

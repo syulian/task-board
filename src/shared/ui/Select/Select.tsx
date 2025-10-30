@@ -41,7 +41,7 @@ export default function Select({ list, selected, setSelected, ariaLabel }: ISele
                     {list.map(l => (
                         <li key={l.id}>
                             <button
-                                className="cursor-pointer hover:bg-bg-neutral py-1 px-4 rounded-sm text-white w-full text-left truncate"
+                                className="cursor-pointer hover:bg-bg-neutral py-1 px-4 rounded-sm w-full text-left truncate"
                                 onClick={() => {
                                     setIsOpen(false);
                                     setSelected(l);

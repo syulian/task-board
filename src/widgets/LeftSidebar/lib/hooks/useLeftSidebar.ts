@@ -33,7 +33,7 @@ const useLeftSidebar = () => {
         };
 
         handleStore();
-    }, [status]);
+    }, [client, status]);
 
     return {
         groups,

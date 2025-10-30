@@ -1,6 +1,8 @@
 const config = {
     content: ['./src/**/*.{js,ts,jsx,tsx}'],
-    plugins: ['@tailwindcss/postcss'],
+    plugins: {
+        '@tailwindcss/postcss': {},
+    },
     theme: {
         extend: {
             colors: {

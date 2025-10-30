@@ -26,7 +26,7 @@ export default function Header() {
     return (
         <>
             {status === 'authenticated' && (
-                <header className="py-4 flex items-center justify-between gap-4">
+                <header className="py-4 flex items-center justify-between gap-4 bg-bg-primary">
                     <div className="flex gap-4 w-full">
                         <BoardInfo />
                         <SearchInput />
@@ -51,7 +51,9 @@ export default function Header() {
                                 <DefaultButton
                                     onClick={() => dispatch(setIsExpanded(!isExpanded))}
                                     ariaLabel={
-                                        isOpen ? t('dropDown.panel.hide') : t('dropDown.panel.open')
+                                        isExpanded
+                                            ? t('dropDown.panel.hide')
+                                            : t('dropDown.panel.open')
                                     }
                                 >
                                     <HiOutlineBookOpen size={24} />

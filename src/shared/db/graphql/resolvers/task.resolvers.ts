@@ -13,12 +13,15 @@ export const taskResolvers = {
             const userId = requireUser(ctx?.user);
             await dbConnect();
 
+            const lists = await List.find({ board: boardId, userId }).distinct('_id');
+
             const query: {
                 labels?: object;
                 dueDate?: object;
                 complete?: boolean;
                 $or?: object[];
-            } = {};
+                list: object;
+            } = { list: { $in: lists } };
 
             filters?.forEach(f => {
                 switch (f) {
@@ -45,7 +48,7 @@ export const taskResolvers = {
                 query.labels = { $in: labels };
             }
 
-            return Task.find({ ...query, boardId, userId }).populate('list');
+            return Task.find({ ...query, userId }).populate('list');
         }) satisfies QueryResolvers['getTasks'],
         getGroupedTasks: (async (_, __, ctx) => {
             const userId = requireUser(ctx?.user);

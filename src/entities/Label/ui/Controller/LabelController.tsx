@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { Control, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import LabelSchema from '@entities/Label/model/types/LabelSchema';
-import ColorsDropDown from '@entities/Label/ui/DropDown/ColorsDropDown';
+import ColorsDropDown from '@entities/Label/ui/DropDown/ColorsDropDown/ColorsDropDown';
 import { AddInput, ColorButton, DropDownContainer } from '@shared/ui';
 
 type LabelValues = z.infer<typeof LabelSchema>;

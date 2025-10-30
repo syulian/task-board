@@ -37,7 +37,7 @@ export default function Calendar({ selectedDate, setSelectedDate, setIsOpen }: I
     const { DAYS, MONTHS } = generateCalendarData(t);
 
     return (
-        <div className="flex flex-col items-center gap-4 w-sm py-2 px-6">
+        <div className="flex flex-col items-center gap-4 w-sm py-2 px-6 bg-bg-primary">
             <p className="font-semibold text-center">{t('calendar.title')}</p>
             <div className="flex justify-between items-center gap-2 w-80.5">
                 <DefaultButton

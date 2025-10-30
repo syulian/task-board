@@ -67,7 +67,10 @@ export default function Textarea<T extends FieldValues>({
                 </button>
             )}
             {error && (
-                <span className="absolute -bottom-6 text-sm text-red-700" aria-live="polite">
+                <span
+                    className="absolute -bottom-6 text-sm text-red-700 truncate w-full"
+                    aria-live="polite"
+                >
                     {error.message}
                 </span>
             )}

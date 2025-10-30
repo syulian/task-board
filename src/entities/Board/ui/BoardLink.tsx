@@ -29,7 +29,7 @@ export default function BoardLink({ group, board, isExpanded }: IMenuItemProps) 
             <Link
                 href={Router.BOARD(board.id)}
                 className={clsx(
-                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-bg-neutral truncate',
+                    'w-full py-1.5 transition duration-200 ease-in-out cursor-pointer rounded-lg pr-4 hover:bg-bg-neutral truncate bg-bg-secondary',
                     isExpanded ? 'pl-12' : 'pl-4',
                     isDragOver && currentItem && 'bg-bg-neutral',
                 )}

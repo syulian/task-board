@@ -78,7 +78,7 @@ export default function SignUpPopup({ openSignIn, setIsOpen }: ISignUpPopupProps
                 />
                 <FormField
                     placeholder={t('profile.change.password.name')}
-                    label={t('profile.change.email.title')}
+                    label={t('profile.change.password.title')}
                     name="password"
                     type="password"
                     register={register}

@@ -9,7 +9,6 @@ interface StoreProviderProps {
 
 const StoreProvider: FC<StoreProviderProps> = ({ children }) => {
     const store = setupStore();
-
     return <Provider store={store}>{children}</Provider>;
 };
 

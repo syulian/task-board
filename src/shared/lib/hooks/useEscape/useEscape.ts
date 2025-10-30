@@ -10,7 +10,7 @@ const useEscape = (isOpen: boolean, onDismiss: () => void) => {
 
         window.addEventListener('keydown', handleKey);
         return () => window.removeEventListener('keydown', handleKey);
-    }, [isOpen]);
+    }, [isOpen, onDismiss]);
 };
 
 export default useEscape;

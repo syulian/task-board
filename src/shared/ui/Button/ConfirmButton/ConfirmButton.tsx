@@ -20,7 +20,7 @@ export default function ConfirmButton({
         <div className="relative">
             <button
                 className={clsx(
-                    'flex items-center justify-center gap-2 font-bold py-2 border border-bg-neutral-lighter bg-bg-neutral cursor-pointer rounded-sm w-full text-white transition duration-200 ease-in-out hover:bg-bg-primary',
+                    'flex items-center justify-center gap-2 font-bold py-2 px-2 border border-bg-neutral-lighter bg-bg-neutral cursor-pointer rounded-sm w-full transition duration-200 ease-in-out hover:bg-bg-primary',
                 )}
                 onClick={onClick}
                 aria-label={ariaLabel}
@@ -28,7 +28,10 @@ export default function ConfirmButton({
             >
                 {children}
             </button>
-            <span className="absolute -bottom-6 text-sm text-red-700" aria-live="polite">
+            <span
+                className="absolute -bottom-6 text-sm text-red-700 truncate w-full"
+                aria-live="polite"
+            >
                 {error}
             </span>
         </div>

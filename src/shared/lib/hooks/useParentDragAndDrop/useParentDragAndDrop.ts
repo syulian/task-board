@@ -20,7 +20,7 @@ const useParentDragAndDrop = <TI extends ItemSchema, TG extends GroupSchema<TI>>
             onReorder?.(lastUpdated.current);
             lastUpdated.current = null;
         }
-    }, [lastUpdated.current]);
+    }, [onReorder]);
 
     const onDragOver = (event: DragEvent<HTMLDivElement>) => {
         event.stopPropagation();

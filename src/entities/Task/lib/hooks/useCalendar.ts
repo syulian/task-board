@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from 'react';
 import generateCalendarData from '@entities/Task/lib/generateCalendarData';
 
 export default function useCalendar(
@@ -15,7 +15,7 @@ export default function useCalendar(
     const [selectedDay, setSelectedDay] = useState<number | null>(null);
 
     const t = useTranslations('Main');
-    const { MONTHS } = generateCalendarData(t);
+    const { MONTHS } = useMemo(() => generateCalendarData(t), [t]);
 
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const month = new Date().getMonth();
@@ -46,7 +46,7 @@ export default function useCalendar(
         setSelectedDay(selectedDate.getDate());
         setHours(selectedDate.getHours());
         setMinutes(selectedDate.getMinutes());
-    }, [selectedDate]);
+    }, [MONTHS, selectedDate]);
 
     const changeMonth = (direction: -1 | 1) => {
         setSelectedMonth(prev => {

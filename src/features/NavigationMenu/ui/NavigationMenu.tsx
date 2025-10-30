@@ -44,9 +44,12 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
     return (
         <section className="relative">
             <Tooltip text={group.name} isExpanded={isExpanded}>
-                <div className="flex items-center w-full hover:bg-bg-neutral font-bold">
+                <div
+                    className="flex items-center w-full hover:bg-bg-neutral font-bold rounded-lg"
+                    data-testid="group-container"
+                >
                     <button
-                        className="flex items-center rounded-lg gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate"
+                        className="flex items-center gap-1.5 py-1.5 px-4 flex-grow text-left cursor-pointer truncate rounded-lg"
                         onClick={() => setIsOpenField('group', !isOpen.group)}
                         onContextMenu={event => {
                             event.preventDefault();
@@ -74,6 +77,7 @@ export default function NavigationMenu({ group, isExpanded }: INavigationMenuPro
                         <button
                             className="ml-auto py-1.5 px-4 cursor-pointer text-text-primary hover:bg-bg-neutral-lighter rounded-lg absolute left-[251px]"
                             onClick={() => setIsOpenField('add', true)}
+                            aria-label={t('board.add.title')}
                         >
                             <HiOutlinePlusSmall size={24} />
                         </button>

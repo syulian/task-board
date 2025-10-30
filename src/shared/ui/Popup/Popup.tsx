@@ -13,9 +13,10 @@ interface IPopupProps {
     isOpen: boolean;
     setIsOpen: () => void;
     children: ReactNode;
+    storyMode?: boolean;
 }
 
-export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
+export default function Popup({ isOpen, setIsOpen, children, storyMode = true }: IPopupProps) {
     const [isSectionOpen, setIsSectionOpen] = useState(false);
 
     const popupRef = useRef<HTMLDivElement>(null);
@@ -46,7 +47,7 @@ export default function Popup({ isOpen, setIsOpen, children }: IPopupProps) {
                     nodeRef={sectionRef}
                     timeout={300}
                     classNames="popup-section"
-                    unmountOnExit
+                    unmountOnExit={storyMode}
                 >
                     <section
                         className="fixed z-50 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-2 border border-bg-neutral-lighter bg-bg-neutral p-4 rounded-md"

@@ -80,7 +80,7 @@ export default function DropDownDynamic({
                             </FocusTrap>
                         </div>
                     </StopPropagation>,
-                    document.body,
+                    document.getElementById('portal-root') || document.body,
                 )}
             </>
         </CSSTransition>

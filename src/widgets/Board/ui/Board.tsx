@@ -63,7 +63,7 @@ export default function Board() {
     return (
         <>
             {status === 'authenticated' && (
-                <section className="w-full flex gap-8 overflow-x-scroll pb-4">
+                <section className="w-full flex gap-8 overflow-x-scroll pb-4 bg-bg-primary">
                     <TaskDragAndDropContext
                         value={{
                             currentItem: currentItem,

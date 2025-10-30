@@ -45,12 +45,13 @@ export default function List({ list }: IListProps) {
     return (
         <li
             className={clsx(
-                'flex flex-col border-bg-neutral border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative',
+                'flex flex-col border-bg-neutral border rounded-sm w-80 h-[calc(100vh-124px)] p-4 relative bg-bg-primary',
                 isDragOverOrder && currentOrder && 'border-dashed border-bg-neutral-lighter',
             )}
             onDragOver={onDragOverOrder}
             onDragLeave={onDragLeaveOrder}
             onDrop={onDropOrder}
+            data-testid="list-container"
         >
             <div
                 className="flex items-center justify-between pb-2 px-2 border-b-2 rounded-b-xs"
@@ -77,7 +78,7 @@ export default function List({ list }: IListProps) {
                     </DefaultButton>
                     <DefaultButton
                         onClick={() => setIsOpenField('settings', true)}
-                        ariaLabel={t('task.update')}
+                        ariaLabel={t('list.dropDown.open')}
                     >
                         <HiEllipsisHorizontal size={24} />
                     </DefaultButton>

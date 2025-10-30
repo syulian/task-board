@@ -91,6 +91,7 @@ export type Mutation = {
   deleteLabel: Scalars['ID']['output'];
   deleteList: Scalars['ID']['output'];
   deleteTask: Scalars['ID']['output'];
+  deleteUser: Scalars['ID']['output'];
   updateBoard?: Maybe<Board>;
   updateBoardsGroup?: Maybe<BoardsGroup>;
   updateBoardsOrders: Array<BoardsGroup>;
@@ -498,6 +499,11 @@ export type CreateUserMutationVariables = Exact<{
 
 
 export type CreateUserMutation = { __typename?: 'Mutation', createUser: { __typename?: 'User', id: string, name: string, email: string } };
+
+export type DeleteUserMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type DeleteUserMutation = { __typename?: 'Mutation', deleteUser: string };
 
 export type CreateListMutationVariables = Exact<{
   name: Scalars['String']['input'];
@@ -1378,6 +1384,36 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const DeleteUserDocument = gql`
+    mutation DeleteUser {
+  deleteUser
+}
+    `;
+export type DeleteUserMutationFn = Apollo.MutationFunction<DeleteUserMutation, DeleteUserMutationVariables>;
+
+/**
+ * __useDeleteUserMutation__
+ *
+ * To run a mutation, you first call `useDeleteUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteUserMutation, { data, loading, error }] = useDeleteUserMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useDeleteUserMutation(baseOptions?: Apollo.MutationHookOptions<DeleteUserMutation, DeleteUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteUserMutation, DeleteUserMutationVariables>(DeleteUserDocument, options);
+      }
+export type DeleteUserMutationHookResult = ReturnType<typeof useDeleteUserMutation>;
+export type DeleteUserMutationResult = Apollo.MutationResult<DeleteUserMutation>;
+export type DeleteUserMutationOptions = Apollo.BaseMutationOptions<DeleteUserMutation, DeleteUserMutationVariables>;
 export const CreateListDocument = gql`
     mutation CreateList($name: String!, $color: String!, $boardId: ID!) {
   createList(name: $name, color: $color, boardId: $boardId) {
@@ -1850,6 +1886,7 @@ export type MutationResolvers<ContextType = any, ParentType extends ResolversPar
   deleteLabel?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteLabelArgs, 'id'>>;
   deleteList?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteListArgs, 'id'>>;
   deleteTask?: Resolver<ResolversTypes['ID'], ParentType, ContextType, RequireFields<MutationDeleteTaskArgs, 'taskId'>>;
+  deleteUser?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   updateBoard?: Resolver<Maybe<ResolversTypes['Board']>, ParentType, ContextType, RequireFields<MutationUpdateBoardArgs, 'id'>>;
   updateBoardsGroup?: Resolver<Maybe<ResolversTypes['BoardsGroup']>, ParentType, ContextType, RequireFields<MutationUpdateBoardsGroupArgs, 'id' | 'name'>>;
   updateBoardsOrders?: Resolver<Array<ResolversTypes['BoardsGroup']>, ParentType, ContextType, RequireFields<MutationUpdateBoardsOrdersArgs, 'boards'>>;

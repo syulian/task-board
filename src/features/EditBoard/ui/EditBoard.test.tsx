@@ -56,7 +56,7 @@ describe('EditBoard component', () => {
 
     test('renders form fields and labels', () => {
         render(<Wrapper mocks={[]} />);
-        expect(screen.getByLabelText(/board name/i)).toBeInTheDocument();
+        expect(screen.getByText(/board name/i)).toBeInTheDocument();
         expect(screen.getByText(/^\s*labels\s*$/i)).toBeInTheDocument();
         expect(screen.getByText(/label 1/i)).toBeInTheDocument();
     });

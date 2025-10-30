@@ -148,7 +148,10 @@
     },
     "list": {
       "add": "Add list...",
-      "update": "Change List Name"
+      "update": "Change List Name",
+      "dropDown": {
+        "open": "Open list settings"
+      }
     },
     "color": {
       "change": {

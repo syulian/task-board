@@ -4,17 +4,19 @@ import { isEnumItem, LOCAL_STORAGE_THEME_KEY, Theme, ThemeContext } from '@share
 
 interface IThemeProviderProps {
     children: ReactNode;
+    initialTheme?: Theme;
 }
 
-const ThemeProvider: FC<IThemeProviderProps> = ({ children }) => {
-    const [theme, setTheme] = useState<Theme>(Theme.SYSTEM);
+const ThemeProvider: FC<IThemeProviderProps> = ({ children, initialTheme }) => {
+    const [theme, setTheme] = useState<Theme>(initialTheme || Theme.SYSTEM);
 
     useEffect(() => {
+        if (initialTheme) return;
         const localStorageTheme = localStorage.getItem(LOCAL_STORAGE_THEME_KEY);
         if (!localStorageTheme || !isEnumItem(Theme, localStorageTheme)) return;
 
         setTheme(localStorageTheme);
-    }, []);
+    }, [initialTheme]);
 
     useEffect(() => {
         let appliedTheme = theme;

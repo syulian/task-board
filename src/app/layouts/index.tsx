@@ -44,7 +44,7 @@ export async function RootLayout({ children }: IRootLayoutProps) {
                         <ThemeProvider>
                             <NextAuthProvider>
                                 <NextIntlClientProvider messages={messages}>
-                                    <div className="flex">
+                                    <div className="flex" id="portal-root">
                                         <LeftSidebar />
                                         {children}
                                     </div>
