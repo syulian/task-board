@@ -29,7 +29,7 @@ export const Closed: Story = {
     decorators: [ApolloDecorator([]), BlockDecorator],
     args: {
         isOpen: false,
-        dueDate: new Date(),
+        dueDate: new Date('Mon Oct 20 2025 10:19:21 GMT+0200'),
     },
     render: Template,
 };
@@ -38,7 +38,7 @@ export const Open: Story = {
     decorators: [ApolloDecorator([]), BlockDecorator],
     args: {
         isOpen: true,
-        dueDate: new Date(),
+        dueDate: new Date('Mon Oct 20 2025 10:19:21 GMT+0200'),
     },
     render: Template,
 };

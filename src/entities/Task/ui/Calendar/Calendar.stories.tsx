@@ -13,7 +13,7 @@ type Story = StoryObj<typeof Calendar>;
 export const Default: Story = {
     decorators: [ApolloDecorator([]), InlineDecorator],
     args: {
-        selectedDate: new Date(),
+        selectedDate: new Date('Mon Oct 20 2025 10:19:21 GMT+0200'),
         setIsOpen: () => {},
         setSelectedDate: () => {},
     },

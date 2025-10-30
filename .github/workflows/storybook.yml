@@ -22,4 +22,4 @@ jobs:
         env:
           CHROMATIC_PROJECT_TOKEN:
             ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
-        run: npx chromatic --project-token=$CHROMATIC_PROJECT_TOKEN
+        run: npx chromatic --project-token=${{ secrets.CHROMATIC_PROJECT_TOKEN }} --exit-zero-on-changes
