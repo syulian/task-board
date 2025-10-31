@@ -1,5 +1,6 @@
 import { Meta, StoryObj } from '@storybook/nextjs-vite';
 import { ApolloDecorator, SessionDecorator, InlineDecorator } from '@shared/config';
+import { SESSION } from '@shared/const';
 import { HomePage } from './HomePage';
 
 const meta: Meta<typeof HomePage> = {
@@ -10,16 +11,8 @@ const meta: Meta<typeof HomePage> = {
 export default meta;
 type Story = StoryObj<typeof HomePage>;
 
-const session = {
-    user: {
-        name: 'Test User',
-        email: 'test@gmail.com',
-    },
-    expires: '2099-12-31T23:59:59.999Z',
-};
-
 export const Authenticated: Story = {
-    decorators: [ApolloDecorator([]), InlineDecorator, SessionDecorator(session)],
+    decorators: [ApolloDecorator([]), InlineDecorator, SessionDecorator(SESSION)],
 };
 
 export const NotAuthenticated: Story = {

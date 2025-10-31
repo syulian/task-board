@@ -47,8 +47,6 @@ export const listResolvers = {
             const userId = requireUser(ctx?.user);
             await dbConnect();
 
-            console.log(id, name, color, boardId);
-
             const board = await Board.findOne({ _id: boardId, userId });
             if (!board) {
                 throw new GraphQLError('This board does not exist', {
